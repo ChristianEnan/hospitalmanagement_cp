@@ -1,0 +1,110 @@
+{% extends 'hospital/homebase.html' %}
+
+{% block content %}
+
+<style>
+  .role-card {
+    background: white;
+    border-radius: 15px;
+    padding: 50px 30px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    margin: 30px auto;
+    max-width: 500px;
+    transition: all 0.3s ease;
+  }
+
+  .role-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  }
+
+  .role-icon {
+    font-size: 80px;
+    color: #667eea;
+    margin-bottom: 20px;
+  }
+
+  .role-card h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-weight: bold;
+    font-size: 32px;
+  }
+
+  .role-card p {
+    color: #666;
+    margin-bottom: 30px;
+    font-size: 16px;
+    line-height: 1.6;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .btn-custom {
+    padding: 12px 30px;
+    border-radius: 8px;
+    border: none;
+    font-weight: bold;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+  }
+
+  .btn-apply {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+  }
+
+  .btn-apply:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .btn-login {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+  }
+
+  .btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+    color: white;
+  }
+</style>
+
+<br><br>
+
+<div class="container">
+  <div class="jumbotron" style="text-align: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 15px;">
+    <h1 class="display-4">Welcome to Doctor Portal</h1>
+    <p class="lead">Apply for a position or login to manage your appointments and patient interactions</p>
+  </div>
+
+  <div class="role-card">
+    <div class="role-icon">
+      <i class="fas fa-stethoscope"></i>
+    </div>
+    <h2>Doctor</h2>
+    <p>Join our team of experienced medical professionals. Apply now to access the doctor dashboard and manage your appointments efficiently.</p>
+    <div class="button-container">
+      <a href="/doctorsignup" class="btn btn-custom btn-apply">
+        <i class="fas fa-file-upload"></i> Apply Now
+      </a>
+      <a href="/doctorlogin" class="btn btn-custom btn-login">
+        <i class="fas fa-sign-in-alt"></i> Login
+      </a>
+    </div>
+  </div>
+</div>
+
+<br><br><br>
+
+{% endblock content %}

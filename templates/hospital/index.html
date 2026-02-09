@@ -1,0 +1,166 @@
+{% extends 'hospital/homebase.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<head>
+  <style media="screen">
+    .jumbotron {
+      margin-top: 0px;
+      margin-bottom: 0px;
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('{% static "images/bg.jpg" %}');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      padding: 80px 20px;
+      min-height: 600px;
+    }
+
+    .jumbotron h5,
+    h3 {
+      text-align: center;
+      color: white;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .alert {
+      margin: 0px;
+    }
+
+    .glow {
+      font-size: 50px;
+      color: white;
+      text-align: center;
+      -webkit-animation: glow 1s ease-in-out infinite alternate;
+      -moz-animation: glow 1s ease-in-out infinite alternate;
+      animation: glow 1s ease-in-out infinite alternate;
+      font-weight: bold;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 10px #eeeeee, 0 0 20px #ffc107, 0 0 30px #ffc107, 0 0 40px #ffc107;
+      }
+
+      to {
+        text-shadow: 0 0 20px #eeeeee, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b, 0 0 50px #ff6b6b;
+      }
+    }
+
+    @-webkit-keyframes glow {
+      from {
+        text-shadow: 0 0 10px #eeeeee, 0 0 20px #ffc107, 0 0 30px #ffc107, 0 0 40px #ffc107;
+      }
+
+      to {
+        text-shadow: 0 0 20px #eeeeee, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b, 0 0 50px #ff6b6b;
+      }
+    }
+
+    .cta-button {
+      padding: 15px 40px;
+      font-size: 18px;
+      border-radius: 50px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .cta-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-section {
+      padding: 60px 20px;
+      background: #f5f7fa;
+    }
+
+    .feature-card {
+      background: white;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      margin-bottom: 20px;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h4 {
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<br>
+<br>
+
+<div class="jumbotron" style="margin-bottom: 0px;margin-top: 0px;">
+  <br>
+  <h5 class="display-3 glow">You’ll Love the Way We Care for You</h5>
+  <br><br>
+  <h3 style="text-align:center;">Emergency?</h3>
+
+  <p class="lead" style="text-align:center;">
+    <a class="btn btn-success btn-lg cta-button" href="/patientclick" role="button">
+      <i class="fas fa-calendar-check"></i> Take Appointment
+    </a>
+  </p>
+  <br><br>
+</div>
+
+<!-- Features Section -->
+<div class="feature-section">
+  <div class="container">
+    <h2 style="text-align: center; margin-bottom: 50px; color: #333;">Why Choose Us?</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-hospital"></i></div>
+          <h4>Modern Healthcare</h4>
+          <p>State-of-the-art medical facilities and advanced technology for better patient care.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-user-md"></i></div>
+          <h4>Expert Doctors</h4>
+          <p>Highly qualified and experienced medical professionals dedicated to your health.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-card">
+          <div class="feature-icon"><i class="fas fa-clock"></i></div>
+          <h4>24/7 Service</h4>
+          <p>Round-the-clock medical services and emergency care available for all patients.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<br><br>
+
+{% include "hospital/admin_doctor_patient_card.html" %}
+<br><br><br>
+
+{% endblock content %}

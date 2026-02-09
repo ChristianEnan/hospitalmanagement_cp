@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>About Us - Hospital Management System</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <style media="screen">
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: #f5f7fa;
+      line-height: 1.6;
+    }
+
+    .hero-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+      margin-top: 60px;
+      margin-bottom: 0;
+    }
+
+    .hero-section h1 {
+      font-size: 48px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-section p.lead {
+      font-size: 20px;
+      opacity: 0.95;
+      margin-bottom: 30px;
+    }
+
+    .about-section {
+      padding: 60px 20px;
+      background: white;
+    }
+
+    .section-title {
+      text-align: center;
+      color: #667eea;
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #667eea;
+      display: inline-block;
+      width: 100%;
+    }
+
+    .content-box {
+      background: #f8f9fa;
+      border-left: 5px solid #667eea;
+      padding: 30px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .content-box:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .content-box h3 {
+      color: #667eea;
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 24px;
+    }
+
+    .content-box p {
+      color: #555;
+      text-align: justify;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .feature-item {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .feature-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .feature-icon {
+      font-size: 48px;
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .feature-item h4 {
+      color: #333;
+      font-weight: bold;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .feature-item p {
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .mission-vision {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 40px;
+      margin-bottom: 40px;
+    }
+
+    .mission-card, .vision-card {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .mission-card {
+      border-top: 5px solid #FF6B6B;
+    }
+
+    .vision-card {
+      border-top: 5px solid #4ECDC4;
+    }
+
+    .mission-card h3, .vision-card h3 {
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 22px;
+    }
+
+    .mission-card h3 {
+      color: #FF6B6B;
+    }
+
+    .vision-card h3 {
+      color: #4ECDC4;
+    }
+
+    .mission-card p, .vision-card p {
+      color: #555;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .btn-back {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      color: white;
+      padding: 12px 35px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-back:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      color: white;
+    }
+
+    .values-section {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 50px 20px;
+      margin-bottom: 0;
+      border-radius: 10px;
+    }
+
+    .values-section h3 {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+
+    .values-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .value-item {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+    }
+
+    .value-item i {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    .value-item h5 {
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .hero-section h1 {
+        font-size: 32px;
+      }
+
+      .hero-section p.lead {
+        font-size: 16px;
+      }
+
+      .mission-vision {
+        grid-template-columns: 1fr;
+      }
+
+      .section-title {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  {% include "hospital/navbar.html" %}
+
+  <!-- Hero Section -->
+  <div class="hero-section">
+    <h1><i class="fas fa-hospital"></i> About Hospital Management System</h1>
+    <p class="lead">Revolutionizing Healthcare Administration and Patient Care</p>
+  </div>
+
+  <!-- About Us Section -->
+  <div class="about-section">
+    <div class="container">
+      <div class="section-title">Welcome to Our Healthcare Platform</div>
+
+      <div class="content-box">
+        <h3><i class="fas fa-building"></i> Our Story</h3>
+        <p>The Hospital Management System was developed with a vision to transform the way healthcare institutions manage their operations, streamline patient care workflows, and enhance communication between administrative staff, medical professionals, and patients. Our comprehensive platform addresses the complex challenges faced by modern hospitals, including patient registration, appointment scheduling, doctor management, and seamless coordination between different departments. With years of expertise in healthcare technology, we have created a robust, user-friendly system that not only reduces administrative burden but also significantly improves the overall patient experience and healthcare delivery quality across all departments.</p>
+      </div>
+
+      <div class="content-box">
+        <h3><i class="fas fa-handshake"></i> Why Choose Us</h3>
+        <p>Our platform stands out in the healthcare technology landscape because of our unwavering commitment to excellence, continuous innovation, and deep understanding of healthcare industry requirements. We offer an integrated solution that brings together all aspects of hospital management, from patient administration to clinical workflows, ensuring that healthcare providers can focus on what they do best - delivering exceptional patient care. Our system is built on cutting-edge technology, offers intuitive user interfaces that require minimal training, provides robust security features to protect sensitive patient data, and includes scalable infrastructure that grows with your institution. Additionally, we provide comprehensive support, regular updates, and a community of healthcare professionals who continuously contribute to improving the platform's functionality and reliability.</p>
+      </div>
+
+      <!-- Mission and Vision Cards -->
+      <div class="mission-vision">
+        <div class="mission-card">
+          <h3><i class="fas fa-bullseye"></i> Our Mission</h3>
+          <p>To provide healthcare institutions with an advanced, reliable, and user-friendly management system that enhances operational efficiency, improves patient care outcomes, and enables healthcare professionals to deliver exceptional medical services with confidence and ease. We are committed to supporting healthcare institutions of all sizes in their journey toward digital transformation and operational excellence.</p>
+        </div>
+
+        <div class="vision-card">
+          <h3><i class="fas fa-eye"></i> Our Vision</h3>
+          <p>To become a leading healthcare management platform globally, recognized for its innovative solutions, exceptional customer service, and significant contribution to improving healthcare delivery worldwide. We envision a future where every healthcare institution, regardless of size or location, has access to world-class management tools that empower them to provide the highest standard of patient care and operational excellence.</p>
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="section-title">Key Features</div>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h4>Patient Management</h4>
+          <p>Comprehensive patient registration, medical history tracking, and appointment scheduling system designed for efficiency and patient satisfaction.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-stethoscope"></i>
+          </div>
+          <h4>Doctor Dashboard</h4>
+          <p>Interactive doctor interface with patient appointments, medical records, prescription management, and seamless communication tools for healthcare professionals.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h4>Admin Control</h4>
+          <p>Centralized administrative panel with complete control over users, departments, appointments, billing, and comprehensive reporting and analytics capabilities.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-calendar-check"></i>
+          </div>
+          <h4>Appointment System</h4>
+          <p>Intelligent appointment scheduling system that prevents conflicts, optimizes doctor availability, and sends automated reminders to enhance attendance rates.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <h4>Data Security</h4>
+          <p>Enterprise-grade security features including encrypted data storage, secure authentication, role-based access control, and compliance with healthcare regulations.</p>
+        </div>
+
+        <div class="feature-item">
+          <div class="feature-icon">
+            <i class="fas fa-mobile-alt"></i>
+          </div>
+          <h4>Responsive Design</h4>
+          <p>Modern, mobile-friendly interface accessible from any device, ensuring healthcare professionals and patients can access services anytime, anywhere.</p>
+        </div>
+      </div>
+
+      <!-- Core Values Section -->
+      <div class="values-section">
+        <h3>Our Core Values</h3>
+        <div class="values-list">
+          <div class="value-item">
+            <i class="fas fa-heart"></i>
+            <h5>Patient Care</h5>
+            <p>Prioritizing patient well-being and satisfaction in every decision</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-lightbulb"></i>
+            <h5>Innovation</h5>
+            <p>Continuous improvement and adoption of latest technologies</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-lock"></i>
+            <h5>Security</h5>
+            <p>Protecting sensitive patient data with highest standards</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-handshake"></i>
+            <h5>Collaboration</h5>
+            <p>Fostering teamwork between healthcare professionals</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-star"></i>
+            <h5>Excellence</h5>
+            <p>Delivering superior quality in all aspects of service</p>
+          </div>
+          <div class="value-item">
+            <i class="fas fa-globe"></i>
+            <h5>Accessibility</h5>
+            <p>Making quality healthcare management accessible to all</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Call to Action -->
+      <div style="text-align: center; margin-top: 50px; margin-bottom: 30px;">
+        <h3 style="color: #667eea; margin-bottom: 20px;">Ready to Transform Your Hospital?</h3>
+        <p style="color: #666; font-size: 16px; margin-bottom: 30px;">Join hundreds of healthcare institutions already using our platform to deliver better patient care and streamline operations.</p>
+        <a class="btn-back" href="/"><i class="fas fa-home"></i> Back to Home</a>
+      </div>
+    </div>
+  </div>
+
+  {% include "hospital/footer.html" %}
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
