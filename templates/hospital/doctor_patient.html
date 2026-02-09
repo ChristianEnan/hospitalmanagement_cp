@@ -1,110 +1,44 @@
-{% extends 'hospital/doctor_base.html' %}
+﻿{% extends 'hospital/doctor_base.html' %}
 {% load static %}
 {% block content %}
-<br><br>
 
-
-<head>
-  <meta charset="utf-8">
-
-
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
-
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-
-  <style type="text/css">
-    a:link {
-      text-decoration: none;
-    }
-
-    .menu {
-      top: 50px;
-    }
-
-    h6 {
-      color: white;
-    }
-
-    .order-card {
-      color: #fff;
-    }
-
-    .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
-    }
-
-    .bg-c-green {
-      background: linear-gradient(45deg, #2ed8b6, #59e0c5);
-    }
-
-    .bg-c-yellow {
-      background: linear-gradient(45deg, #FFB64D, #ffcb80);
-    }
-
-    .bg-c-pink {
-      background: linear-gradient(45deg, #FF5370, #ff869a);
-    }
-
-
-    .card {
-      border-radius: 5px;
-      -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      border: none;
-      margin-bottom: 30px;
-      -webkit-transition: all 0.3s ease-in-out;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .card .card-block {
-      padding: 25px;
-    }
-
-    .order-card i {
-      font-size: 26px;
-    }
-
-    .f-left {
-      float: left;
-    }
-
-    .f-right {
-      float: right;
-    }
-  </style>
-</head>
-
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
+<div class="container-fluid py-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Playfair Display',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-user-injured" style="color:#c9a84c;margin-right:10px;"></i>Patient Management
+    </h2>
+    <p class="text-muted mt-1 mb-0">Manage your patients</p>
+  </div>
   <div class="row">
-    <div class="col-md-4 col-xl-6">
-      <div class="card bg-c-blue order-card">
-        <div class="card-block">
-          <a href="/doctor-view-patient">
-            <h6 class="m-b-20">Your Patient Record</h6>
+    <div class="col-md-6 mb-4">
+      <div class="card border-0 shadow-sm h-100" style="border-top:4px solid #0f3460!important;">
+        <div class="card-body text-center p-4">
+          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#0f3460,#1a1a2e);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <i class="fas fa-user-injured fa-2x" style="color:#c9a84c;"></i>
+          </div>
+          <h5 style="font-family:'Playfair Display',serif;color:#1a1a2e;">Your Patients</h5>
+          <p class="text-muted small">View your assigned patient records</p>
+          <a href="/doctor-view-patient" class="btn btn-sm" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:8px 24px;">
+            <i class="fas fa-eye mr-1"></i> View
           </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-user-injured f-left"></i></h2>
-
         </div>
       </div>
     </div>
-
-
-    <div class="col-md-4 col-xl-6">
-      <div class="card bg-c-pink order-card">
-        <div class="card-block">
-          <a href="/doctor-view-discharge-patient">
-            <h6 class="m-b-20">Your Discharged Patient</h6>
+    <div class="col-md-6 mb-4">
+      <div class="card border-0 shadow-sm h-100" style="border-top:4px solid #c9a84c!important;">
+        <div class="card-body text-center p-4">
+          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#8a6d1b);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <i class="fas fa-procedures fa-2x" style="color:#fff;"></i>
+          </div>
+          <h5 style="font-family:'Playfair Display',serif;color:#1a1a2e;">Discharged Patients</h5>
+          <p class="text-muted small">View your discharged patient history</p>
+          <a href="/doctor-view-discharge-patient" class="btn btn-sm" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:8px 24px;">
+            <i class="fas fa-clipboard-list mr-1"></i> View
           </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-eject f-left"></i></h2>
         </div>
       </div>
     </div>
   </div>
 </div>
-<br><br><br><br><br><br><br>
+
 {% endblock content %}

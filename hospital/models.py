@@ -2,77 +2,100 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-
-departments=[('Cardiologist','Cardiologist'),
-('Dermatologists','Dermatologists'),
-('Emergency Medicine Specialists','Emergency Medicine Specialists'),
-('Allergists/Immunologists','Allergists/Immunologists'),
-('Anesthesiologists','Anesthesiologists'),
-('Colon and Rectal Surgeons','Colon and Rectal Surgeons')
+DEPARTMENTS = [
+    ('Cardiologist', 'Cardiologist'),
+    ('Dermatologists', 'Dermatologists'),
+    ('Emergency Medicine Specialists', 'Emergency Medicine Specialists'),
+    ('Allergists/Immunologists', 'Allergists/Immunologists'),
+    ('Anesthesiologists', 'Anesthesiologists'),
+    ('Colon and Rectal Surgeons', 'Colon and Rectal Surgeons'),
 ]
+
+
 class Doctor(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
-    profile_pic= models.ImageField(upload_to='profile_pic/DoctorProfilePic/',null=True,blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(upload_to='profile_pic/DoctorProfilePic/', null=True, blank=True)
     address = models.CharField(max_length=40)
-    mobile = models.CharField(max_length=20,null=True)
-    department= models.CharField(max_length=50,choices=departments,default='Cardiologist')
-    status=models.BooleanField(default=False)
+    mobile = models.CharField(max_length=20, null=True)
+    department = models.CharField(max_length=50, choices=DEPARTMENTS, default='Cardiologist')
+    status = models.BooleanField(default=False)
+
     @property
     def get_name(self):
-        return self.user.first_name+" "+self.user.last_name
+        return f"{self.user.first_name} {self.user.last_name}"
+
     @property
     def get_id(self):
         return self.user.id
-    def __str__(self):
-        return "{} ({})".format(self.user.first_name,self.department)
 
+    def __str__(self):
+        return f"{self.user.first_name} ({self.department})"
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Patient(models.Model):
-    user=models.OneToOneField(User,on_delete=models.CASCADE)
-    profile_pic= models.ImageField(upload_to='profile_pic/PatientProfilePic/',null=True,blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    profile_pic = models.ImageField(upload_to='profile_pic/PatientProfilePic/', null=True, blank=True)
     address = models.CharField(max_length=40)
-    mobile = models.CharField(max_length=20,null=False)
-    symptoms = models.CharField(max_length=100,null=False)
+    mobile = models.CharField(max_length=20)
+    symptoms = models.CharField(max_length=100)
     assignedDoctorId = models.PositiveIntegerField(null=True)
-    admitDate=models.DateField(auto_now=True)
-    status=models.BooleanField(default=False)
+    admitDate = models.DateField(auto_now=True)
+    status = models.BooleanField(default=False)
+
     @property
     def get_name(self):
-        return self.user.first_name+" "+self.user.last_name
+        return f"{self.user.first_name} {self.user.last_name}"
+
     @property
     def get_id(self):
         return self.user.id
+
     def __str__(self):
-        return self.user.first_name+" ("+self.symptoms+")"
+        return f"{self.user.first_name} ({self.symptoms})"
+
+    class Meta:
+        ordering = ['-id']
 
 
 class Appointment(models.Model):
-    patientId=models.PositiveIntegerField(null=True)
-    doctorId=models.PositiveIntegerField(null=True)
-    patientName=models.CharField(max_length=40,null=True)
-    doctorName=models.CharField(max_length=40,null=True)
-    appointmentDate=models.DateField(auto_now=True)
-    description=models.TextField(max_length=500)
-    status=models.BooleanField(default=False)
+    patientId = models.PositiveIntegerField(null=True)
+    doctorId = models.PositiveIntegerField(null=True)
+    patientName = models.CharField(max_length=40, null=True)
+    doctorName = models.CharField(max_length=40, null=True)
+    appointmentDate = models.DateField(auto_now=True)
+    description = models.TextField(max_length=500)
+    status = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"{self.patientName} - {self.doctorName}"
+
+    class Meta:
+        ordering = ['-appointmentDate']
 
 
 class PatientDischargeDetails(models.Model):
-    patientId=models.PositiveIntegerField(null=True)
-    patientName=models.CharField(max_length=40)
-    assignedDoctorName=models.CharField(max_length=40)
+    patientId = models.PositiveIntegerField(null=True)
+    patientName = models.CharField(max_length=40)
+    assignedDoctorName = models.CharField(max_length=40)
     address = models.CharField(max_length=40)
-    mobile = models.CharField(max_length=20,null=True)
-    symptoms = models.CharField(max_length=100,null=True)
+    mobile = models.CharField(max_length=20, null=True)
+    symptoms = models.CharField(max_length=100, null=True)
+    admitDate = models.DateField()
+    releaseDate = models.DateField()
+    daySpent = models.PositiveIntegerField()
+    roomCharge = models.PositiveIntegerField()
+    medicineCost = models.PositiveIntegerField()
+    doctorFee = models.PositiveIntegerField()
+    OtherCharge = models.PositiveIntegerField()
+    total = models.PositiveIntegerField()
 
-    admitDate=models.DateField(null=False)
-    releaseDate=models.DateField(null=False)
-    daySpent=models.PositiveIntegerField(null=False)
+    def __str__(self):
+        return f"{self.patientName} (Discharged)"
 
-    roomCharge=models.PositiveIntegerField(null=False)
-    medicineCost=models.PositiveIntegerField(null=False)
-    doctorFee=models.PositiveIntegerField(null=False)
-    OtherCharge=models.PositiveIntegerField(null=False)
-    total=models.PositiveIntegerField(null=False)
+    class Meta:
+        verbose_name_plural = 'Patient Discharge Details'
+        ordering = ['-releaseDate']
 

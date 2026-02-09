@@ -1,41 +1,33 @@
-{% extends 'hospital/admin_base.html' %}
+﻿{% extends 'hospital/admin_base.html' %}
+{% load static %}
 {% block content %}
-{%load static%}
+<style>
+  .section-header {
+    font-family: 'Playfair Display', serif;
+    color: #1a1a2e;
+    font-weight: 700;
+    margin-bottom: 25px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #c9a84c;
+  }
+  .table { border-radius: 8px; overflow: hidden; }
+  .table thead th { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #c9a84c; border: none; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .table tbody tr:hover { background-color: #f8f6f2; }
+  .table td { vertical-align: middle; }
+  .btn-edit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #c9a84c; border: none; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
+  .btn-edit:hover { background: #c9a84c; color: #1a1a2e; }
+  .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
+  .btn-delete:hover { background: #c82333; color: white; }
+</style>
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-<!--
-written By : sumit kumar
-facebook : fb.com/sumit.luv
--->
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Doctors</h6>
-    </div>
+<div class="container-fluid" style="padding: 20px;">
+  <h3 class="section-header"><i class="fas fa-user-md" style="color: #c9a84c;"></i> Doctors List</h3>
+  <div class="table-responsive">
     <table class="table table-hover" id="dev-table">
       <thead>
         <tr>
-
           <th>Name</th>
-          <th>Profile Picture</th>
+          <th>Photo</th>
           <th>Mobile</th>
           <th>Address</th>
           <th>Department</th>
@@ -43,18 +35,19 @@ facebook : fb.com/sumit.luv
           <th>Delete</th>
         </tr>
       </thead>
-      {% for d in doctors %}
-      <tr>
-
-        <td> {{d.get_name}}</td>
-        <td> <img src="{% static d.profile_pic.url %}" alt="Profile Pic" height="40px" width="40px" /></td>
-        <td>{{d.mobile}}</td>
-        <td>{{d.address}}</td>
-        <td>{{d.department}}</td>
-        <td><a class="btn btn-primary btn-xs" href="{% url 'update-doctor' d.id  %}"><span class="glyphicon glyphicon-edit"></span></a></td>
-        <td><a class="btn btn-danger btn-xs" href="{% url 'delete-doctor-from-hospital' d.id  %}"><span class="glyphicon glyphicon-trash"></span></a></td>
-      </tr>
-      {% endfor %}
+      <tbody>
+        {% for d in doctors %}
+        <tr>
+          <td>{{d.get_name}}</td>
+          <td><img src="{% static d.profile_pic.url %}" alt="Profile" style="height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;" /></td>
+          <td>{{d.mobile}}</td>
+          <td>{{d.address}}</td>
+          <td>{{d.department}}</td>
+          <td><a class="btn btn-edit" href="{% url 'update-doctor' d.id %}"><i class="fas fa-edit"></i></a></td>
+          <td><a class="btn btn-delete" href="{% url 'delete-doctor-from-hospital' d.id %}"><i class="fas fa-trash-alt"></i></a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 </div>

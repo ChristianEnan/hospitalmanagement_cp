@@ -1,166 +1,262 @@
-{% extends 'hospital/homebase.html' %}
+﻿{% extends 'hospital/homebase.html' %}
 {% load static %}
 
 {% block content %}
+<style>
+  .hero-section {
+    margin-top: 0;
+    margin-bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 26, 46, 0.92) 0%, rgba(15, 52, 96, 0.88) 100%), url('{% static "images/bg.jpg" %}');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    padding: 120px 20px 100px;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+    line-height: 1.2;
+  }
+  .hero-title span { color: #c9a84c; }
+  .hero-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 40px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+  .hero-btn {
+    padding: 16px 45px;
+    font-size: 16px;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(201, 168, 76, 0.3);
+    background: linear-gradient(135deg, #c9a84c, #d4b85c);
+    color: #1a1a2e;
+    border: none;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'Inter', sans-serif;
+  }
+  .hero-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(201, 168, 76, 0.5);
+    color: #1a1a2e;
+    text-decoration: none;
+  }
+  .feature-section {
+    padding: 80px 20px;
+    background: #f8f6f2;
+  }
+  .feature-section .section-title {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #1a1a2e;
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+  }
+  .feature-section .section-subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 50px;
+    font-size: 16px;
+  }
+  .feature-card {
+    background: white;
+    border-radius: 12px;
+    padding: 35px 25px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.04);
+  }
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  }
+  .feature-icon {
+    width: 75px;
+    height: 75px;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 28px;
+    color: #c9a84c;
+  }
+  .feature-card h4 {
+    color: #1a1a2e;
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 20px;
+  }
+  .feature-card p {
+    color: #777;
+    font-size: 14px;
+    line-height: 1.7;
+  }
+  .roles-section {
+    padding: 80px 20px;
+    background: #fff;
+  }
+  .roles-section .section-title {
+    text-align: center;
+    margin-bottom: 15px;
+    color: #1a1a2e;
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+  }
+  .roles-section .section-subtitle {
+    text-align: center;
+    color: #888;
+    margin-bottom: 50px;
+    font-size: 16px;
+  }
+  .role-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    margin-bottom: 25px;
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+  .role-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+  }
+  .role-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+  .role-card-body {
+    padding: 25px;
+    text-align: center;
+  }
+  .role-card-body h4 {
+    font-family: 'Playfair Display', serif;
+    color: #1a1a2e;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  .role-card-body .role-btn {
+    display: inline-block;
+    padding: 10px 30px;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    color: #c9a84c;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+  }
+  .role-card-body .role-btn:hover {
+    background: #c9a84c;
+    color: #1a1a2e;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(201, 168, 76, 0.3);
+  }
+</style>
 
-
-<head>
-  <style media="screen">
-    .jumbotron {
-      margin-top: 0px;
-      margin-bottom: 0px;
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.9) 0%, rgba(118, 75, 162, 0.9) 100%), url('{% static "images/bg.jpg" %}');
-      background-size: cover;
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      padding: 80px 20px;
-      min-height: 600px;
-    }
-
-    .jumbotron h5,
-    h3 {
-      text-align: center;
-      color: white;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .alert {
-      margin: 0px;
-    }
-
-    .glow {
-      font-size: 50px;
-      color: white;
-      text-align: center;
-      -webkit-animation: glow 1s ease-in-out infinite alternate;
-      -moz-animation: glow 1s ease-in-out infinite alternate;
-      animation: glow 1s ease-in-out infinite alternate;
-      font-weight: bold;
-    }
-
-    @keyframes glow {
-      from {
-        text-shadow: 0 0 10px #eeeeee, 0 0 20px #ffc107, 0 0 30px #ffc107, 0 0 40px #ffc107;
-      }
-
-      to {
-        text-shadow: 0 0 20px #eeeeee, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b, 0 0 50px #ff6b6b;
-      }
-    }
-
-    @-webkit-keyframes glow {
-      from {
-        text-shadow: 0 0 10px #eeeeee, 0 0 20px #ffc107, 0 0 30px #ffc107, 0 0 40px #ffc107;
-      }
-
-      to {
-        text-shadow: 0 0 20px #eeeeee, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b, 0 0 50px #ff6b6b;
-      }
-    }
-
-    .cta-button {
-      padding: 15px 40px;
-      font-size: 18px;
-      border-radius: 50px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .cta-button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
-
-    .feature-section {
-      padding: 60px 20px;
-      background: #f5f7fa;
-    }
-
-    .feature-card {
-      background: white;
-      border-radius: 10px;
-      padding: 30px;
-      text-align: center;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      margin-bottom: 20px;
-    }
-
-    .feature-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .feature-icon {
-      font-size: 48px;
-      color: #667eea;
-      margin-bottom: 15px;
-    }
-
-    .feature-card h4 {
-      color: #333;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-
-    .feature-card p {
-      color: #666;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-  </style>
-</head>
-<br>
-<br>
-
-<div class="jumbotron" style="margin-bottom: 0px;margin-top: 0px;">
-  <br>
-  <h5 class="display-3 glow">You’ll Love the Way We Care for You</h5>
-  <br><br>
-  <h3 style="text-align:center;">Emergency?</h3>
-
-  <p class="lead" style="text-align:center;">
-    <a class="btn btn-success btn-lg cta-button" href="/patientclick" role="button">
-      <i class="fas fa-calendar-check"></i> Take Appointment
+<!-- Hero Section -->
+<div class="hero-section">
+  <div class="container">
+    <h1 class="hero-title">Exceptional <span>Healthcare</span><br>You Can Trust</h1>
+    <p class="hero-subtitle">Advanced hospital management with a commitment to patient-centered care</p>
+    <a class="btn hero-btn" href="/patientclick" role="button">
+      <i class="fas fa-calendar-check"></i> Book Appointment
     </a>
-  </p>
-  <br><br>
+  </div>
 </div>
 
 <!-- Features Section -->
 <div class="feature-section">
   <div class="container">
-    <h2 style="text-align: center; margin-bottom: 50px; color: #333;">Why Choose Us?</h2>
+    <h2 class="section-title">Why Choose Us?</h2>
+    <p class="section-subtitle">Delivering excellence in every aspect of healthcare</p>
     <div class="row">
       <div class="col-md-4">
         <div class="feature-card">
           <div class="feature-icon"><i class="fas fa-hospital"></i></div>
           <h4>Modern Healthcare</h4>
-          <p>State-of-the-art medical facilities and advanced technology for better patient care.</p>
+          <p>State-of-the-art medical facilities and advanced technology for better patient care and outcomes.</p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="feature-card">
           <div class="feature-icon"><i class="fas fa-user-md"></i></div>
           <h4>Expert Doctors</h4>
-          <p>Highly qualified and experienced medical professionals dedicated to your health.</p>
+          <p>Highly qualified and experienced medical professionals dedicated to your health and well-being.</p>
         </div>
       </div>
       <div class="col-md-4">
         <div class="feature-card">
           <div class="feature-icon"><i class="fas fa-clock"></i></div>
           <h4>24/7 Service</h4>
-          <p>Round-the-clock medical services and emergency care available for all patients.</p>
+          <p>Round-the-clock medical services and emergency care available for all patients at any time.</p>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<br><br>
-
-{% include "hospital/admin_doctor_patient_card.html" %}
-<br><br><br>
+<!-- Roles Section -->
+<div class="roles-section">
+  <div class="container">
+    <h2 class="section-title">Get Started</h2>
+    <p class="section-subtitle">Choose your portal to access the system</p>
+    <div class="row justify-content-center">
+      <div class="col-md-4">
+        <div class="role-card">
+          <img src="{% static 'images/admin.png' %}" alt="Admin">
+          <div class="role-card-body">
+            <h4>Admin Portal</h4>
+            <a href="/adminclick" class="role-btn">Enter</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="role-card">
+          <img src="{% static 'images/doctor.png' %}" alt="Doctor">
+          <div class="role-card-body">
+            <h4>Doctor Portal</h4>
+            <a href="/doctorclick" class="role-btn">Enter</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="role-card">
+          <img src="{% static 'images/patient.jpg' %}" alt="Patient">
+          <div class="role-card-body">
+            <h4>Patient Portal</h4>
+            <a href="/patientclick" class="role-btn">Enter</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

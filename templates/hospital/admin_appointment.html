@@ -1,118 +1,58 @@
-{% extends 'hospital/admin_base.html' %}
+﻿{% extends 'hospital/admin_base.html' %}
 {% load static %}
 {% block content %}
-<br><br>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <link href="http://netdna.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
-  <style type="text/css">
-    a:link {
-      text-decoration: none;
-    }
-
-    .menu {
-      top: 50px;
-    }
-
-    h6 {
-      color: white;
-    }
-
-    .order-card {
-      color: #fff;
-    }
-
-    .bg-c-blue {
-      background: linear-gradient(45deg, #4099ff, #73b4ff);
-    }
-
-    .bg-c-green {
-      background: linear-gradient(45deg, #2ed8b6, #59e0c5);
-    }
-
-    .bg-c-yellow {
-      background: linear-gradient(45deg, #FFB64D, #ffcb80);
-    }
-
-    .bg-c-pink {
-      background: linear-gradient(45deg, #FF5370, #ff869a);
-    }
-
-
-    .card {
-      border-radius: 5px;
-      -webkit-box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      box-shadow: 0 1px 2.94px 0.06px rgba(4, 26, 55, 0.16);
-      border: none;
-      margin-bottom: 30px;
-      -webkit-transition: all 0.3s ease-in-out;
-      transition: all 0.3s ease-in-out;
-    }
-
-    .card .card-block {
-      padding: 25px;
-    }
-
-    .order-card i {
-      font-size: 26px;
-    }
-
-    .f-left {
-      float: left;
-    }
-
-    .f-right {
-      float: right;
-    }
-  </style>
-</head>
-
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-<div class="container">
+<div class="container-fluid py-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Playfair Display',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-calendar-check" style="color:#c9a84c;margin-right:10px;"></i>Appointment Management
+    </h2>
+    <p class="text-muted mt-1 mb-0">Manage all appointment operations</p>
+  </div>
   <div class="row">
-    <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-blue order-card">
-        <div class="card-block">
-          <a href="/admin-view-appointment">
-            <h6 class="m-b-20">View Appointment</h6>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100" style="border-top:4px solid #0f3460!important;">
+        <div class="card-body text-center p-4">
+          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#0f3460,#1a1a2e);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <i class="fas fa-calendar-alt fa-2x" style="color:#c9a84c;"></i>
+          </div>
+          <h5 style="font-family:'Playfair Display',serif;color:#1a1a2e;">View Appointments</h5>
+          <p class="text-muted small">View all scheduled appointments</p>
+          <a href="/admin-view-appointment" class="btn btn-sm" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:8px 24px;">
+            <i class="fas fa-eye mr-1"></i> View
           </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-calendar f-left"></i></h2>
-
         </div>
       </div>
     </div>
-
-    <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-green order-card">
-        <div class="card-block">
-          <a href="/admin-add-appointment">
-            <h6 class="m-b-20">Book Appointment</h6>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100" style="border-top:4px solid #2a9d8f!important;">
+        <div class="card-body text-center p-4">
+          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#2a9d8f,#264653);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <i class="fas fa-book-medical fa-2x" style="color:#e9c46a;"></i>
+          </div>
+          <h5 style="font-family:'Playfair Display',serif;color:#1a1a2e;">Book Appointment</h5>
+          <p class="text-muted small">Schedule a new appointment</p>
+          <a href="/admin-add-appointment" class="btn btn-sm" style="background:linear-gradient(135deg,#2a9d8f,#264653);color:#fff;border-radius:25px;padding:8px 24px;">
+            <i class="fas fa-plus mr-1"></i> Book
           </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-book-medical f-left"></i></h2>
         </div>
       </div>
     </div>
-
-    <div class="col-md-4 col-xl-4">
-      <div class="card bg-c-yellow order-card">
-        <div class="card-block">
-          <a href="/admin-approve-appointment">
-            <h6 class="m-b-20">Approve Appointment</h6>
+    <div class="col-md-4 mb-4">
+      <div class="card border-0 shadow-sm h-100" style="border-top:4px solid #c9a84c!important;">
+        <div class="card-body text-center p-4">
+          <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#8a6d1b);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+            <i class="fas fa-check-circle fa-2x" style="color:#fff;"></i>
+          </div>
+          <h5 style="font-family:'Playfair Display',serif;color:#1a1a2e;">Approve Appointments</h5>
+          <p class="text-muted small">Review pending appointment requests</p>
+          <a href="/admin-approve-appointment" class="btn btn-sm" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:8px 24px;">
+            <i class="fas fa-clipboard-check mr-1"></i> Approve
           </a>
-          <br>
-          <h2 class="text-right"><i class="fas fa-check-circle f-left"></i></h2>
         </div>
       </div>
     </div>
-
-
   </div>
 </div>
-  <br><br><br><br><br><br><br>
+
 {% endblock content %}

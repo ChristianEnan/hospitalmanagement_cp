@@ -1,208 +1,140 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 {% load widget_tweaks %}
-<html lang="en" dir="ltr">
-
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <title>Hospital Management System - Admin Login</title>
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-  <style type="text/css">
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      font-family: 'Inter', sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
     }
-
-    .navbar {
-      margin-bottom: 40px;
-    }
-
     .login-container {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
-      margin-top: 60px;
+      margin-top: 70px;
     }
-
     .login-card {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-      padding: 40px;
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+      padding: 45px 40px;
       max-width: 450px;
       width: 100%;
+      border-top: 4px solid #c9a84c;
     }
-
-    .login-header {
-      text-align: center;
-      margin-bottom: 30px;
+    .login-header { text-align: center; margin-bottom: 35px; }
+    .login-header .icon-circle {
+      width: 70px; height: 70px;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 15px;
+      font-size: 28px; color: #c9a84c;
     }
-
     .login-header h2 {
-      color: #667eea;
-      font-weight: bold;
-      margin-bottom: 10px;
-      font-size: 28px;
-    }
-
-    .login-header p {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .form-group label {
-      color: #333;
-      font-weight: 600;
+      font-family: 'Playfair Display', serif;
+      color: #1a1a2e;
+      font-weight: 700;
+      font-size: 26px;
       margin-bottom: 8px;
     }
-
+    .login-header p { color: #888; font-size: 14px; }
+    .form-group label { color: #333; font-weight: 600; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
     .form-control {
-      border: 2px solid #e0e0e0;
-      border-radius: 8px;
-      padding: 12px 15px;
+      border: 2px solid #e8e8e8;
+      border-radius: 10px;
+      padding: 12px 15px 12px 42px;
       font-size: 14px;
       transition: all 0.3s ease;
     }
-
     .form-control:focus {
-      border-color: #667eea;
-      box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+      border-color: #c9a84c;
+      box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.15);
     }
-
-    .form-control::placeholder {
-      color: #999;
+    .form-icon { position: relative; }
+    .form-icon > i {
+      position: absolute;
+      left: 15px;
+      top: 44px;
+      color: #c9a84c;
+      font-size: 14px;
     }
-
-    .input-group-append .btn {
-      border: 2px solid #e0e0e0;
-      background: transparent;
-      color: #666;
-    }
-
     .btn-login {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
       border: none;
-      color: white;
-      padding: 12px;
-      border-radius: 8px;
-      font-weight: bold;
-      font-size: 16px;
+      color: #c9a84c;
+      padding: 13px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 15px;
       width: 100%;
       transition: all 0.3s ease;
-      margin-top: 20px;
+      margin-top: 15px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
     }
-
     .btn-login:hover {
+      background: #c9a84c;
+      color: #1a1a2e;
       transform: translateY(-2px);
-      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
-      color: white;
+      box-shadow: 0 8px 25px rgba(201, 168, 76, 0.3);
     }
-
-    .login-footer {
-      text-align: center;
-      margin-top: 20px;
-      color: #666;
-      font-size: 14px;
-    }
-
-    .login-footer a {
-      color: #667eea;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .login-footer a:hover {
-      color: #764ba2;
-      text-decoration: underline;
-    }
-
-    .form-icon {
-      position: relative;
-    }
-
-    .form-icon i {
-      position: absolute;
-      right: 15px;
-      top: 40px;
-      color: #667eea;
-    }
-
-    .error-message {
-      color: #dc3545;
-      font-size: 13px;
-      margin-top: 5px;
-    }
+    .login-footer { text-align: center; margin-top: 25px; color: #888; font-size: 14px; }
+    .login-footer a { color: #c9a84c; text-decoration: none; font-weight: 600; }
+    .login-footer a:hover { color: #0f3460; }
+    .error-message { color: #dc3545; font-size: 13px; margin-top: 5px; }
+    .alert-danger { border-radius: 8px; font-size: 14px; }
   </style>
 </head>
-
 <body>
   {% include "hospital/navbar.html" %}
-
   <div class="login-container">
     <div class="login-card">
       <div class="login-header">
-        <h2><i class="fas fa-user-tie"></i> Admin Login</h2>
+        <div class="icon-circle"><i class="fas fa-user-tie"></i></div>
+        <h2>Admin Login</h2>
         <p>Welcome to Hospital Management System</p>
       </div>
-
       <form method="post">
         {% csrf_token %}
-
         <div class="form-group form-icon">
-          <label for="id_username">Username</label>
-          {% render_field form.username id="id_username" class="form-control" placeholder="Enter your username" %}
+          <label>Username</label>
           <i class="fas fa-user"></i>
-          {% if form.username.errors %}
-            <div class="error-message">{{ form.username.errors }}</div>
-          {% endif %}
+          {% render_field form.username class="form-control" placeholder="Enter your username" %}
+          {% if form.username.errors %}<div class="error-message">{{ form.username.errors }}</div>{% endif %}
         </div>
-
         <div class="form-group form-icon">
-          <label for="id_password">Password</label>
-          {% render_field form.password id="id_password" class="form-control" placeholder="Enter your password" %}
+          <label>Password</label>
           <i class="fas fa-lock"></i>
-          {% if form.password.errors %}
-            <div class="error-message">{{ form.password.errors }}</div>
-          {% endif %}
+          {% render_field form.password class="form-control" placeholder="Enter your password" %}
+          {% if form.password.errors %}<div class="error-message">{{ form.password.errors }}</div>{% endif %}
         </div>
-
         {% if form.non_field_errors %}
-          <div class="alert alert-danger" role="alert">
-            {% for error in form.non_field_errors %}
-              <i class="fas fa-exclamation-circle"></i> {{ error }}
-            {% endfor %}
-          </div>
+        <div class="alert alert-danger">
+          {% for error in form.non_field_errors %}<i class="fas fa-exclamation-circle"></i> {{ error }}{% endfor %}
+        </div>
         {% endif %}
-
-        <button type="submit" class="btn btn-login">
-          <i class="fas fa-sign-in-alt"></i> Login
-        </button>
+        <button type="submit" class="btn btn-login"><i class="fas fa-sign-in-alt"></i> Login</button>
       </form>
-
       <div class="login-footer">
-        <p>Don't have an account? <a href="adminsignup"><i class="fas fa-user-plus"></i> Sign up here</a></p>
+        <p>Don't have an account? <a href="adminsignup"><i class="fas fa-user-plus"></i> Sign up</a></p>
       </div>
     </div>
   </div>
-
   {% include "hospital/footer.html" %}
-
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
-
 </html>

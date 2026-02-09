@@ -1,233 +1,75 @@
-<!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-<head>
-  <meta charset="utf-8">
-  <title></title>
-
-  <style media="screen">
-    .market-update-block {
-      padding: 2em 2em;
-      background: #999;
+<!-- Patient Dashboard Cards (included snippet) -->
+<style>
+    .stats-card {
+      border-radius: 12px; padding: 25px; color: white;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;
+      margin-bottom: 20px; position: relative; overflow: hidden;
     }
-
-    .market-update-block h3 {
-      color: #fff;
-      font-size: 1.5em;
-      font-family: 'Carrois Gothic', sans-serif;
+    .stats-card::before {
+      content: ''; position: absolute; top: -50%; right: -50%;
+      width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%;
     }
-
-    .market-update-block h4 {
-      font-size: 1.2em;
-      color: #fff;
-      margin: 0.3em 0em;
-      font-family: 'Carrois Gothic', sans-serif;
-    }
-
-    .market-update-block p {
-      color: #fff;
-      font-size: 0.8em;
-      line-height: 1.8em;
-    }
-
-    .market-update-block.clr-block-1 {
-      background: #ff0000;
-      margin-right: 0.8em;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-block.clr-block-2 {
-      background: #4f5905;
-      margin-right: 0.8em;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-block.clr-block-3 {
-      background: #1355f9;
-      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-block.clr-block-1:hover {
-      background: #3C3C3C;
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-block.clr-block-2:hover {
-      background: #3C3C3C;
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-block.clr-block-3:hover {
-      background: #3C3C3C;
-      transition: 0.5s all;
-      -webkit-transition: 0.5s all;
-      -moz-transition: 0.5s all;
-      -o-transition: 0.5s all;
-    }
-
-    .market-update-right i.fa.fa-user-o,
-    i.fa.fa-map-marker {
-      font-size: 3em;
-      color: #68AE00;
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      text-align: center;
-      border-radius: 49px;
-      -webkit-border-radius: 49px;
-      -moz-border-radius: 49px;
-      -o-border-radius: 49px;
-      line-height: 1.7em;
-    }
-
-    .market-update-right i.fa.fa-info-circle,
-    i.fa.fa-list-alt {
-      font-size: 3em;
-      color: #FC8213;
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      text-align: center;
-      border-radius: 49px;
-      -webkit-border-radius: 49px;
-      -moz-border-radius: 49px;
-      -o-border-radius: 49px;
-      line-height: 1.7em;
-    }
-
-    .market-update-right i.fa.fa-mobile,
-    i.fa.fa-calendar-o {
-      font-size: 3em;
-      color: #337AB7;
-      width: 80px;
-      height: 80px;
-      background: #fff;
-      text-align: center;
-      border-radius: 49px;
-      -webkit-border-radius: 49px;
-      -moz-border-radius: 49px;
-      -o-border-radius: 49px;
-      line-height: 1.7em;
-    }
-
-
-
-    .market-update-left {
-      padding: 0px;
-    }
+    .stats-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+    .stats-card.card-doctor { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); }
+    .stats-card.card-symptoms { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); }
+    .stats-card.card-mobile { background: linear-gradient(135deg, #c9a84c 0%, #b8963e 100%); color: #1a1a2e; }
+    .stats-card.card-mobile .stats-label, .stats-card.card-mobile .stats-subtitle { color: #1a1a2e; }
+    .stats-card.card-address { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); }
+    .stats-card.card-department { background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%); }
+    .stats-card.card-date { background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%); }
+    .stats-number { font-size: 28px; font-weight: bold; margin-bottom: 8px; position: relative; z-index: 1; word-break: break-word; }
+    .stats-label { font-size: 16px; font-weight: 600; margin-bottom: 5px; position: relative; z-index: 1; }
+    .stats-icon { position: absolute; right: 20px; top: 20px; font-size: 42px; opacity: 0.2; z-index: 0; }
+    .market-updates { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px 0; }
+    .market-update-gd { flex: 1; min-width: 280px; }
+    @media (max-width: 768px) { .market-update-gd { flex: 1 1 100%; } }
   </style>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-</head>
 
-<body>
-  <div class="market-updates">
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-1">
-        <div class="col-md-8 market-update-left">
-          <h3>{{doctorName}}</h3>
-          <h4>Doctor Name</h4>
+<div class="container-fluid">
+    <div class="market-updates">
+      <div class="market-update-gd">
+        <div class="stats-card card-doctor">
+          <div class="stats-icon"><i class="fas fa-user-md"></i></div>
+          <div class="stats-number">{{doctorName}}</div>
+          <div class="stats-label">Your Doctor</div>
         </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-user-o"> </i>
+      </div>
+      <div class="market-update-gd">
+        <div class="stats-card card-symptoms">
+          <div class="stats-icon"><i class="fas fa-notes-medical"></i></div>
+          <div class="stats-number">{{symptoms}}</div>
+          <div class="stats-label">Symptoms</div>
         </div>
-        <div class="clearfix"> </div>
+      </div>
+      <div class="market-update-gd">
+        <div class="stats-card card-mobile">
+          <div class="stats-icon"><i class="fas fa-phone-alt"></i></div>
+          <div class="stats-number">{{doctorMobile}}</div>
+          <div class="stats-label">Doctor Mobile</div>
+        </div>
       </div>
     </div>
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-2">
-        <div class="col-md-8 market-update-left">
-          <h3>{{symptoms}}</h3>
-          <h4>Symptoms</h4>
+    <div class="market-updates">
+      <div class="market-update-gd">
+        <div class="stats-card card-address">
+          <div class="stats-icon"><i class="fas fa-map-marker-alt"></i></div>
+          <div class="stats-number">{{doctorAddress}}</div>
+          <div class="stats-label">Doctor Address</div>
         </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-info-circle"></i>
+      </div>
+      <div class="market-update-gd">
+        <div class="stats-card card-department">
+          <div class="stats-icon"><i class="fas fa-hospital"></i></div>
+          <div class="stats-number">{{doctorDepartment}}</div>
+          <div class="stats-label">Department</div>
         </div>
-        <div class="clearfix"> </div>
+      </div>
+      <div class="market-update-gd">
+        <div class="stats-card card-date">
+          <div class="stats-icon"><i class="fas fa-calendar-alt"></i></div>
+          <div class="stats-number">{{admitDate}}</div>
+          <div class="stats-label">Admit Date</div>
+        </div>
       </div>
     </div>
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-3">
-        <div class="col-md-8 market-update-left">
-          <h3>{{doctorMobile}}</h3>
-          <h4>Doctor Mobile</h4>
-        </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-mobile" aria-hidden="true"></i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
-    </div>
-    <div class="clearfix"> </div>
   </div>
-
-
-
-  <br><br><br>
-
-
-
-  <div class="market-updates">
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-1">
-        <div class="col-md-8 market-update-left">
-          <h3>{{doctorAddress}}</h3>
-          <h4>Doctor Address</h4>
-        </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-map-marker"> </i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
-    </div>
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-2">
-        <div class="col-md-8 market-update-left">
-          <h3>{{doctorDepartment}}</h3>
-          <h4>Doctor Department</h4>
-        </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-list-alt"></i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
-    </div>
-    <div class="col-md-4 market-update-gd">
-      <div class="market-update-block clr-block-3">
-        <div class="col-md-8 market-update-left">
-          <h3>{{admitDate}}</h3>
-          <h4>Admit Date</h4>
-        </div>
-        <div class="col-md-4 market-update-right">
-          <i class="fa fa-calendar-o" aria-hidden="true"></i>
-        </div>
-        <div class="clearfix"> </div>
-      </div>
-    </div>
-    <div class="clearfix"> </div>
-  </div>
-
-
-</body>
-
-</html>

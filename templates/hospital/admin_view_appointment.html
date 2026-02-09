@@ -1,49 +1,41 @@
-{% extends 'hospital/admin_base.html' %}
+﻿{% extends 'hospital/admin_base.html' %}
 {% block content %}
 
-<head>
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-  <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-  <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
-
-  <style media="screen">
-    a:link {
-      text-decoration: none;
-    }
-
-    h6 {
-      text-align: center;
-    }
-
-    .row {
-      margin: 100px;
-    }
-  </style>
-</head>
-
-<div class="container">
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      <h6 class="panel-title">Appointments</h6>
+<div class="container-fluid py-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Playfair Display',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-calendar-alt" style="color:#c9a84c;margin-right:10px;"></i>All Appointments
+    </h2>
+    <p class="text-muted mt-1 mb-0">View all scheduled appointments</p>
+  </div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+            <tr>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Doctor Name</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Patient Name</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Description</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in appointments %}
+            <tr style="transition:all 0.2s;">
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.doctorName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.patientName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center py-4 text-muted">No appointments found</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
-    <table class="table table-hover" id="dev-table">
-      <thead>
-        <tr>
-          <th>Doctor Name</th>
-          <th>Patient Name</th>
-          <th>Description</th>
-          <th>Date</th>
-        </tr>
-      </thead>
-      {% for a in appointments %}
-      <tr>
-        <td> {{a.doctorName}}</td>
-        <td>{{a.patientName}}</td>
-        <td>{{a.description}}</td>
-        <td>{{a.appointmentDate}}</td>
-      </tr>
-      {% endfor %}
-    </table>
   </div>
 </div>
+
 {% endblock content %}
