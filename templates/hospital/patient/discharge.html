@@ -1,0 +1,83 @@
+{% extends 'hospital/patient/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .invoice-box {
+    max-width:800px;margin:0 auto;padding:30px;
+    background:#fff;border-radius:12px;
+    box-shadow:0 4px 20px rgba(0,0,0,0.08);
+    border-top:4px solid #c9a84c;
+  }
+  .invoice-box table { width:100%;line-height:inherit;text-align:left; }
+  .invoice-box table td { padding:8px;vertical-align:top; }
+  .invoice-box table tr td:nth-child(2) { text-align:right; }
+  .invoice-box table tr.top table td { padding-bottom:20px; }
+  .invoice-box table tr.top table td.title { font-size:28px;line-height:32px;color:#1a1a2e;font-family:'Cormorant Garamond',serif; }
+  .invoice-box table tr.information table td { padding-bottom:30px;color:#555; }
+  .invoice-box table tr.heading td { background:#1a1a2e;color:#c9a84c;border:none;font-weight:600;padding:10px 8px;border-radius:4px; }
+  .invoice-box table tr.details td { padding-bottom:20px;color:#555; }
+  .invoice-box table tr.item td { border-bottom:1px solid #eee;padding:10px 8px; }
+  .invoice-box table tr.item.last td { border-bottom:none; }
+  .invoice-box table tr.total td:nth-child(2) { border-top:3px solid #c9a84c;font-weight:700;color:#1a1a2e;font-size:1.1rem;padding-top:12px; }
+</style>
+
+<div class="container-fluid py-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-file-invoice-dollar" style="color:#c9a84c;margin-right:10px;"></i>Discharge Details
+    </h2>
+    <p class="text-muted mt-1 mb-0">Your billing and discharge information</p>
+  </div>
+
+  {% if is_discharged %}
+  <div class="invoice-box">
+    <table cellpadding="0" cellspacing="0">
+      <tr class="top">
+        <td colspan="2">
+          <table>
+            <tr>
+              <td class="title"><i class="fas fa-hospital" style="color:#c9a84c;margin-right:8px;"></i>Hospital Management</td>
+              <td style="color:#555;">Admit Date: {{admitDate}}<br>Release Date: {{releaseDate}}<br>Days Spent: <strong>{{daySpent}}</strong></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr class="information">
+        <td colspan="2">
+          <table>
+            <tr>
+              <td>Patient: <strong>{{patientName}}</strong><br>Mobile: {{mobile}}<br>Address: {{address}}</td>
+              <td>Attending Doctor:<br><strong>{{assignedDoctorName}}</strong></td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr class="heading"><td>Disease &amp; Symptoms</td><td></td></tr>
+      <tr class="details"><td>{{symptoms}}</td><td></td></tr>
+      <tr class="heading"><td>Item</td><td>Price</td></tr>
+      <tr class="item"><td>Room Charge ({{daySpent}} Days)</td><td>{{roomCharge}}</td></tr>
+      <tr class="item"><td>Doctor Fee</td><td>{{doctorFee}}</td></tr>
+      <tr class="item"><td>Medicine Cost</td><td>{{medicineCost}}</td></tr>
+      <tr class="item last"><td>Other Charges</td><td>{{OtherCharge}}</td></tr>
+      <tr class="total"><td></td><td>Total: &#8377; {{total}}</td></tr>
+    </table>
+  </div>
+  <div class="text-center mt-4">
+    <a href="{% url 'download-pdf' patientId %}" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
+      <i class="fas fa-download mr-2"></i>Download Invoice
+    </a>
+  </div>
+  {% else %}
+  <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
+    <div class="card-body text-center py-5">
+      <i class="fas fa-hospital-user fa-3x mb-3" style="color:#c9a84c;"></i>
+      <h4 style="color:#1a1a2e;font-family:'Cormorant Garamond',serif;">Treatment In Progress</h4>
+      <p class="text-muted mt-2">You have not been discharged yet. Your treatment is ongoing.</p>
+      <p class="text-muted small">Your invoice will be available once you are discharged.</p>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+{% endblock content %}

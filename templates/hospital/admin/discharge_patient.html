@@ -1,0 +1,43 @@
+{% extends 'hospital/admin/base.html' %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-sign-out-alt" style="color:#c9a84c;margin-right:10px;"></i>Discharge Patient
+    </h2>
+    <p class="text-muted mt-1 mb-0">Select a patient to discharge</p>
+  </div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+            <tr>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Name</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Discharge</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in patients %}
+            <tr style="transition:all 0.2s;">
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:500;">{{p.get_name}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">
+                <a href="{% url 'discharge-patient' p.id %}" class="btn btn-sm" style="background:#c9a84c;color:#1a1a2e;border-radius:20px;padding:5px 15px;font-weight:600;"><i class="fas fa-sign-out-alt mr-1"></i>Discharge</a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" class="text-center py-4 text-muted">No patients to discharge</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

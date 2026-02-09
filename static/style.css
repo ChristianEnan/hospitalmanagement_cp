@@ -2,7 +2,7 @@
    HOSPITAL MANAGEMENT - LUXURY THEME
    ═══════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap');
 
 :root {
   --primary: #1a1a2e;
@@ -38,7 +38,7 @@
 body {
   padding-left: var(--sidebar-width);
   background-color: var(--off-white);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--text-dark);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -375,7 +375,7 @@ main {
   margin-bottom: 8px;
   position: relative;
   z-index: 1;
-  font-family: 'Playfair Display', serif;
+  font-family: 'Cormorant Garamond', serif;
 }
 
 .stats-label {

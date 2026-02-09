@@ -1,0 +1,39 @@
+{% extends 'hospital/admin/base.html' %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-stethoscope" style="color:#c9a84c;margin-right:10px;"></i>Departments &amp; Doctors
+    </h2>
+    <p class="text-muted mt-1 mb-0">View doctors by department specialisation</p>
+  </div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+            <tr>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Department</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Doctor Name</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for d in doctors %}
+            <tr style="transition:all 0.2s;">
+              <td style="padding:12px 20px;vertical-align:middle;"><span class="badge" style="background:#0f3460;color:#c9a84c;padding:5px 12px;border-radius:15px;">{{d.department}}</span></td>
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:500;">{{d.get_name}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{d.mobile}}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3" class="text-center py-4 text-muted">No doctors found</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,40 @@
+{% extends 'hospital/admin/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
+        <div class="card-body p-0">
+          <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
+            <i class="fas fa-calendar-plus fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
+            <h4 style="color:#fff;font-family:'Cormorant Garamond',serif;margin:0;">Book Appointment</h4>
+          </div>
+          <form method="post" style="padding:30px;">
+            {% csrf_token %}
+            <div class="form-group">
+              <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Description</label>
+              {% render_field appointmentForm.description class="form-control" placeholder="Appointment description" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+            </div>
+            <div class="form-group">
+              <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Doctor</label>
+              {% render_field appointmentForm.doctorId class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+            </div>
+            <div class="form-group">
+              <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Patient</label>
+              {% render_field appointmentForm.patientId class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+            </div>
+            <div class="text-center mt-4">
+              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:10px 40px;font-weight:600;font-size:1rem;">
+                <i class="fas fa-calendar-check mr-2"></i>Book Appointment
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

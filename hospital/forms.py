@@ -78,9 +78,14 @@ class PatientAppointmentForm(forms.ModelForm):
 
 
 class ContactusForm(forms.Form):
-    Name = forms.CharField(max_length=30)
-    Email = forms.EmailField()
+    Name = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Your name'}),
+    )
+    Email = forms.EmailField(
+        widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Your email address'}),
+    )
     Message = forms.CharField(
         max_length=500,
-        widget=forms.Textarea(attrs={'rows': 3, 'cols': 30}),
+        widget=forms.Textarea(attrs={'class': 'form-control', 'rows': 5, 'placeholder': 'Write your message here...'}),
     )

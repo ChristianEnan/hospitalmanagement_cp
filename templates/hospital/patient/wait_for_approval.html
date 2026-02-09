@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-{% load static %}
 <html lang="en" dir="ltr">
 <head>
   <meta charset="utf-8">
@@ -13,20 +12,21 @@
   {% include "hospital/navbar.html" %}
   <div style="display:flex;align-items:center;justify-content:center;min-height:80vh;padding:40px 20px;">
     <div class="text-center" style="max-width:550px;">
-      <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#2a9d8f,#264653);display:flex;align-items:center;justify-content:center;margin:0 auto 30px;">
-        <i class="fas fa-check-circle fa-3x" style="color:#e9c46a;"></i>
+      <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;margin:0 auto 30px;">
+        <i class="fas fa-hourglass-half fa-3x" style="color:#c9a84c;"></i>
       </div>
-      <h1 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;font-size:2.2rem;margin-bottom:15px;">Message Sent Successfully!</h1>
-      <div class="card border-0 shadow-sm" style="border-top:4px solid #2a9d8f!important;">
+      <h1 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;font-size:2.2rem;margin-bottom:15px;">Hello, {{request.user.first_name}}</h1>
+      <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
         <div class="card-body p-4">
           <p style="color:#555;font-size:1.1rem;line-height:1.8;margin-bottom:0;">
-            Thank you for reaching out to us.<br>
-            We will respond to your feedback soon.
+            Your account is currently <strong style="color:#c9a84c;">pending approval</strong>.<br>
+            Our team is reviewing your profile.<br>
+            You will be notified once your account is confirmed.
           </p>
         </div>
       </div>
-      <a href="/" class="btn mt-4" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#c9a84c;border-radius:25px;padding:12px 40px;font-weight:600;font-size:1rem;">
-        <i class="fas fa-home mr-2"></i>Back to Home
+      <a href="/logout" class="btn mt-4" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#c9a84c;border-radius:25px;padding:12px 40px;font-weight:600;font-size:1rem;">
+        <i class="fas fa-sign-out-alt mr-2"></i>Logout For Now
       </a>
     </div>
   </div>
