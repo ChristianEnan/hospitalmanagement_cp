@@ -37,16 +37,19 @@
     .login-header h2 { font-family: 'Cormorant Garamond', serif; color: #1a1a2e; font-weight: 700; font-size: 26px; margin-bottom: 8px; }
     .login-header p { color: #888; font-size: 14px; }
     .form-group label { color: #333; font-weight: 600; margin-bottom: 8px; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
-    .form-control { border: 2px solid #e8e8e8; border-radius: 10px; padding: 12px 15px 12px 42px; font-size: 14px; transition: all 0.3s ease; }
+    .form-control { border: 2px solid #e8e8e8; border-left: none; border-radius: 0 10px 10px 0; padding: 12px 15px; font-size: 14px; transition: all 0.3s ease; height: auto; }
     .form-control:focus { border-color: #c9a84c; box-shadow: 0 0 0 0.2rem rgba(201, 168, 76, 0.15); }
-    .form-icon { position: relative; }
-    .form-icon > i { position: absolute; left: 15px; top: 44px; color: #c9a84c; font-size: 14px; }
-    .btn-login {
-      background: linear-gradient(135deg, #1a1a2e, #0f3460); border: none; color: #c9a84c;
+    .input-group-text { background: #fff; border: 2px solid #e8e8e8; border-right: none; border-radius: 10px 0 0 10px; color: #c9a84c; font-size: 14px; padding: 12px 12px 12px 15px; }
+    .input-group:focus-within .input-group-text { border-color: #c9a84c; }
+    .input-group:focus-within .form-control { border-color: #c9a84c; }
+    .btn-login,
+    button.btn-login {
+      background: linear-gradient(135deg, #c9a84c, #b8963e) !important; border: none; color: #fff !important;
       padding: 13px; border-radius: 10px; font-weight: 700; font-size: 15px; width: 100%;
       transition: all 0.3s ease; margin-top: 15px; text-transform: uppercase; letter-spacing: 1.5px;
     }
-    .btn-login:hover { background: #c9a84c; color: #1a1a2e; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201, 168, 76, 0.3); }
+    .btn-login:hover,
+    button.btn-login:hover { background: linear-gradient(135deg, #b8963e, #a6872e) !important; color: #fff !important; transform: translateY(-2px); box-shadow: 0 8px 25px rgba(201, 168, 76, 0.4); }
     .login-footer { text-align: center; margin-top: 25px; color: #888; font-size: 14px; }
     .login-footer a { color: #c9a84c; text-decoration: none; font-weight: 600; }
     .login-footer a:hover { color: #0f3460; }
@@ -64,16 +67,24 @@
       </div>
       <form method="post">
         {% csrf_token %}
-        <div class="form-group form-icon">
+        <div class="form-group">
           <label>Username</label>
-          <i class="fas fa-user"></i>
-          {% render_field form.username class="form-control" placeholder="Enter your username" %}
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-user"></i></span>
+            </div>
+            {% render_field form.username class="form-control" placeholder="Enter your username" %}
+          </div>
           {% if form.username.errors %}<div class="error-message">{{ form.username.errors }}</div>{% endif %}
         </div>
-        <div class="form-group form-icon">
+        <div class="form-group">
           <label>Password</label>
-          <i class="fas fa-lock"></i>
-          {% render_field form.password class="form-control" placeholder="Enter your password" %}
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text"><i class="fas fa-lock"></i></span>
+            </div>
+            {% render_field form.password class="form-control" placeholder="Enter your password" %}
+          </div>
           {% if form.password.errors %}<div class="error-message">{{ form.password.errors }}</div>{% endif %}
         </div>
         {% if form.non_field_errors %}
