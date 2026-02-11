@@ -39,7 +39,10 @@
                 </div>
                 <div class="form-group">
                   <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Password</label>
-                  {% render_field userForm.password class="form-control" placeholder="Password" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                  {% render_field userForm.password class="form-control" placeholder="Enter new password" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                  <a href="#" onclick="this.closest('.form-group').querySelector('input').value='';this.textContent='Password field cleared';this.style.color='#2a9d8f';return false;" style="font-size:12px;color:#c9a84c;text-decoration:none;font-weight:600;margin-top:5px;display:inline-block;">
+                    <i class="fas fa-key mr-1"></i>Reset Password
+                  </a>
                 </div>
                 <div class="form-group">
                   <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Address</label>

@@ -21,6 +21,14 @@ class DoctorUserForm(forms.ModelForm):
         }
 
 
+class DoctorUpdateUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), required=False)
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'password']
+
+
 class DoctorForm(forms.ModelForm):
     class Meta:
         model = models.Doctor
@@ -36,13 +44,16 @@ class PatientUserForm(forms.ModelForm):
         }
 
 
-class PatientForm(forms.ModelForm):
-    assignedDoctorId = forms.ModelChoiceField(
-        queryset=models.Doctor.objects.all().filter(status=True),
-        empty_label="Name and Department",
-        to_field_name="user_id",
-    )
+class PatientUpdateUserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), required=False)
 
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'password']
+
+
+class PatientForm(forms.ModelForm):
+    # Note: assignedDoctorId is handled manually in views/templates, not through form validation
     class Meta:
         model = models.Patient
         fields = ['address', 'mobile', 'status', 'symptoms', 'profile_pic']
@@ -51,12 +62,12 @@ class PatientForm(forms.ModelForm):
 class AppointmentForm(forms.ModelForm):
     doctorId = forms.ModelChoiceField(
         queryset=models.Doctor.objects.all().filter(status=True),
-        empty_label="Doctor Name and Department",
+        empty_label="-- Select a Doctor --",
         to_field_name="user_id",
     )
     patientId = forms.ModelChoiceField(
         queryset=models.Patient.objects.all().filter(status=True),
-        empty_label="Patient Name and Symptoms",
+        empty_label="-- Select a Patient --",
         to_field_name="user_id",
     )
 
@@ -68,7 +79,7 @@ class AppointmentForm(forms.ModelForm):
 class PatientAppointmentForm(forms.ModelForm):
     doctorId = forms.ModelChoiceField(
         queryset=models.Doctor.objects.all().filter(status=True),
-        empty_label="Doctor Name and Department",
+        empty_label="-- Select a Doctor --",
         to_field_name="user_id",
     )
 

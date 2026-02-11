@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login as auth_login
+from django.contrib import messages
 from datetime import date
 from django.conf import settings
 from django.db.models import Q
@@ -64,11 +65,12 @@ def admin_signup_view(request):
     if request.method == 'POST':
         form = forms.AdminSigupForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            user.set_password(user.password)
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
             user.save()
             my_admin_group = Group.objects.get_or_create(name='ADMIN')
             my_admin_group[0].user_set.add(user)
+            messages.success(request, 'Registration successful! Please login to continue.')
             return HttpResponseRedirect('adminlogin')
     return render(request, 'hospital/admin/signup.html', {'form': form})
 
@@ -81,28 +83,32 @@ def doctor_signup_view(request):
         userForm = forms.DoctorUserForm(request.POST)
         doctorForm = forms.DoctorForm(request.POST, request.FILES)
         if userForm.is_valid() and doctorForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
+            user = userForm.save(commit=False)
+            user.set_password(userForm.cleaned_data['password'])
             user.save()
             doctor = doctorForm.save(commit=False)
             doctor.user = user
             doctor.save()
             my_doctor_group = Group.objects.get_or_create(name='DOCTOR')
             my_doctor_group[0].user_set.add(user)
+            messages.success(request, 'Registration successful! Your account is pending admin approval. Please login to continue.')
             return HttpResponseRedirect('doctorlogin')
+        else:
+            mydict = {'userForm': userForm, 'doctorForm': doctorForm}
     return render(request, 'hospital/doctor/signup.html', context=mydict)
 
 
 def patient_signup_view(request):
     userForm = forms.PatientUserForm()
     patientForm = forms.PatientForm()
-    mydict = {'userForm': userForm, 'patientForm': patientForm}
+    doctors = models.Doctor.objects.filter(status=True)
+    mydict = {'userForm': userForm, 'patientForm': patientForm, 'doctors': doctors}
     if request.method == 'POST':
         userForm = forms.PatientUserForm(request.POST)
         patientForm = forms.PatientForm(request.POST, request.FILES)
         if userForm.is_valid() and patientForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
+            user = userForm.save(commit=False)
+            user.set_password(userForm.cleaned_data['password'])
             user.save()
             patient = patientForm.save(commit=False)
             patient.user = user
@@ -110,7 +116,10 @@ def patient_signup_view(request):
             patient.save()
             my_patient_group = Group.objects.get_or_create(name='PATIENT')
             my_patient_group[0].user_set.add(user)
+            messages.success(request, 'Registration successful! Your account is pending admin approval. Please login to continue.')
             return HttpResponseRedirect('patientlogin')
+        else:
+            mydict = {'userForm': userForm, 'patientForm': patientForm, 'doctors': doctors}
     return render(request, 'hospital/patient/signup.html', context=mydict)
 
 
@@ -240,19 +249,22 @@ def delete_doctor_from_hospital_view(request, pk):
 def update_doctor_view(request, pk):
     doctor = models.Doctor.objects.get(id=pk)
     user = models.User.objects.get(id=doctor.user_id)
-    userForm = forms.DoctorUserForm(instance=user)
+    userForm = forms.DoctorUpdateUserForm(instance=user)
     doctorForm = forms.DoctorForm(instance=doctor)
     mydict = {'userForm': userForm, 'doctorForm': doctorForm}
     if request.method == 'POST':
-        userForm = forms.DoctorUserForm(request.POST, instance=user)
+        userForm = forms.DoctorUpdateUserForm(request.POST, instance=user)
         doctorForm = forms.DoctorForm(request.POST, request.FILES, instance=doctor)
         if userForm.is_valid() and doctorForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
+            user = userForm.save(commit=False)
+            password = userForm.cleaned_data.get('password')
+            if password:
+                user.set_password(password)
             user.save()
             doctor = doctorForm.save(commit=False)
             doctor.status = True
             doctor.save()
+            messages.success(request, f'Doctor {user.first_name} {user.last_name} details updated successfully!')
             return redirect('admin-view-doctor')
     return render(request, 'hospital/admin/update_doctor.html', context=mydict)
 
@@ -341,21 +353,37 @@ def delete_patient_from_hospital_view(request, pk):
 def update_patient_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     user = models.User.objects.get(id=patient.user_id)
-    userForm = forms.PatientUserForm(instance=user)
+    userForm = forms.PatientUpdateUserForm(instance=user)
     patientForm = forms.PatientForm(instance=patient)
-    mydict = {'userForm': userForm, 'patientForm': patientForm}
+    doctors = models.Doctor.objects.filter(status=True)
+    currentDoctor = None
+    if patient.assignedDoctorId:
+        try:
+            currentDoctor = models.Doctor.objects.get(user_id=patient.assignedDoctorId)
+        except models.Doctor.DoesNotExist:
+            currentDoctor = None
+    mydict = {'userForm': userForm, 'patientForm': patientForm, 'patient': patient, 'doctors': doctors, 'currentDoctor': currentDoctor}
     if request.method == 'POST':
-        userForm = forms.PatientUserForm(request.POST, instance=user)
+        userForm = forms.PatientUpdateUserForm(request.POST, instance=user)
         patientForm = forms.PatientForm(request.POST, request.FILES, instance=patient)
         if userForm.is_valid() and patientForm.is_valid():
-            user = userForm.save()
-            user.set_password(user.password)
+            user = userForm.save(commit=False)
+            password = userForm.cleaned_data.get('password')
+            if password:
+                user.set_password(password)
             user.save()
             patient = patientForm.save(commit=False)
             patient.status = True
-            patient.assignedDoctorId = request.POST.get('assignedDoctorId')
+            # Only update assigned doctor if a new one is selected
+            new_doctor_id = request.POST.get('assignedDoctorId')
+            if new_doctor_id:
+                patient.assignedDoctorId = new_doctor_id
             patient.save()
+            messages.success(request, f'Patient {user.first_name} {user.last_name} details updated successfully!')
             return redirect('admin-view-patient')
+        else:
+            # Re-populate context with doctors on validation error
+            mydict = {'userForm': userForm, 'patientForm': patientForm, 'patient': patient, 'doctors': doctors, 'currentDoctor': currentDoctor}
     return render(request, 'hospital/admin/update_patient.html', context=mydict)
 
 
@@ -364,7 +392,8 @@ def update_patient_view(request, pk):
 def admin_add_patient_view(request):
     userForm = forms.PatientUserForm()
     patientForm = forms.PatientForm()
-    mydict = {'userForm': userForm, 'patientForm': patientForm}
+    doctors = models.Doctor.objects.filter(status=True)
+    mydict = {'userForm': userForm, 'patientForm': patientForm, 'doctors': doctors}
     if request.method == 'POST':
         userForm = forms.PatientUserForm(request.POST)
         patientForm = forms.PatientForm(request.POST, request.FILES)
@@ -423,7 +452,7 @@ def discharge_patient_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     days = (date.today() - patient.admitDate)
     assignedDoctor = models.User.objects.filter(id=patient.assignedDoctorId)
-    d = days.days
+    d = max(days.days, 1)  # Minimum 1 day for billing
     patientDict = {
         'patientId': pk,
         'name': patient.get_name,
@@ -433,7 +462,7 @@ def discharge_patient_view(request, pk):
         'admitDate': patient.admitDate,
         'todayDate': date.today(),
         'day': d,
-        'assignedDoctorName': assignedDoctor[0].first_name,
+        'assignedDoctorName': f"Dr. {assignedDoctor[0].first_name} {assignedDoctor[0].last_name}",
     }
     if request.method == 'POST':
         feeDict = {
@@ -447,7 +476,7 @@ def discharge_patient_view(request, pk):
         pDD = models.PatientDischargeDetails()
         pDD.patientId = pk
         pDD.patientName = patient.get_name
-        pDD.assignedDoctorName = assignedDoctor[0].first_name
+        pDD.assignedDoctorName = f"Dr. {assignedDoctor[0].first_name} {assignedDoctor[0].last_name}"
         pDD.address = patient.address
         pDD.mobile = patient.mobile
         pDD.symptoms = patient.symptoms
@@ -459,7 +488,14 @@ def discharge_patient_view(request, pk):
         pDD.doctorFee = int(request.POST['doctorFee'])
         pDD.OtherCharge = int(request.POST['OtherCharge'])
         pDD.total = (int(request.POST['roomCharge']) * int(d)) + int(request.POST['doctorFee']) + int(request.POST['medicineCost']) + int(request.POST['OtherCharge'])
+        pDD.canReapply = request.POST.get('canReapply', '') == 'on'
+        pDD.followUpNotes = request.POST.get('followUpNotes', '')
         pDD.save()
+        
+        # Mark patient as discharged
+        patient.status = False
+        patient.save()
+        
         return render(request, 'hospital/patient/final_bill.html', context=patientDict)
     return render(request, 'hospital/patient/generate_bill.html', context=patientDict)
 
@@ -561,7 +597,8 @@ def reject_appointment_view(request, pk):
 def doctor_dashboard_view(request):
     patientcount = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id).count()
     appointmentcount = models.Appointment.objects.filter(status=True, doctorId=request.user.id).count()
-    patientdischarged = models.PatientDischargeDetails.objects.distinct().filter(assignedDoctorName=request.user.first_name).count()
+    doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+    patientdischarged = models.PatientDischargeDetails.objects.distinct().filter(assignedDoctorName=doctorFullName).count()
     appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id).order_by('-id')
     patientid = [a.patientId for a in appointments]
     patients = models.Patient.objects.filter(status=True, user_id__in=patientid).order_by('-id')
@@ -609,7 +646,8 @@ def search_view(request):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_view_discharge_patient_view(request):
-    dischargedpatients = models.PatientDischargeDetails.objects.distinct().filter(assignedDoctorName=request.user.first_name)
+    doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+    dischargedpatients = models.PatientDischargeDetails.objects.distinct().filter(assignedDoctorName=doctorFullName)
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     return render(request, 'hospital/doctor/view_discharge_patient.html', {'dischargedpatients': dischargedpatients, 'doctor': doctor})
 
@@ -654,6 +692,25 @@ def delete_appointment_view(request, pk):
     patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
     appointments = zip(appointments, patients)
     return render(request, 'hospital/doctor/delete_appointment.html', {'appointments': appointments, 'doctor': doctor})
+
+
+# ──────────────── DOCTOR: SCHEDULE CONSULTATION ────────────────
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_schedule_consultation_view(request, pk):
+    doctor = models.Doctor.objects.get(user_id=request.user.id)
+    appointment = models.Appointment.objects.get(id=pk)
+    if request.method == 'POST':
+        appointment.consultationDate = request.POST.get('consultationDate')
+        appointment.consultationTime = request.POST.get('consultationTime')
+        appointment.consultationNotes = request.POST.get('consultationNotes', '')
+        appointment.save()
+        messages.success(request, f'Consultation scheduled for {appointment.patientName}.')
+        return redirect('doctor-view-appointment')
+    return render(request, 'hospital/doctor/schedule_consultation.html', {
+        'appointment': appointment,
+        'doctor': doctor,
+    })
 
 
 # ══════════════════════════════════════════════════════════════
@@ -772,6 +829,93 @@ def patient_discharge_view(request):
             'patientId': request.user.id,
         }
     return render(request, 'hospital/patient/discharge.html', context=patientDict)
+
+
+# ──────────────── PATIENT: MEDICAL RECORDS TIMELINE ────────────────
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def patient_medical_records_view(request):
+    patient = models.Patient.objects.get(user_id=request.user.id)
+    appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-appointmentDate')
+    discharges = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-releaseDate')
+
+    # Build timeline
+    timeline = []
+    timeline.append({
+        'type': 'admit',
+        'date': patient.admitDate,
+        'title': 'Admitted to Hospital',
+        'detail': f'Symptoms: {patient.symptoms}',
+        'icon': 'fa-hospital',
+        'color': '#0f3460',
+    })
+    for apt in appointments:
+        timeline.append({
+            'type': 'appointment',
+            'date': apt.appointmentDate,
+            'title': f'Appointment with Dr. {apt.doctorName}',
+            'detail': apt.description,
+            'status': 'Approved' if apt.status else 'Pending',
+            'icon': 'fa-calendar-check',
+            'color': '#2a9d8f' if apt.status else '#c9a84c',
+        })
+        if apt.consultationDate:
+            timeline.append({
+                'type': 'consultation',
+                'date': apt.consultationDate,
+                'title': f'Consultation with Dr. {apt.doctorName}',
+                'detail': f'Time: {apt.consultationTime.strftime("%I:%M %p") if apt.consultationTime else "TBD"}' + (f' | Notes: {apt.consultationNotes}' if apt.consultationNotes else ''),
+                'icon': 'fa-comments-medical' if hasattr(apt, 'consultationNotes') else 'fa-comments',
+                'color': '#6C5CE7',
+            })
+    for d in discharges:
+        timeline.append({
+            'type': 'discharge',
+            'date': d.releaseDate,
+            'title': 'Discharged from Hospital',
+            'detail': f'Days spent: {d.daySpent} | Total bill: ₹{d.total}',
+            'icon': 'fa-sign-out-alt',
+            'color': '#FF6B6B',
+            'canReapply': d.canReapply,
+            'followUpNotes': d.followUpNotes,
+        })
+
+    timeline.sort(key=lambda x: x['date'], reverse=True)
+
+    return render(request, 'hospital/patient/medical_records.html', {
+        'patient': patient,
+        'timeline': timeline,
+        'appointments': appointments,
+        'discharges': discharges,
+    })
+
+
+# ──────────────── PATIENT: REAPPLY AFTER DISCHARGE ────────────────
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def patient_reapply_view(request):
+    patient = models.Patient.objects.get(user_id=request.user.id)
+    # Check if patient was discharged and can reapply
+    lastDischarge = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-id').first()
+    if not lastDischarge:
+        messages.warning(request, 'You have not been discharged yet.')
+        return redirect('patient-dashboard')
+    if not lastDischarge.canReapply:
+        messages.error(request, 'Your doctor has not approved reapplication. Please contact the hospital.')
+        return redirect('patient-discharge')
+
+    if request.method == 'POST':
+        new_symptoms = request.POST.get('symptoms', patient.symptoms)
+        patient.symptoms = new_symptoms
+        patient.status = False  # Needs re-approval
+        patient.save()
+        messages.success(request, 'Reapplication submitted successfully! Your account is pending admin approval.')
+        return redirect('patient-dashboard')
+
+    return render(request, 'hospital/patient/reapply.html', {
+        'patient': patient,
+        'lastDischarge': lastDischarge,
+    })
 
 
 # ══════════════════════════════════════════════════════════════

@@ -1,0 +1,177 @@
+{% extends 'hospital/patient/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .timeline { position: relative; padding: 20px 0; }
+  .timeline::before {
+    content: ''; position: absolute; left: 30px; top: 0; bottom: 0;
+    width: 3px; background: linear-gradient(to bottom, #c9a84c, #0f3460);
+  }
+  .timeline-item { position: relative; padding-left: 70px; margin-bottom: 30px; }
+  .timeline-icon {
+    position: absolute; left: 15px; top: 0;
+    width: 34px; height: 34px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 14px; z-index: 1;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  }
+  .timeline-card {
+    background: #fff; border-radius: 12px; padding: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    border-left: 4px solid #e8e8e8; transition: all 0.3s;
+  }
+  .timeline-card:hover { transform: translateX(5px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+  .timeline-date { font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+  .timeline-title { font-weight: 700; color: #1a1a2e; font-size: 16px; margin: 5px 0; }
+  .timeline-detail { color: #666; font-size: 14px; }
+  .summary-card {
+    background: #fff; border-radius: 12px; padding: 20px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+    text-align: center; transition: all 0.3s;
+  }
+  .summary-card:hover { transform: translateY(-3px); }
+  .summary-number { font-size: 32px; font-weight: 700; }
+  .summary-label { font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+</style>
+
+<div class="container-fluid py-4 px-4">
+  <div class="section-header mb-4">
+    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+      <i class="fas fa-clipboard-list" style="color:#c9a84c;margin-right:10px;"></i>Medical Records
+    </h2>
+    <p class="text-muted mt-1 mb-0">Complete history of your hospital journey</p>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="summary-card" style="border-top:4px solid #0f3460;">
+        <div class="summary-number" style="color:#0f3460;">{{appointments|length}}</div>
+        <div class="summary-label">Total Appointments</div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="summary-card" style="border-top:4px solid #6C5CE7;">
+        {% with consultations=0 %}
+        {% for a in appointments %}{% if a.consultationDate %}{% with consultations=consultations|add:1 %}{% endwith %}{% endif %}{% endfor %}
+        <div class="summary-number" style="color:#6C5CE7;">
+          {% for a in appointments %}{% if a.consultationDate %}{% if forloop.last %}{{forloop.counter}}{% endif %}{% endif %}{% endfor %}
+          {% if not appointments %}0{% endif %}
+        </div>
+        {% endwith %}
+        <div class="summary-label">Consultations</div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="summary-card" style="border-top:4px solid #FF6B6B;">
+        <div class="summary-number" style="color:#FF6B6B;">{{discharges|length}}</div>
+        <div class="summary-label">Discharges</div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="summary-card" style="border-top:4px solid #2a9d8f;">
+        <div class="summary-number" style="color:#2a9d8f;">
+          {% if patient.status %}<i class="fas fa-check-circle"></i>{% else %}<i class="fas fa-clock"></i>{% endif %}
+        </div>
+        <div class="summary-label">{% if patient.status %}Active{% else %}Pending{% endif %}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upcoming Consultations -->
+  {% for a in appointments %}
+  {% if a.consultationDate %}
+  {% if forloop.first %}
+  <div class="card border-0 shadow-sm mb-4" style="border-top:4px solid #6C5CE7!important;border-radius:12px;">
+    <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
+      <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+        <i class="fas fa-comments mr-2"></i>Scheduled Consultations
+      </h6>
+    </div>
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead>
+            <tr>
+              <th style="padding:12px 20px;font-weight:600;font-size:0.85rem;border-top:none;color:#1a1a2e;">Doctor</th>
+              <th style="padding:12px 20px;font-weight:600;font-size:0.85rem;border-top:none;color:#1a1a2e;">Date</th>
+              <th style="padding:12px 20px;font-weight:600;font-size:0.85rem;border-top:none;color:#1a1a2e;">Time</th>
+              <th style="padding:12px 20px;font-weight:600;font-size:0.85rem;border-top:none;color:#1a1a2e;">Notes</th>
+            </tr>
+          </thead>
+          <tbody>
+  {% endif %}
+            <tr>
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:500;">Dr. {{a.doctorName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.consultationDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">
+                <span class="badge" style="background:#6C5CE7;color:#fff;padding:5px 12px;border-radius:15px;">
+                  {{a.consultationTime|time:"h:i A"}}
+                </span>
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.consultationNotes|default:"—"}}</td>
+            </tr>
+  {% if forloop.last %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+
+  <!-- Timeline -->
+  <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;border-radius:12px;">
+    <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
+      <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+        <i class="fas fa-stream mr-2"></i>Treatment Timeline
+      </h6>
+    </div>
+    <div class="card-body">
+      <div class="timeline">
+        {% for event in timeline %}
+        <div class="timeline-item">
+          <div class="timeline-icon" style="background:{{event.color}};">
+            <i class="fas {{event.icon}}"></i>
+          </div>
+          <div class="timeline-card" style="border-left-color:{{event.color}};">
+            <div class="timeline-date">{{event.date}}</div>
+            <div class="timeline-title">{{event.title}}</div>
+            <div class="timeline-detail">{{event.detail}}</div>
+            {% if event.status %}
+            <span class="badge mt-2" style="background:{% if event.status == 'Approved' %}#2a9d8f{% else %}#c9a84c{% endif %};color:#fff;padding:4px 10px;border-radius:12px;font-size:12px;">
+              {{event.status}}
+            </span>
+            {% endif %}
+            {% if event.type == 'discharge' %}
+            <div class="mt-2">
+              {% if event.canReapply %}
+              <span class="badge" style="background:#2a9d8f;color:#fff;padding:5px 12px;border-radius:12px;font-size:12px;">
+                <i class="fas fa-redo mr-1"></i>Reapplication Allowed
+              </span>
+              {% else %}
+              <span class="badge" style="background:#dc3545;color:#fff;padding:5px 12px;border-radius:12px;font-size:12px;">
+                <i class="fas fa-ban mr-1"></i>Reapplication Not Allowed
+              </span>
+              {% endif %}
+              {% if event.followUpNotes %}
+              <p class="mt-2 mb-0" style="font-size:13px;color:#555;"><i class="fas fa-sticky-note mr-1" style="color:#c9a84c;"></i> <strong>Follow-up:</strong> {{event.followUpNotes}}</p>
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-4 text-muted">
+          <i class="fas fa-clipboard fa-2x mb-2"></i>
+          <p>No records yet</p>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

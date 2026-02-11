@@ -36,6 +36,19 @@
         <h2>Patient Registration</h2>
         <p>Register to book appointments</p>
       </div>
+      {% if userForm.errors or patientForm.errors %}
+      <div class="alert" style="border-radius:12px;border:none;background:#fff3f3;color:#c0392b;font-size:14px;padding:15px 18px;margin-bottom:20px;">
+        <i class="fas fa-exclamation-triangle mr-2"></i> <strong>Please fix the errors below:</strong>
+        <ul class="mb-0 mt-2" style="padding-left:20px;">
+          {% for field, errors in userForm.errors.items %}
+            {% for error in errors %}<li>{{ field|title }}: {{ error }}</li>{% endfor %}
+          {% endfor %}
+          {% for field, errors in patientForm.errors.items %}
+            {% for error in errors %}<li>{{ field|title }}: {{ error }}</li>{% endfor %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
       <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="row">
@@ -84,7 +97,12 @@
           <div class="col-md-6">
             <div class="form-group">
               <label>Assigned Doctor</label>
-              {% render_field patientForm.assignedDoctorId class="form-control" %}
+              <select name="assignedDoctorId" class="form-control" required>
+                <option value="">-- Select a Doctor --</option>
+                {% for doc in doctors %}
+                <option value="{{ doc.user.id }}">Dr. {{ doc.user.first_name }} {{ doc.user.last_name }} — {{ doc.department }}</option>
+                {% endfor %}
+              </select>
             </div>
           </div>
           <div class="col-md-12">

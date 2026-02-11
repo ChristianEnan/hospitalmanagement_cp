@@ -2,6 +2,19 @@
 {% load static %}
 {% block content %}
 
+<!-- Flash Messages -->
+{% if messages %}
+<div class="container-fluid px-4 pt-3">
+  {% for message in messages %}
+  <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert" style="border-radius:12px;border-left:4px solid {% if message.tags == 'success' %}#2a9d8f{% elif message.tags == 'warning' %}#c9a84c{% else %}#e74c3c{% endif %};">
+    <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'warning' %}exclamation-triangle{% else %}times-circle{% endif %} mr-2"></i>
+    {{ message }}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 <!-- Welcome Banner -->
 <div class="container-fluid px-4 pt-3">
   <div class="card border-0 mb-4" style="background:linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%);border-radius:16px;overflow:hidden;">
@@ -140,6 +153,7 @@
           </h6>
         </div>
         <div class="card-body p-0">
+          {% if appointments %}
           <div class="table-responsive">
             <table class="table table-hover mb-0">
               <thead>
@@ -148,6 +162,7 @@
                   <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Description</th>
                   <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Date</th>
                   <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Status</th>
+                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Consultation</th>
                 </tr>
               </thead>
               <tbody>
@@ -163,13 +178,37 @@
                       <span class="badge" style="background:#c9a84c;color:#1a1a2e;padding:4px 10px;border-radius:12px;">Pending</span>
                     {% endif %}
                   </td>
+                  <td style="padding:10px 15px;vertical-align:middle;">
+                    {% if a.consultationDate %}
+                      <span class="badge" style="background:#6C5CE7;color:#fff;padding:4px 10px;border-radius:12px;">
+                        {{a.consultationDate}} {{a.consultationTime|time:"h:i A"}}
+                      </span>
+                      {% if a.consultationNotes %}
+                      <br><small class="text-muted mt-1" style="font-size:11px;">{{a.consultationNotes}}</small>
+                      {% endif %}
+                    {% else %}
+                      <span class="text-muted" style="font-size:13px;">Not scheduled</span>
+                    {% endif %}
+                  </td>
                 </tr>
-                {% empty %}
-                <tr><td colspan="4" class="text-center py-3 text-muted">No appointments yet</td></tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
+          {% else %}
+          <div class="text-center py-5" style="background:#fff;border-radius:0 0 12px 12px;">
+            <div style="padding:30px;">
+              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#f8f9fa,#e9ecef);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+                <i class="fas fa-calendar-times fa-2x" style="color:#c9a84c;"></i>
+              </div>
+              <h6 style="color:#1a1a2e;font-family:'Cormorant Garamond',serif;margin-bottom:8px;">No Appointments Yet</h6>
+              <p class="text-muted mb-3" style="font-size:14px;">You haven't booked any appointments with doctors.</p>
+              <a href="/patient-book-appointment" class="btn btn-sm" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:20px;padding:8px 24px;font-weight:600;">
+                <i class="fas fa-plus mr-1"></i> Book Appointment
+              </a>
+            </div>
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>

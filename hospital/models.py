@@ -29,7 +29,7 @@ class Doctor(models.Model):
         return self.user.id
 
     def __str__(self):
-        return f"{self.user.first_name} ({self.department})"
+        return f"Dr. {self.user.first_name} {self.user.last_name} — {self.department}"
 
     class Meta:
         ordering = ['-id']
@@ -68,6 +68,13 @@ class Appointment(models.Model):
     appointmentDate = models.DateField(auto_now=True)
     description = models.TextField(max_length=500)
     status = models.BooleanField(default=False)
+    consultationDate = models.DateField(null=True, blank=True)
+    consultationTime = models.TimeField(null=True, blank=True)
+    consultationNotes = models.TextField(max_length=1000, null=True, blank=True)
+
+    @property
+    def has_consultation(self):
+        return self.consultationDate is not None
 
     def __str__(self):
         return f"{self.patientName} - {self.doctorName}"
@@ -91,6 +98,8 @@ class PatientDischargeDetails(models.Model):
     doctorFee = models.PositiveIntegerField()
     OtherCharge = models.PositiveIntegerField()
     total = models.PositiveIntegerField()
+    canReapply = models.BooleanField(default=True)
+    followUpNotes = models.TextField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return f"{self.patientName} (Discharged)"

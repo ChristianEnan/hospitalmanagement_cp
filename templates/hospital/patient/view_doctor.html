@@ -10,12 +10,10 @@
     <p class="text-muted mt-1 mb-0">Search and view available doctors</p>
   </div>
   <div class="mb-3">
-    <form action="/searchdoctor" method="get" class="form-inline">
+    <form action="/searchdoctor" method="get">
       <div class="input-group" style="max-width:400px;">
-        <input class="form-control" type="search" placeholder="Search doctors..." name="query" id="query" style="border-radius:25px 0 0 25px;border:2px solid #0f3460;padding:10px 20px;">
-        <div class="input-group-append">
-          <button class="btn" type="submit" style="background:#0f3460;color:#c9a84c;border-radius:0 25px 25px 0;padding:10px 20px;"><i class="fas fa-search"></i></button>
-        </div>
+        <input class="form-control" type="search" placeholder="Search doctors..." name="query" id="query" style="border-radius:25px 0 0 25px;border:2px solid #0f3460;border-right:none;height:44px;padding:0 20px;">
+        <button class="btn" type="submit" style="background:#0f3460;color:#c9a84c;border-radius:0 25px 25px 0;height:44px;width:50px;border:2px solid #0f3460;display:flex;align-items:center;justify-content:center;"><i class="fas fa-search"></i></button>
       </div>
     </form>
   </div>

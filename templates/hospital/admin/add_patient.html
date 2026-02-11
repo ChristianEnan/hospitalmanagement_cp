@@ -51,7 +51,12 @@
                 </div>
                 <div class="form-group">
                   <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Assigned Doctor</label>
-                  {% render_field patientForm.assignedDoctorId class="form-control" placeholder="Doctor" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                  <select name="assignedDoctorId" class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:12px 15px;height:auto;line-height:1.5;" required>
+                    <option value="">-- Select a Doctor --</option>
+                    {% for doc in doctors %}
+                    <option value="{{ doc.user.id }}">Dr. {{ doc.user.first_name }} {{ doc.user.last_name }} — {{ doc.department }}</option>
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
             </div>

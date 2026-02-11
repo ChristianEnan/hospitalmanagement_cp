@@ -2,61 +2,121 @@
 {% load widget_tweaks %}
 {% block content %}
 
+<style>
+  .update-card { max-width: 900px; margin: 0 auto; }
+  .form-label { font-weight: 600; color: #1a1a2e; font-size: 0.85rem; margin-bottom: 6px; display: block; }
+  .form-input { border-radius: 8px; border: 2px solid #e0e0e0; padding: 12px 15px; width: 100%; transition: all 0.3s; }
+  .form-input:focus { border-color: #c9a84c; outline: none; box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
+  .section-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+  .section-title { color: #0f3460; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #c9a84c; padding-bottom: 10px; }
+  .current-doctor-badge { background: linear-gradient(135deg, #e8f5e9, #c8e6c9); border-radius: 8px; padding: 12px 15px; border: 2px solid #81c784; margin-bottom: 10px; }
+</style>
+
 <div class="container-fluid py-4">
   <div class="row justify-content-center">
-    <div class="col-lg-8">
+    <div class="col-lg-10 update-card">
       <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
         <div class="card-body p-0">
           <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
             <i class="fas fa-user-edit fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
             <h4 style="color:#fff;font-family:'Cormorant Garamond',serif;margin:0;">Update Patient Details</h4>
           </div>
+          
+          {% if userForm.errors or patientForm.errors %}
+          <div class="alert alert-danger mx-4 mt-3" style="border-radius:8px;">
+            <i class="fas fa-exclamation-circle mr-2"></i>Please correct the errors below.
+          </div>
+          {% endif %}
+          
           <form method="post" enctype="multipart/form-data" style="padding:30px;">
             {% csrf_token %}
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">First Name</label>
-                  {% render_field userForm.first_name class="form-control" placeholder="First Name" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+            
+            <!-- Personal Information -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-user mr-2"></i>Personal Information</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">First Name</label>
+                  {% render_field userForm.first_name class="form-input" placeholder="First Name" %}
                 </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Username</label>
-                  {% render_field userForm.username class="form-control" placeholder="Username" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Last Name</label>
+                  {% render_field userForm.last_name class="form-input" placeholder="Last Name" %}
                 </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Address</label>
-                  {% render_field patientForm.address class="form-control" placeholder="Address" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Username</label>
+                  {% render_field userForm.username class="form-input" placeholder="Username" %}
                 </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Symptoms</label>
-                  {% render_field patientForm.symptoms class="form-control" placeholder="Symptoms" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Profile Picture</label>
-                  {% render_field patientForm.profile_pic class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Last Name</label>
-                  {% render_field userForm.last_name class="form-control" placeholder="Last Name" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Password</label>
-                  {% render_field userForm.password class="form-control" placeholder="Password" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Mobile</label>
-                  {% render_field patientForm.mobile class="form-control" placeholder="Mobile" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Assigned Doctor</label>
-                  {% render_field patientForm.assignedDoctorId class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Password <span style="font-weight:400;color:#888;font-size:12px;">(leave blank to keep)</span></label>
+                  {% render_field userForm.password class="form-input" placeholder="Enter new password" %}
                 </div>
               </div>
             </div>
-            <div class="text-center mt-3">
-              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:10px 40px;font-weight:600;font-size:1rem;">
+            
+            <!-- Contact & Medical -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-notes-medical mr-2"></i>Contact & Medical Info</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Mobile Number</label>
+                  {% render_field patientForm.mobile class="form-input" placeholder="Mobile Number" %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Address</label>
+                  {% render_field patientForm.address class="form-input" placeholder="Address" %}
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Symptoms</label>
+                  {% render_field patientForm.symptoms class="form-input" placeholder="Describe symptoms" %}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Doctor Assignment -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-user-md mr-2"></i>Assigned Doctor</h6>
+              {% if currentDoctor %}
+              <div class="current-doctor-badge">
+                <i class="fas fa-check-circle mr-2" style="color:#2e7d32;"></i>
+                <strong>Currently Assigned:</strong> Dr. {{ currentDoctor.user.first_name }} {{ currentDoctor.user.last_name }} — {{ currentDoctor.department }}
+              </div>
+              {% endif %}
+              <label class="form-label">{% if currentDoctor %}Change Doctor (optional){% else %}Select Doctor{% endif %}</label>
+              <select name="assignedDoctorId" class="form-input">
+                <option value="">{% if currentDoctor %}-- Keep Current Doctor --{% else %}-- Select a Doctor --{% endif %}</option>
+                {% for doc in doctors %}
+                <option value="{{ doc.user.id }}">Dr. {{ doc.user.first_name }} {{ doc.user.last_name }} — {{ doc.department }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            
+            <!-- Profile Picture -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-camera mr-2"></i>Profile Picture</h6>
+              <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                  {% if patient.profile_pic %}
+                  <img src="{{ patient.profile_pic.url }}" alt="Photo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #c9a84c;">
+                  {% else %}
+                  <div style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+                    <i class="fas fa-user fa-3x" style="color:#c9a84c;"></i>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="col-md-9">
+                  <label class="form-label">Upload New Photo (optional)</label>
+                  <input type="file" name="profile_pic" class="form-input" accept="image/*">
+                </div>
+              </div>
+            </div>
+            
+            <!-- Submit -->
+            <div class="text-center mt-4">
+              <a href="{% url 'admin-view-patient' %}" class="btn mr-2" style="background:#6c757d;color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
+                <i class="fas fa-times mr-2"></i>Cancel
+              </a>
+              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:12px 40px;font-weight:600;">
                 <i class="fas fa-save mr-2"></i>Update Patient
               </button>
             </div>

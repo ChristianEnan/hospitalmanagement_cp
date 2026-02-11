@@ -19,8 +19,9 @@
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Photo</th>
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Description</th>
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Address</th>
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Date</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Consultation</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -30,11 +31,24 @@
               <td style="padding:12px 20px;vertical-align:middle;">{% if p.profile_pic %}<img src="{% static p.profile_pic.url %}" alt="Photo" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;">{% else %}<div style="width:40px;height:40px;border-radius:50%;background:#0f3460;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#c9a84c;font-size:16px;"></i></div>{% endif %}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">
+                {% if a.consultationDate %}
+                <span class="badge" style="background:#6C5CE7;color:#fff;padding:5px 10px;border-radius:12px;font-size:12px;">
+                  {{a.consultationDate}} {{a.consultationTime|time:"h:i A"}}
+                </span>
+                {% else %}
+                <span class="badge" style="background:#eee;color:#888;padding:5px 10px;border-radius:12px;font-size:12px;">Not Set</span>
+                {% endif %}
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;">
+                <a href="{% url 'doctor-schedule-consultation' a.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#6C5CE7,#A29BFE);color:#fff;border-radius:8px;font-size:12px;padding:5px 12px;">
+                  <i class="fas fa-clock mr-1"></i>{% if a.consultationDate %}Update{% else %}Schedule{% endif %}
+                </a>
+              </td>
             </tr>
             {% empty %}
-            <tr><td colspan="6" class="text-center py-4 text-muted">No appointments found</td></tr>
+            <tr><td colspan="7" class="text-center py-4 text-muted">No appointments found</td></tr>
             {% endfor %}
           </tbody>
         </table>
