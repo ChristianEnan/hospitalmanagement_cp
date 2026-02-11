@@ -2,11 +2,16 @@
 {% block content %}
 
 <div class="container-fluid py-4">
-  <div class="section-header mb-4">
-    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
-      <i class="fas fa-calendar-alt" style="color:#c9a84c;margin-right:10px;"></i>All Appointments
-    </h2>
-    <p class="text-muted mt-1 mb-0">View all scheduled appointments</p>
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="section-header mb-0">
+      <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+        <i class="fas fa-calendar-alt" style="color:#c9a84c;margin-right:10px;"></i>All Appointments
+      </h2>
+      <p class="text-muted mt-1 mb-0">View all scheduled appointments</p>
+    </div>
+    <a href="{% url 'admin-appointment' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:500;">
+      <i class="fas fa-arrow-left mr-2"></i>Back to Appointments
+    </a>
   </div>
   <div class="card border-0 shadow-sm">
     <div class="card-body p-0">

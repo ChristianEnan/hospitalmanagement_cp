@@ -2,65 +2,132 @@
 {% load widget_tweaks %}
 {% block content %}
 
+<style>
+  .add-card { max-width: 900px; margin: 0 auto; }
+  .form-label { font-weight: 600; color: #1a1a2e; font-size: 0.85rem; margin-bottom: 6px; display: block; }
+  .form-input { border-radius: 8px; border: 2px solid #e0e0e0; padding: 12px 15px; width: 100%; transition: all 0.3s; }
+  .form-input:focus { border-color: #c9a84c; outline: none; box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
+  .section-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
+  .section-title { color: #0f3460; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #c9a84c; padding-bottom: 10px; }
+</style>
+
 <div class="container-fluid py-4">
-  <div class="row justify-content-center">
-    <div class="col-lg-8">
-      <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
-        <div class="card-body p-0">
-          <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
-            <i class="fas fa-user-md fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
-            <h4 style="color:#fff;font-family:'Cormorant Garamond',serif;margin:0;">Add New Doctor</h4>
-          </div>
-          <form method="post" enctype="multipart/form-data" style="padding:30px;">
-            {% csrf_token %}
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">First Name</label>
-                  {% render_field userForm.first_name class="form-control" placeholder="First Name" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+  <div class="add-card">
+    <!-- Back Button -->
+    <div class="mb-3">
+      <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:500;">
+        <i class="fas fa-arrow-left mr-2"></i>Back to Doctor Management
+      </a>
+    </div>
+    
+    <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
+      <div class="card-body p-0">
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
+          <i class="fas fa-user-md fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
+          <h4 style="color:#fff;font-family:'Cormorant Garamond',serif;margin:0;">Add New Doctor</h4>
+        </div>
+        
+        {% if userForm.errors or doctorForm.errors %}
+        <div class="alert alert-danger mx-4 mt-3" style="border-radius:8px;">
+          <i class="fas fa-exclamation-circle mr-2"></i>Please correct the errors below.
+        </div>
+        {% endif %}
+        
+        <form method="post" enctype="multipart/form-data" style="padding:30px;">
+          {% csrf_token %}
+            
+            <!-- Personal Information -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-user mr-2"></i>Personal Information</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">First Name</label>
+                  {% render_field userForm.first_name class="form-input" placeholder="Enter first name" %}
                 </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Username</label>
-                  {% render_field userForm.username class="form-control" placeholder="Username" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Last Name</label>
+                  {% render_field userForm.last_name class="form-input" placeholder="Enter last name" %}
                 </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Department</label>
-                  {% render_field doctorForm.department class="form-control" placeholder="Department" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Username</label>
+                  {% render_field userForm.username class="form-input" placeholder="Enter username" %}
                 </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Address</label>
-                  {% render_field doctorForm.address class="form-control" placeholder="Address" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Last Name</label>
-                  {% render_field userForm.last_name class="form-control" placeholder="Last Name" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Password</label>
-                  {% render_field userForm.password class="form-control" placeholder="Password" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Mobile</label>
-                  {% render_field doctorForm.mobile class="form-control" placeholder="Mobile" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                </div>
-                <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Profile Picture</label>
-                  {% render_field doctorForm.profile_pic required="required" class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Password</label>
+                  {% render_field userForm.password class="form-input" placeholder="Enter password" %}
                 </div>
               </div>
             </div>
-            <div class="text-center mt-3">
-              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:10px 40px;font-weight:600;font-size:1rem;">
+            
+            <!-- Professional Information -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-stethoscope mr-2"></i>Professional Information</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Department / Specialization</label>
+                  {% render_field doctorForm.department class="form-input" %}
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Mobile Number</label>
+                  {% render_field doctorForm.mobile class="form-input" placeholder="Enter mobile number" %}
+                </div>
+                <div class="col-md-12 mb-3">
+                  <label class="form-label">Address</label>
+                  {% render_field doctorForm.address class="form-input" placeholder="Enter full address" %}
+                </div>
+              </div>
+            </div>
+            
+            <!-- Profile Picture -->
+            <div class="section-box">
+              <h6 class="section-title"><i class="fas fa-camera mr-2"></i>Profile Picture</h6>
+              <div class="row align-items-center">
+                <div class="col-md-3 text-center mb-3 mb-md-0">
+                  <div id="imagePreviewContainer">
+                    <div id="defaultAvatar" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+                      <i class="fas fa-user-md fa-3x" style="color:#c9a84c;"></i>
+                    </div>
+                    <img id="imagePreview" src="" alt="Photo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #c9a84c;display:none;">
+                  </div>
+                </div>
+                <div class="col-md-9">
+                  <label class="form-label">Upload Photo <span style="color:#dc3545;">*</span></label>
+                  <input type="file" name="profile_pic" id="profilePicInput" class="form-input" accept="image/*" required onchange="previewImage(this)">
+                  <small class="text-muted">Please upload a professional photo</small>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Submit -->
+            <div class="text-center mt-4">
+              <a href="{% url 'admin-doctor' %}" class="btn mr-2" style="background:#6c757d;color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
+                <i class="fas fa-times mr-2"></i>Cancel
+              </a>
+              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:12px 40px;font-weight:600;">
                 <i class="fas fa-user-plus mr-2"></i>Register Doctor
               </button>
             </div>
-          </form>
-        </div>
+        </form>
       </div>
     </div>
   </div>
 </div>
+<script>
+function previewImage(input) {
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      var preview = document.getElementById('imagePreview');
+      var defaultAvatar = document.getElementById('defaultAvatar');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+      if (defaultAvatar) {
+        defaultAvatar.style.display = 'none';
+      }
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+</script>
 
 {% endblock content %}

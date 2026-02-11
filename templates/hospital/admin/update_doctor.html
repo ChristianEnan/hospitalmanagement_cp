@@ -3,6 +3,15 @@
 {% block content %}
 
 <div class="container-fluid py-4">
+  <!-- Back Button -->
+  <div class="row justify-content-center mb-3">
+    <div class="col-lg-8">
+      <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:500;">
+        <i class="fas fa-arrow-left mr-2"></i>Back to Doctor Management
+      </a>
+    </div>
+  </div>
+  
   <div class="row justify-content-center">
     <div class="col-lg-8">
       <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
@@ -55,6 +64,9 @@
               </div>
             </div>
             <div class="text-center mt-3">
+              <a href="{% url 'admin-doctor' %}" class="btn mr-2" style="background:#6c757d;color:#fff;border-radius:25px;padding:10px 35px;font-weight:600;">
+                <i class="fas fa-times mr-2"></i>Cancel
+              </a>
               <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:10px 40px;font-weight:600;font-size:1rem;">
                 <i class="fas fa-save mr-2"></i>Update Doctor
               </button>

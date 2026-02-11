@@ -14,10 +14,6 @@ import io
 from xhtml2pdf import pisa
 from django.template.loader import get_template
 
-
-# ──────────────────────────────────────────────────────────────
-# ROLE CHECK HELPERS
-# ──────────────────────────────────────────────────────────────
 def is_admin(user):
     return user.groups.filter(name='ADMIN').exists()
 
@@ -29,10 +25,6 @@ def is_doctor(user):
 def is_patient(user):
     return user.groups.filter(name='PATIENT').exists()
 
-
-# ──────────────────────────────────────────────────────────────
-# PUBLIC VIEWS
-# ──────────────────────────────────────────────────────────────
 def home_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -56,10 +48,6 @@ def patientclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request, 'hospital/patient/click.html')
 
-
-# ──────────────────────────────────────────────────────────────
-# SIGNUP VIEWS
-# ──────────────────────────────────────────────────────────────
 def admin_signup_view(request):
     form = forms.AdminSigupForm()
     if request.method == 'POST':
@@ -122,10 +110,6 @@ def patient_signup_view(request):
             mydict = {'userForm': userForm, 'patientForm': patientForm, 'doctors': doctors}
     return render(request, 'hospital/patient/signup.html', context=mydict)
 
-
-# ──────────────────────────────────────────────────────────────
-# ROLE-SPECIFIC LOGIN VIEWS
-# ──────────────────────────────────────────────────────────────
 def admin_login_view(request):
     form = AuthenticationForm()
     error_message = None
@@ -173,10 +157,6 @@ def patient_login_view(request):
                 form = AuthenticationForm()
     return render(request, 'hospital/patient/login.html', {'form': form, 'error_message': error_message})
 
-
-# ──────────────────────────────────────────────────────────────
-# AFTER LOGIN REDIRECT
-# ──────────────────────────────────────────────────────────────
 def afterlogin_view(request):
     if is_admin(request.user):
         return redirect('admin-dashboard')
@@ -193,10 +173,6 @@ def afterlogin_view(request):
         else:
             return render(request, 'hospital/patient/wait_for_approval.html')
 
-
-# ══════════════════════════════════════════════════════════════
-# ADMIN VIEWS
-# ══════════════════════════════════════════════════════════════
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_dashboard_view(request):
@@ -437,8 +413,6 @@ def reject_patient_view(request, pk):
     patient.delete()
     return redirect('admin-approve-patient')
 
-
-# ──────────────── DISCHARGE PATIENT ────────────────
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin)
 def admin_discharge_patient_view(request):
@@ -588,10 +562,6 @@ def reject_appointment_view(request, pk):
     appointment.delete()
     return redirect('admin-approve-appointment')
 
-
-# ══════════════════════════════════════════════════════════════
-# DOCTOR VIEWS
-# ══════════════════════════════════════════════════════════════
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
@@ -712,10 +682,6 @@ def doctor_schedule_consultation_view(request, pk):
         'doctor': doctor,
     })
 
-
-# ══════════════════════════════════════════════════════════════
-# PATIENT VIEWS
-# ══════════════════════════════════════════════════════════════
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient)
 def patient_dashboard_view(request):
@@ -917,10 +883,6 @@ def patient_reapply_view(request):
         'lastDischarge': lastDischarge,
     })
 
-
-# ══════════════════════════════════════════════════════════════
-# ABOUT US & CONTACT US
-# ══════════════════════════════════════════════════════════════
 def aboutus_view(request):
     return render(request, 'hospital/aboutus.html')
 

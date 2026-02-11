@@ -1,141 +1,173 @@
 <!-- Admin Dashboard Cards (included snippet) -->
 <style media="screen">
-    .stats-card {
-      border-radius: 12px;
-      padding: 25px;
-      color: white;
-      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      padding: 0 24px;
+    }
+    
+    .stat-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
       transition: all 0.3s ease;
-      margin-bottom: 20px;
       position: relative;
       overflow: hidden;
+      border-left: 5px solid;
     }
-
-    .stats-card::before {
-      content: '';
-      position: absolute;
-      top: -50%;
-      right: -50%;
-      width: 200px;
-      height: 200px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 50%;
-    }
-
-    .stats-card:hover {
+    
+    .stat-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
     }
-
-    .stats-card.card-doctors {
-      background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%);
-    }
-
-    .stats-card.card-patients {
-      background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%);
-    }
-
-    .stats-card.card-appointments {
-      background: linear-gradient(135deg, #FFD93D 0%, #FFC93D 100%);
-      color: #333;
-    }
-
-    .stats-card.card-appointments h4,
-    .stats-card.card-appointments p {
-      color: #333;
-    }
-
-    .stats-number {
-      font-size: 42px;
-      font-weight: bold;
-      margin-bottom: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .stats-label {
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .stats-subtitle {
-      font-size: 13px;
-      opacity: 0.9;
-      position: relative;
-      z-index: 1;
-    }
-
-    .stats-icon {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      font-size: 48px;
-      opacity: 0.2;
-      z-index: 0;
-    }
-
-    .market-updates {
+    
+    .stat-card.doctors { border-left-color: #3b82f6; }
+    .stat-card.patients { border-left-color: #10b981; }
+    .stat-card.appointments { border-left-color: #f59e0b; }
+    
+    .stat-card .stat-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
       display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 20px 0;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
     }
-
-    .market-update-gd {
-      flex: 1;
-      min-width: 280px;
-      max-width: 100%;
+    
+    .stat-card.doctors .stat-icon { background: rgba(59,130,246,0.1); color: #3b82f6; }
+    .stat-card.patients .stat-icon { background: rgba(16,185,129,0.1); color: #10b981; }
+    .stat-card.appointments .stat-icon { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    
+    .stat-card .stat-number {
+      font-size: 36px;
+      font-weight: 700;
+      color: #1a1a2e;
+      line-height: 1;
+      margin-bottom: 8px;
     }
-
-    @media (max-width: 768px) {
-      .market-update-gd {
-        flex: 1 1 100%;
-      }
+    
+    .stat-card .stat-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: #64748b;
+      margin-bottom: 12px;
     }
-  </style>
+    
+    .stat-card .stat-pending {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+    
+    .stat-card.doctors .stat-pending { background: rgba(59,130,246,0.1); color: #3b82f6; }
+    .stat-card.patients .stat-pending { background: rgba(16,185,129,0.1); color: #10b981; }
+    .stat-card.appointments .stat-pending { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+      padding: 0 24px;
+    }
+    
+    .quick-action-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 15px;
+      background: linear-gradient(135deg, #1a1a2e, #0f3460);
+      border-radius: 12px;
+      text-decoration: none;
+      transition: all 0.3s;
+      border: 2px solid transparent;
+    }
+    
+    .quick-action-btn:hover {
+      border-color: #c9a84c;
+      transform: translateY(-3px);
+      text-decoration: none;
+    }
+    
+    .quick-action-btn i {
+      font-size: 24px;
+      color: #c9a84c;
+      margin-bottom: 10px;
+    }
+    
+    .quick-action-btn span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+    }
+</style>
 
-<div class="container-fluid">
-    <div class="market-updates">
-      <div class="market-update-gd">
-        <div class="stats-card card-doctors">
-          <div class="stats-icon">
-            <i class="fas fa-stethoscope"></i>
-          </div>
-          <div class="stats-number">{{doctorcount}}</div>
-          <div class="stats-label">Total Doctors</div>
-          <div class="stats-subtitle">
-            <i class="fas fa-clock"></i> Pending Approval: <strong>{{pendingdoctorcount}}</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="market-update-gd">
-        <div class="stats-card card-patients">
-          <div class="stats-icon">
-            <i class="fas fa-users"></i>
-          </div>
-          <div class="stats-number">{{patientcount}}</div>
-          <div class="stats-label">Total Patients</div>
-          <div class="stats-subtitle">
-            <i class="fas fa-hourglass-half"></i> Awaiting Admission: <strong>{{pendingpatientcount}}</strong>
-          </div>
-        </div>
-      </div>
-
-      <div class="market-update-gd">
-        <div class="stats-card card-appointments">
-          <div class="stats-icon">
-            <i class="fas fa-calendar-alt"></i>
-          </div>
-          <div class="stats-number">{{appointmentcount}}</div>
-          <div class="stats-label">Total Appointments</div>
-          <div class="stats-subtitle">
-            <i class="fas fa-check-circle"></i> Pending Approval: <strong>{{pendingappointmentcount}}</strong>
-          </div>
-        </div>
-      </div>
+<div class="stats-row">
+  <div class="stat-card doctors">
+    <div class="stat-icon"><i class="fas fa-user-md"></i></div>
+    <div class="stat-number">{{doctorcount}}</div>
+    <div class="stat-label">Total Doctors</div>
+    <div class="stat-pending">
+      <i class="fas fa-clock"></i>
+      <span>{{pendingdoctorcount}} Pending</span>
     </div>
   </div>
+  
+  <div class="stat-card patients">
+    <div class="stat-icon"><i class="fas fa-users"></i></div>
+    <div class="stat-number">{{patientcount}}</div>
+    <div class="stat-label">Total Patients</div>
+    <div class="stat-pending">
+      <i class="fas fa-hourglass-half"></i>
+      <span>{{pendingpatientcount}} Awaiting</span>
+    </div>
+  </div>
+  
+  <div class="stat-card appointments">
+    <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
+    <div class="stat-number">{{appointmentcount}}</div>
+    <div class="stat-label">Total Appointments</div>
+    <div class="stat-pending">
+      <i class="fas fa-bell"></i>
+      <span>{{pendingappointmentcount}} Pending</span>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+  <a href="{% url 'admin-add-doctor' %}" class="quick-action-btn">
+    <i class="fas fa-user-plus"></i>
+    <span>Add Doctor</span>
+  </a>
+  <a href="{% url 'admin-add-patient' %}" class="quick-action-btn">
+    <i class="fas fa-user-injured"></i>
+    <span>Add Patient</span>
+  </a>
+  <a href="{% url 'admin-add-appointment' %}" class="quick-action-btn">
+    <i class="fas fa-calendar-plus"></i>
+    <span>Book Appointment</span>
+  </a>
+  <a href="{% url 'admin-approve-doctor' %}" class="quick-action-btn">
+    <i class="fas fa-user-check"></i>
+    <span>Approve Doctor</span>
+  </a>
+  <a href="{% url 'admin-approve-patient' %}" class="quick-action-btn">
+    <i class="fas fa-clipboard-check"></i>
+    <span>Approve Patient</span>
+  </a>
+  <a href="{% url 'admin-discharge-patient' %}" class="quick-action-btn">
+    <i class="fas fa-file-medical"></i>
+    <span>Discharge</span>
+  </a>
+</div>

@@ -2,21 +2,83 @@
 {% load static %}
 {% block content %}
 
+<style>
+  .dashboard-table { border-radius: 12px; overflow: hidden; }
+  .dashboard-table .table { margin-bottom: 0; }
+  .dashboard-table .table thead th {
+    background: #f8f9fa;
+    color: #1a1a2e;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 14px 16px;
+    border: none;
+  }
+  .dashboard-table .table tbody td {
+    padding: 14px 16px;
+    vertical-align: middle;
+    border-color: #f0f0f0;
+    font-size: 14px;
+  }
+  .dashboard-table .table tbody tr:hover { background: #fafafa; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  }
+  .section-header h6 {
+    color: #fff;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .section-header h6 i { color: #c9a84c; margin-right: 10px; }
+  .section-header .view-all {
+    color: #c9a84c;
+    font-size: 13px;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .section-header .view-all:hover { text-decoration: underline; }
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .status-badge.active { background: #d1fae5; color: #059669; }
+  .status-badge.pending { background: #fef3c7; color: #d97706; }
+  .dept-badge {
+    background: #e0e7ff;
+    color: #4338ca;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+</style>
+
 <!-- Admin Welcome Banner -->
 <div class="container-fluid px-4 pt-3">
   <div class="card border-0 mb-4" style="background:linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%);border-radius:16px;overflow:hidden;">
     <div class="card-body p-4">
       <div class="row align-items-center">
         <div class="col-md-8">
-          <h3 style="color:#c9a84c;font-family:'Cormorant Garamond',serif;font-weight:700;margin-bottom:5px;">
-            <i class="fas fa-user-shield mr-2"></i>Admin Dashboard
+          <h3 style="color:#c9a84c;font-family:'Cormorant Garamond',serif;font-weight:700;margin-bottom:8px;">
+            <i class="fas fa-user-shield mr-2"></i>Welcome, {{request.user.first_name}}!
           </h3>
-          <p style="color:rgba(255,255,255,0.8);margin-bottom:0;font-size:15px;">
-            Welcome back, {{request.user.first_name}}! Manage doctors, patients, and appointments from your central control panel.
+          <p style="color:rgba(255,255,255,0.85);margin-bottom:0;font-size:15px;">
+            Manage your hospital operations from this central dashboard.
           </p>
         </div>
         <div class="col-md-4 text-right d-none d-md-block">
-          <i class="fas fa-hospital" style="font-size:64px;color:rgba(201,168,76,0.15);"></i>
+          <i class="fas fa-hospital" style="font-size:72px;color:rgba(201,168,76,0.2);"></i>
         </div>
       </div>
     </div>
@@ -25,42 +87,50 @@
 
 {% include 'hospital/admin/dashboard_cards.html' %}
 
-<div class="container-fluid py-4">
+<!-- Recent Activity Tables -->
+<div class="container-fluid px-4 py-4">
   <div class="row">
+    <!-- Recent Doctors -->
     <div class="col-lg-6 mb-4">
-      <div class="card border-0 shadow-sm" style="border-top:4px solid #0f3460!important;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;">
-          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;">
-            <i class="fas fa-user-md mr-2"></i>Recent Doctors
-          </h6>
+      <div class="card border-0 shadow-sm dashboard-table">
+        <div class="section-header">
+          <h6><i class="fas fa-user-md"></i>Recent Doctors</h6>
+          <a href="{% url 'admin-view-doctor' %}" class="view-all">View All <i class="fas fa-arrow-right ml-1"></i></a>
         </div>
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table">
               <thead>
                 <tr>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Name</th>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Department</th>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Mobile</th>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Status</th>
+                  <th>Doctor Name</th>
+                  <th>Specialization</th>
+                  <th>Contact</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {% for d in doctors %}
                 <tr>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{d.get_name}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;"><span class="badge" style="background:#0f3460;color:#c9a84c;padding:4px 10px;border-radius:12px;">{{d.department}}</span></td>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{d.mobile}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">
+                  <td>
+                    <div style="font-weight:600;color:#1a1a2e;">Dr. {{d.user.first_name}} {{d.user.last_name}}</div>
+                  </td>
+                  <td><span class="dept-badge">{{d.department}}</span></td>
+                  <td style="color:#64748b;">{{d.mobile}}</td>
+                  <td>
                     {% if d.status %}
-                    <span class="badge" style="background:#2a9d8f;color:#fff;padding:4px 10px;border-radius:12px;">Permanent</span>
+                    <span class="status-badge active"><i class="fas fa-check-circle"></i>Active</span>
                     {% else %}
-                    <span class="badge" style="background:#c9a84c;color:#1a1a2e;padding:4px 10px;border-radius:12px;">On Hold</span>
+                    <span class="status-badge pending"><i class="fas fa-clock"></i>Pending</span>
                     {% endif %}
                   </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="text-center py-3 text-muted">No doctors yet</td></tr>
+                <tr>
+                  <td colspan="4" class="text-center py-4">
+                    <i class="fas fa-user-md fa-2x mb-2" style="color:#e0e0e0;"></i>
+                    <p class="text-muted mb-0">No doctors registered yet</p>
+                  </td>
+                </tr>
                 {% endfor %}
               </tbody>
             </table>
@@ -68,40 +138,48 @@
         </div>
       </div>
     </div>
+    
+    <!-- Recent Patients -->
     <div class="col-lg-6 mb-4">
-      <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;">
-          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;">
-            <i class="fas fa-user-injured mr-2"></i>Recent Patients
-          </h6>
+      <div class="card border-0 shadow-sm dashboard-table">
+        <div class="section-header">
+          <h6><i class="fas fa-user-injured"></i>Recent Patients</h6>
+          <a href="{% url 'admin-view-patient' %}" class="view-all">View All <i class="fas fa-arrow-right ml-1"></i></a>
         </div>
         <div class="card-body p-0">
           <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="table">
               <thead>
                 <tr>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Name</th>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Symptoms</th>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Mobile</th>
-                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Status</th>
+                  <th>Patient Name</th>
+                  <th>Symptoms</th>
+                  <th>Contact</th>
+                  <th>Status</th>
                 </tr>
               </thead>
               <tbody>
                 {% for p in patients %}
                 <tr>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{p.get_name}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{p.symptoms}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{p.mobile}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">
+                  <td>
+                    <div style="font-weight:600;color:#1a1a2e;">{{p.user.first_name}} {{p.user.last_name}}</div>
+                  </td>
+                  <td style="color:#64748b;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{p.symptoms}}</td>
+                  <td style="color:#64748b;">{{p.mobile}}</td>
+                  <td>
                     {% if p.status %}
-                    <span class="badge" style="background:#2a9d8f;color:#fff;padding:4px 10px;border-radius:12px;">Admitted</span>
+                    <span class="status-badge active"><i class="fas fa-check-circle"></i>Admitted</span>
                     {% else %}
-                    <span class="badge" style="background:#c9a84c;color:#1a1a2e;padding:4px 10px;border-radius:12px;">On Hold</span>
+                    <span class="status-badge pending"><i class="fas fa-clock"></i>Pending</span>
                     {% endif %}
                   </td>
                 </tr>
                 {% empty %}
-                <tr><td colspan="4" class="text-center py-3 text-muted">No patients yet</td></tr>
+                <tr>
+                  <td colspan="4" class="text-center py-4">
+                    <i class="fas fa-user-injured fa-2x mb-2" style="color:#e0e0e0;"></i>
+                    <p class="text-muted mb-0">No patients registered yet</p>
+                  </td>
+                </tr>
                 {% endfor %}
               </tbody>
             </table>
