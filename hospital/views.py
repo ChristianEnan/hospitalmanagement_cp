@@ -4,6 +4,8 @@ from django.contrib.auth.models import Group
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import login as auth_login
 from datetime import date
 from django.conf import settings
 from django.db.models import Q
@@ -110,6 +112,57 @@ def patient_signup_view(request):
             my_patient_group[0].user_set.add(user)
             return HttpResponseRedirect('patientlogin')
     return render(request, 'hospital/patient/signup.html', context=mydict)
+
+
+# ──────────────────────────────────────────────────────────────
+# ROLE-SPECIFIC LOGIN VIEWS
+# ──────────────────────────────────────────────────────────────
+def admin_login_view(request):
+    form = AuthenticationForm()
+    error_message = None
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if is_admin(user):
+                auth_login(request, user)
+                return redirect('admin-dashboard')
+            else:
+                error_message = 'This account is not registered as an Administrator. Please use the correct login portal.'
+                form = AuthenticationForm()
+    return render(request, 'hospital/admin/login.html', {'form': form, 'error_message': error_message})
+
+
+def doctor_login_view(request):
+    form = AuthenticationForm()
+    error_message = None
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if is_doctor(user):
+                auth_login(request, user)
+                return redirect('afterlogin')
+            else:
+                error_message = 'This account is not registered as a Doctor. Please use the correct login portal.'
+                form = AuthenticationForm()
+    return render(request, 'hospital/doctor/login.html', {'form': form, 'error_message': error_message})
+
+
+def patient_login_view(request):
+    form = AuthenticationForm()
+    error_message = None
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
+            if is_patient(user):
+                auth_login(request, user)
+                return redirect('afterlogin')
+            else:
+                error_message = 'This account is not registered as a Patient. Please use the correct login portal.'
+                form = AuthenticationForm()
+    return render(request, 'hospital/patient/login.html', {'form': form, 'error_message': error_message})
 
 
 # ──────────────────────────────────────────────────────────────
@@ -611,14 +664,23 @@ def delete_appointment_view(request, pk):
 def patient_dashboard_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     doctor = models.Doctor.objects.get(user_id=patient.assignedDoctorId)
+    appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-id')
+    appointmentcount = appointments.filter(status=True).count()
+    pendingappointmentcount = appointments.filter(status=False).count()
+    discharge = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-id')
     mydict = {
         'patient': patient,
+        'doctor': doctor,
         'doctorName': doctor.get_name,
         'doctorMobile': doctor.mobile,
         'doctorAddress': doctor.address,
         'symptoms': patient.symptoms,
         'doctorDepartment': doctor.department,
         'admitDate': patient.admitDate,
+        'appointments': appointments,
+        'appointmentcount': appointmentcount,
+        'pendingappointmentcount': pendingappointmentcount,
+        'discharge': discharge,
     }
     return render(request, 'hospital/patient/dashboard.html', context=mydict)
 

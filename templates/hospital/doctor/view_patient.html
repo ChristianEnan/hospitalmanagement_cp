@@ -37,7 +37,7 @@
             {% for p in patients %}
             <tr style="transition:all 0.2s;">
               <td style="padding:12px 20px;vertical-align:middle;font-weight:500;">{{p.get_name}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;"><img src="{% static p.profile_pic.url %}" alt="Photo" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;"></td>
+              <td style="padding:12px 20px;vertical-align:middle;">{% if p.profile_pic %}<img src="{% static p.profile_pic.url %}" alt="Photo" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;">{% else %}<div style="width:40px;height:40px;border-radius:50%;background:#0f3460;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#c9a84c;font-size:16px;"></i></div>{% endif %}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>

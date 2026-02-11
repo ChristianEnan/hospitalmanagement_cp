@@ -39,7 +39,7 @@
         {% for d in doctors %}
         <tr>
           <td>{{d.get_name}}</td>
-          <td><img src="{% static d.profile_pic.url %}" alt="Profile" style="height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;" /></td>
+          <td>{% if d.profile_pic %}<img src="{% static d.profile_pic.url %}" alt="Profile" style="height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;" />{% else %}<div style="width:40px;height:40px;border-radius:50%;background:#0f3460;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-user-md" style="color:#c9a84c;font-size:16px;"></i></div>{% endif %}</td>
           <td>{{d.mobile}}</td>
           <td>{{d.address}}</td>
           <td>{{d.department}}</td>

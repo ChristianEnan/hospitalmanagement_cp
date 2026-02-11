@@ -1,7 +1,179 @@
 {% extends 'hospital/patient/base.html' %}
 {% load static %}
 {% block content %}
-{%include 'hospital/patient/dashboard_cards.html'%}
-<br><br><br><br>
+
+<!-- Welcome Banner -->
+<div class="container-fluid px-4 pt-3">
+  <div class="card border-0 mb-4" style="background:linear-gradient(135deg,#1a1a2e 0%,#0f3460 100%);border-radius:16px;overflow:hidden;">
+    <div class="card-body p-4">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h3 style="color:#c9a84c;font-family:'Cormorant Garamond',serif;font-weight:700;margin-bottom:5px;">
+            <i class="fas fa-heartbeat mr-2"></i>Welcome, {{request.user.first_name}}!
+          </h3>
+          <p style="color:rgba(255,255,255,0.8);margin-bottom:0;font-size:15px;">
+            Your health dashboard — track your appointments, view doctor details, and manage your medical profile.
+          </p>
+        </div>
+        <div class="col-md-4 text-right d-none d-md-block">
+          <i class="fas fa-user-injured" style="font-size:64px;color:rgba(201,168,76,0.15);"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'hospital/patient/dashboard_cards.html' %}
+
+<!-- Doctor & Medical Info Section -->
+<div class="container-fluid py-3 px-4">
+  <div class="row">
+    <!-- Assigned Doctor Card -->
+    <div class="col-lg-5 mb-4">
+      <div class="card border-0 shadow-sm" style="border-top:4px solid #0f3460!important;border-radius:12px;">
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
+          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+            <i class="fas fa-user-md mr-2"></i>Your Assigned Doctor
+          </h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="text-center mb-3">
+            {% if doctor.profile_pic %}
+              <img src="{% static doctor.profile_pic.url %}" alt="Doctor" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:3px solid #c9a84c;">
+            {% else %}
+              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:inline-flex;align-items:center;justify-content:center;margin:0 auto;">
+                <i class="fas fa-user-md" style="font-size:32px;color:#c9a84c;"></i>
+              </div>
+            {% endif %}
+            <h5 style="color:#1a1a2e;font-family:'Cormorant Garamond',serif;font-weight:700;margin-top:12px;">Dr. {{doctorName}}</h5>
+            <span class="badge" style="background:#0f3460;color:#c9a84c;padding:5px 14px;border-radius:12px;font-size:13px;">{{doctorDepartment}}</span>
+          </div>
+          <hr style="border-color:#eee;">
+          <ul class="list-unstyled mb-0" style="font-size:14px;">
+            <li class="py-2" style="border-bottom:1px solid #f0f0f0;">
+              <i class="fas fa-phone-alt mr-2" style="color:#c9a84c;width:20px;"></i>
+              <strong>Mobile:</strong> {{doctorMobile}}
+            </li>
+            <li class="py-2" style="border-bottom:1px solid #f0f0f0;">
+              <i class="fas fa-map-marker-alt mr-2" style="color:#c9a84c;width:20px;"></i>
+              <strong>Address:</strong> {{doctorAddress}}
+            </li>
+            <li class="py-2">
+              <i class="fas fa-calendar-alt mr-2" style="color:#c9a84c;width:20px;"></i>
+              <strong>Admit Date:</strong> {{admitDate|default:"Not set"}}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Your Medical Info -->
+    <div class="col-lg-7 mb-4">
+      <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;border-radius:12px;">
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
+          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+            <i class="fas fa-notes-medical mr-2"></i>Your Medical Profile
+          </h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-6 mb-3">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #0f3460;">
+                <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Full Name</small>
+                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{patient.get_name}}</div>
+              </div>
+            </div>
+            <div class="col-6 mb-3">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #c9a84c;">
+                <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Mobile</small>
+                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{patient.mobile}}</div>
+              </div>
+            </div>
+            <div class="col-6 mb-3">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #2a9d8f;">
+                <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Address</small>
+                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{patient.address}}</div>
+              </div>
+            </div>
+            <div class="col-6 mb-3">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #e76f51;">
+                <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Symptoms</small>
+                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{symptoms|default:"None reported"}}</div>
+              </div>
+            </div>
+            <div class="col-6 mb-3">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #6C5CE7;">
+                <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Status</small>
+                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">
+                  {% if patient.status %}
+                    <span class="badge" style="background:#2a9d8f;color:#fff;padding:4px 10px;border-radius:12px;">Admitted</span>
+                  {% else %}
+                    <span class="badge" style="background:#c9a84c;color:#1a1a2e;padding:4px 10px;border-radius:12px;">Pending</span>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="col-6 mb-3">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #FF6B6B;">
+                <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Appointments</small>
+                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">
+                  {{appointmentcount}} approved
+                  {% if pendingappointmentcount %}<span style="color:#c9a84c;">({{pendingappointmentcount}} pending)</span>{% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Appointments Table -->
+<div class="container-fluid py-2 px-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm" style="border-top:4px solid #2a9d8f!important;border-radius:12px;">
+        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
+          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+            <i class="fas fa-calendar-check mr-2"></i>Your Appointments
+          </h6>
+        </div>
+        <div class="card-body p-0">
+          <div class="table-responsive">
+            <table class="table table-hover mb-0">
+              <thead>
+                <tr>
+                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Doctor</th>
+                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Description</th>
+                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Date</th>
+                  <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a in appointments %}
+                <tr>
+                  <td style="padding:10px 15px;vertical-align:middle;font-weight:500;">Dr. {{a.doctorName}}</td>
+                  <td style="padding:10px 15px;vertical-align:middle;">{{a.description}}</td>
+                  <td style="padding:10px 15px;vertical-align:middle;">{{a.appointmentDate}}</td>
+                  <td style="padding:10px 15px;vertical-align:middle;">
+                    {% if a.status %}
+                      <span class="badge" style="background:#2a9d8f;color:#fff;padding:4px 10px;border-radius:12px;">Approved</span>
+                    {% else %}
+                      <span class="badge" style="background:#c9a84c;color:#1a1a2e;padding:4px 10px;border-radius:12px;">Pending</span>
+                    {% endif %}
+                  </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4" class="text-center py-3 text-muted">No appointments yet</td></tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock content %}

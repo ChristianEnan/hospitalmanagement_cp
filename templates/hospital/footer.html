@@ -26,7 +26,15 @@
       color: #b0b0b0;
     }
     .footer-content p i { color: #c9a84c; margin-right: 8px; }
-    .footer-social { display: flex; gap: 12px; }
+    .footer-content a {
+      color: #b0b0b0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .footer-content a:hover {
+      color: #c9a84c;
+      text-decoration: underline;
+    }    .footer-social { display: flex; gap: 12px; }
     .footer-social a {
       display: inline-flex;
       align-items: center;
@@ -61,14 +69,14 @@
   <div class="container">
     <div class="row">
       <div class="col-md-4 col-sm-6 footer-content">
-        <h5><i class="fas fa-hospital"></i> Hospital Management</h5>
+        <h5><i class="fas fa-hospital"></i> Hospital Management System</h5>
         <p>Providing quality healthcare management solutions for modern hospitals and clinics.</p>
       </div>
       <div class="col-md-4 col-sm-6 footer-content">
         <h5><i class="fas fa-address-card"></i> Contact Info</h5>
-        <p><i class="fas fa-phone"></i> +91-XXXXXXXXXX</p>
-        <p><i class="fas fa-envelope"></i> info@hospital.com</p>
-        <p><i class="fas fa-map-marker-alt"></i> Hospital Street, Medical City</p>
+        <p><i class="fas fa-phone"></i> +91 7046452028</p>
+        <p><i class="fas fa-envelope"></i> <a href="mailto:enanchristiann26@gmail.com">enanchristiann26@gmail.com</a></p>
+        <p><i class="fas fa-map-marker-alt"></i> 46, Shalom Park Society, C.T.M, Ahmedabad</p>
       </div>
       <div class="col-md-4 col-sm-6 footer-content">
         <h5><i class="fas fa-share-alt"></i> Follow Us</h5>
@@ -81,8 +89,8 @@
       </div>
     </div>
     <div class="footer-bottom">
-      <p>&copy; 2024 Hospital Management System. All rights reserved.</p>
-      <p>Built with <i class="fas fa-heart" style="color: #c9a84c;"></i> for Better Healthcare</p>
+      <p>&copy; 2026 Hospital Management System. All rights reserved.</p>
+      <p>Build by Enan Christian.</p>
     </div>
   </div>
 </footer>

@@ -17,7 +17,7 @@
   <nav class="menu" tabindex="0">
     <div class="smartphone-menu-trigger"></div>
     <header class="avatar">
-      <img src="{% static patient.profile_pic.url %}" alt="Profile Pic" />
+      {% if patient.profile_pic %}<img src="{% static patient.profile_pic.url %}" alt="Profile Pic" />{% else %}<div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;margin:0 auto;"><i class="fas fa-user" style="font-size:32px;color:#c9a84c;"></i></div>{% endif %}
       <h6>Patient</h6>
       <h2>{{request.user.first_name}}</h2>
     </header>
