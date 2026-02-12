@@ -4,7 +4,7 @@
 
 <div class="container-fluid py-4">
   <div class="section-header mb-4">
-    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+    <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
       <i class="fas fa-calendar-alt" style="color:#c9a84c;margin-right:10px;"></i>Your Appointments
     </h2>
     <p class="text-muted mt-1 mb-0">View all your scheduled appointments</p>
@@ -27,7 +27,7 @@
           <tbody>
             {% for a,p in appointments %}
             <tr style="transition:all 0.2s;">
-              <td style="padding:12px 20px;vertical-align:middle;font-weight:500;">{{a.patientName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{a.patientName}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{% if p.profile_pic %}<img src="{% static p.profile_pic.url %}" alt="Photo" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;">{% else %}<div style="width:40px;height:40px;border-radius:50%;background:#0f3460;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-user" style="color:#c9a84c;font-size:16px;"></i></div>{% endif %}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>

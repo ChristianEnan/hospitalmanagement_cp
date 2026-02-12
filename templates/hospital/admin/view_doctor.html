@@ -3,7 +3,7 @@
 {% block content %}
 <style>
   .section-header {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'Playfair Display', serif !important;
     color: #1a1a2e;
     font-weight: 700;
     margin-bottom: 25px;
@@ -25,7 +25,7 @@
   @keyframes modalIn { from { transform:scale(0.8); opacity:0; } to { transform:scale(1); opacity:1; } }
   .delete-modal-header { background:linear-gradient(135deg,#dc3545,#c82333); padding:25px; text-align:center; }
   .delete-modal-header i { font-size:40px; color:#fff; margin-bottom:10px; }
-  .delete-modal-header h5 { color:#fff; margin:0; font-family:'Cormorant Garamond',serif; font-size:22px; }
+  .delete-modal-header h5 { color:#fff; margin:0; font-family: 'Playfair Display', serif !important; font-size:22px; }
   .delete-modal-body { padding:25px; text-align:center; }
   .delete-modal-body p { color:#555; font-size:15px; margin-bottom:5px; }
   .delete-modal-body .name { font-weight:700; color:#1a1a2e; font-size:18px; }
@@ -46,7 +46,7 @@
   {% endif %}
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h3 class="section-header mb-0" style="border-bottom:none;padding-bottom:0;"><i class="fas fa-user-md" style="color: #c9a84c;"></i> Doctors List</h3>
-    <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:500;">
+    <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
       <i class="fas fa-arrow-left mr-2"></i>Back to Doctor Management
     </a>
   </div>

@@ -3,7 +3,7 @@
 
 <div class="container-fluid py-4">
   <div class="section-header mb-4">
-    <h2 style="font-family:'Cormorant Garamond',serif;color:#1a1a2e;margin:0;">
+    <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
       <i class="fas fa-calendar-alt" style="color:#c9a84c;margin-right:10px;"></i>Your Appointments
     </h2>
     <p class="text-muted mt-1 mb-0">Track your appointment status</p>
@@ -24,7 +24,7 @@
           <tbody>
             {% for a in appointments %}
             <tr style="transition:all 0.2s;">
-              <td style="padding:12px 20px;vertical-align:middle;font-weight:500;">{{a.doctorName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{a.doctorName}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">

@@ -6,7 +6,7 @@
   <!-- Back Button -->
   <div class="row justify-content-center mb-3">
     <div class="col-lg-6">
-      <a href="{% url 'admin-appointment' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:500;">
+      <a href="{% url 'admin-appointment' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
         <i class="fas fa-arrow-left mr-2"></i>Back to Appointments
       </a>
     </div>
@@ -18,7 +18,7 @@
         <div class="card-body p-0">
           <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
             <i class="fas fa-calendar-plus fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
-            <h4 style="color:#fff;font-family:'Cormorant Garamond',serif;margin:0;">Book Appointment</h4>
+            <h4 style="color:#fff;font-family: 'Playfair Display', serif !important;margin:0;">Book Appointment</h4>
           </div>
           <form method="post" style="padding:30px;">
             {% csrf_token %}

@@ -21,7 +21,7 @@
     <div class="card-body p-4">
       <div class="row align-items-center">
         <div class="col-md-8">
-          <h3 style="color:#c9a84c;font-family:'Cormorant Garamond',serif;font-weight:700;margin-bottom:5px;">
+          <h3 style="color:#c9a84c;font-family: 'Playfair Display', serif !important;font-weight:700;margin-bottom:5px;">
             <i class="fas fa-heartbeat mr-2"></i>Welcome, {{request.user.first_name}}!
           </h3>
           <p style="color:rgba(255,255,255,0.8);margin-bottom:0;font-size:15px;">
@@ -45,7 +45,7 @@
     <div class="col-lg-5 mb-4">
       <div class="card border-0 shadow-sm" style="border-top:4px solid #0f3460!important;border-radius:12px;">
         <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
-          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+          <h6 style="color:#c9a84c;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
             <i class="fas fa-user-md mr-2"></i>Your Assigned Doctor
           </h6>
         </div>
@@ -58,7 +58,7 @@
                 <i class="fas fa-user-md" style="font-size:32px;color:#c9a84c;"></i>
               </div>
             {% endif %}
-            <h5 style="color:#1a1a2e;font-family:'Cormorant Garamond',serif;font-weight:700;margin-top:12px;">Dr. {{doctorName}}</h5>
+            <h5 style="color:#1a1a2e;font-family: 'Playfair Display', serif !important;font-weight:700;margin-top:12px;">Dr. {{doctorName}}</h5>
             <span class="badge" style="background:#0f3460;color:#c9a84c;padding:5px 14px;border-radius:12px;font-size:13px;">{{doctorDepartment}}</span>
           </div>
           <hr style="border-color:#eee;">
@@ -84,7 +84,7 @@
     <div class="col-lg-7 mb-4">
       <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;border-radius:12px;">
         <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
-          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+          <h6 style="color:#c9a84c;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
             <i class="fas fa-notes-medical mr-2"></i>Your Medical Profile
           </h6>
         </div>
@@ -148,7 +148,7 @@
     <div class="col-12">
       <div class="card border-0 shadow-sm" style="border-top:4px solid #2a9d8f!important;border-radius:12px;">
         <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
-          <h6 style="color:#c9a84c;margin:0;font-family:'Cormorant Garamond',serif;font-size:18px;">
+          <h6 style="color:#c9a84c;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
             <i class="fas fa-calendar-check mr-2"></i>Your Appointments
           </h6>
         </div>
@@ -168,7 +168,7 @@
               <tbody>
                 {% for a in appointments %}
                 <tr>
-                  <td style="padding:10px 15px;vertical-align:middle;font-weight:500;">Dr. {{a.doctorName}}</td>
+                  <td style="padding:10px 15px;vertical-align:middle;font-weight:600;">Dr. {{a.doctorName}}</td>
                   <td style="padding:10px 15px;vertical-align:middle;">{{a.description}}</td>
                   <td style="padding:10px 15px;vertical-align:middle;">{{a.appointmentDate}}</td>
                   <td style="padding:10px 15px;vertical-align:middle;">
@@ -201,7 +201,7 @@
               <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#f8f9fa,#e9ecef);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
                 <i class="fas fa-calendar-times fa-2x" style="color:#c9a84c;"></i>
               </div>
-              <h6 style="color:#1a1a2e;font-family:'Cormorant Garamond',serif;margin-bottom:8px;">No Appointments Yet</h6>
+              <h6 style="color:#1a1a2e;font-family: 'Playfair Display', serif !important;margin-bottom:8px;">No Appointments Yet</h6>
               <p class="text-muted mb-3" style="font-size:14px;">You haven't booked any appointments with doctors.</p>
               <a href="/patient-book-appointment" class="btn btn-sm" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:20px;padding:8px 24px;font-weight:600;">
                 <i class="fas fa-plus mr-1"></i> Book Appointment
