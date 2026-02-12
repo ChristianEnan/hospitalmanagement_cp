@@ -624,6 +624,28 @@ def doctor_view_discharge_patient_view(request):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
+def doctor_clear_discharge_history_view(request):
+    doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+    models.PatientDischargeDetails.objects.filter(assignedDoctorName=doctorFullName).delete()
+    return redirect('doctor-view-discharge-patient')
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_delete_selected_discharge_view(request):
+    if request.method == 'POST':
+        selected_ids = request.POST.getlist('selected_patients')
+        if selected_ids:
+            doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+            models.PatientDischargeDetails.objects.filter(
+                id__in=selected_ids,
+                assignedDoctorName=doctorFullName
+            ).delete()
+    return redirect('doctor-view-discharge-patient')
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
 def doctor_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     return render(request, 'hospital/doctor/appointment.html', {'doctor': doctor})

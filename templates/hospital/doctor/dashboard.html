@@ -35,9 +35,10 @@
           </h6>
         </div>
         <div class="card-body p-0">
+          {% if appointments %}
           <div class="table-responsive">
             <table class="table table-hover mb-0">
-              <thead>
+              <thead style="background-color:#f8f9fa;">
                 <tr>
                   <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Patient Name</th>
                   <th style="color:#1a1a2e;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Photo</th>
@@ -57,12 +58,17 @@
                   <td style="padding:10px 15px;vertical-align:middle;">{{p.address}}</td>
                   <td style="padding:10px 15px;vertical-align:middle;">{{a.appointmentDate}}</td>
                 </tr>
-                {% empty %}
-                <tr><td colspan="6" class="text-center py-3 text-muted">No recent appointments</td></tr>
                 {% endfor %}
               </tbody>
             </table>
           </div>
+          {% else %}
+          <div class="text-center py-5">
+            <i class="fas fa-calendar-times" style="font-size:48px;color:#d1d1d1;margin-bottom:15px;"></i>
+            <p class="text-muted mb-0" style="font-size:15px;">No recent appointments</p>
+            <p class="text-muted" style="font-size:13px;">Your upcoming appointments will appear here</p>
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>

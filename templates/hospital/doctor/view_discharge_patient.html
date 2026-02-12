@@ -3,41 +3,115 @@
 {% block content %}
 
 <div class="container-fluid py-4">
-  <div class="section-header mb-4">
-    <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
-      <i class="fas fa-procedures" style="color:#c9a84c;margin-right:10px;"></i>Discharged Patients
-    </h2>
-    <p class="text-muted mt-1 mb-0">Your discharged patient history</p>
+  <div class="row align-items-center mb-4">
+    <div class="col-md-6">
+      <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
+        <i class="fas fa-procedures" style="color:#c9a84c;margin-right:10px;"></i>Discharged Patients
+      </h2>
+      <p class="text-muted mt-1 mb-0">Your discharged patient history</p>
+    </div>
+    <div class="col-md-6 text-md-right mt-3 mt-md-0">
+      {% if dischargedpatients %}
+      <button type="button" class="btn mr-2" id="deleteSelectedBtn" style="background:linear-gradient(135deg,#ff9800,#f57c00);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;border:none;box-shadow:0 2px 8px rgba(255,152,0,0.3);display:none;" onclick="confirmDeleteSelected()">
+        <i class="fas fa-trash mr-2"></i>Delete Selected (<span id="selectedCount">0</span>)
+      </button>
+      <button type="button" class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;border:none;box-shadow:0 2px 8px rgba(220,53,69,0.3);" data-toggle="modal" data-target="#clearHistoryModal">
+        <i class="fas fa-trash-alt mr-2"></i>Clear All
+      </button>
+      {% endif %}
+    </div>
   </div>
-  <div class="card border-0 shadow-sm">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover mb-0">
-          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
-            <tr>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Name</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Release Date</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Address</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for p in dischargedpatients %}
-            <tr style="transition:all 0.2s;">
-              <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{p.patientName}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;">{{p.admitDate}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;">{{p.releaseDate}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
-              <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="6" class="text-center py-4 text-muted">No discharged patients found</td></tr>
-            {% endfor %}
-          </tbody>
-        </table>
+  <form id="deleteForm" method="POST" action="/doctor-delete-selected-discharge">
+    {% csrf_token %}
+    <div class="card border-0 shadow-sm">
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+              <tr>
+                <th style="color:#c9a84c;padding:15px 15px;font-weight:600;border:none;width:50px;">
+                  <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" style="width:18px;height:18px;cursor:pointer;">
+                </th>
+                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Name</th>
+                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
+                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Release Date</th>
+                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
+                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
+                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Address</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in dischargedpatients %}
+              <tr style="transition:all 0.2s;">
+                <td style="padding:12px 15px;vertical-align:middle;">
+                  <input type="checkbox" name="selected_patients" value="{{p.id}}" class="patient-checkbox" onclick="updateSelectedCount()" style="width:18px;height:18px;cursor:pointer;">
+                </td>
+                <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{p.patientName}}</td>
+                <td style="padding:12px 20px;vertical-align:middle;">{{p.admitDate}}</td>
+                <td style="padding:12px 20px;vertical-align:middle;">{{p.releaseDate}}</td>
+                <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
+                <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
+                <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="7" class="text-center py-4 text-muted">No discharged patients found</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+function toggleSelectAll() {
+  var selectAll = document.getElementById('selectAll');
+  var checkboxes = document.querySelectorAll('.patient-checkbox');
+  checkboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  var checkboxes = document.querySelectorAll('.patient-checkbox:checked');
+  var count = checkboxes.length;
+  document.getElementById('selectedCount').textContent = count;
+  document.getElementById('deleteSelectedBtn').style.display = count > 0 ? 'inline-block' : 'none';
+  
+  var allCheckboxes = document.querySelectorAll('.patient-checkbox');
+  document.getElementById('selectAll').checked = allCheckboxes.length > 0 && count === allCheckboxes.length;
+}
+
+function confirmDeleteSelected() {
+  var count = document.querySelectorAll('.patient-checkbox:checked').length;
+  if (count > 0 && confirm('Are you sure you want to delete ' + count + ' selected record(s)? This action cannot be undone.')) {
+    document.getElementById('deleteForm').submit();
+  }
+}
+</script>
+
+<!-- Clear History Confirmation Modal -->
+<div class="modal fade" id="clearHistoryModal" tabindex="-1" role="dialog" aria-labelledby="clearHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border-radius:12px;border:none;overflow:hidden;">
+      <div class="modal-header" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border:none;padding:20px;">
+        <h5 class="modal-title" id="clearHistoryModalLabel" style="color:#c9a84c;font-family:'Playfair Display',serif;">
+          <i class="fas fa-exclamation-triangle mr-2"></i>Confirm Clear History
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:0.8;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:30px;text-align:center;">
+        <i class="fas fa-trash-alt" style="font-size:48px;color:#dc3545;margin-bottom:20px;"></i>
+        <h5 style="color:#1a1a2e;margin-bottom:10px;">Are you sure?</h5>
+        <p class="text-muted mb-0">This will permanently delete all your discharged patient records. This action cannot be undone.</p>
+      </div>
+      <div class="modal-footer" style="border:none;padding:15px 30px 25px;justify-content:center;gap:15px;">
+        <button type="button" class="btn" data-dismiss="modal" style="background:#f0f0f0;color:#1a1a2e;border-radius:8px;padding:10px 25px;font-weight:500;">Cancel</button>
+        <a href="/doctor-clear-discharge-history" class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:8px;padding:10px 25px;font-weight:500;border:none;">
+          <i class="fas fa-trash-alt mr-2"></i>Yes, Clear All
+        </a>
       </div>
     </div>
   </div>
