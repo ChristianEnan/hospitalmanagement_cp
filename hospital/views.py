@@ -232,10 +232,15 @@ def update_doctor_view(request, pk):
         userForm = forms.DoctorUpdateUserForm(request.POST, instance=user)
         doctorForm = forms.DoctorForm(request.POST, request.FILES, instance=doctor)
         if userForm.is_valid() and doctorForm.is_valid():
+            # Save the original password before form save overwrites it
+            original_password = user.password
             user = userForm.save(commit=False)
             password = userForm.cleaned_data.get('password')
             if password:
                 user.set_password(password)
+            else:
+                # Restore original password if no new password provided
+                user.password = original_password
             user.save()
             doctor = doctorForm.save(commit=False)
             doctor.status = True
@@ -343,10 +348,15 @@ def update_patient_view(request, pk):
         userForm = forms.PatientUpdateUserForm(request.POST, instance=user)
         patientForm = forms.PatientForm(request.POST, request.FILES, instance=patient)
         if userForm.is_valid() and patientForm.is_valid():
+            # Save the original password before form save overwrites it
+            original_password = user.password
             user = userForm.save(commit=False)
             password = userForm.cleaned_data.get('password')
             if password:
                 user.set_password(password)
+            else:
+                # Restore original password if no new password provided
+                user.password = original_password
             user.save()
             patient = patientForm.save(commit=False)
             patient.status = True

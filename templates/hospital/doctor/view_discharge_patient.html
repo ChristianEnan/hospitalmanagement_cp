@@ -2,7 +2,34 @@
 {% load static %}
 {% block content %}
 
+<style>
+  /* Hide checkboxes by default, show on hover */
+  .patient-checkbox {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  
+  tbody tr:hover .patient-checkbox {
+    opacity: 1;
+  }
+  
+  /* Always show checked checkboxes */
+  .patient-checkbox:checked {
+    opacity: 1;
+  }
+  
+  /* Keep select all checkbox always visible */
+  #selectAll {
+    opacity: 1 !important;
+  }
+</style>
+
 <div class="container-fluid py-4">
+  <div class="mb-3">
+    <a href="/doctor-dashboard" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
+      <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+    </a>
+  </div>
   <div class="row align-items-center mb-4">
     <div class="col-md-6">
       <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
@@ -21,6 +48,23 @@
       {% endif %}
     </div>
   </div>
+  {% if dischargedpatients %}
+  <div class="mb-3" style="padding-left:15px;">
+    <div style="max-width:400px;position:relative;">
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border:none;border-radius:8px 0 0 8px;padding:10px 15px;">
+            <i class="fas fa-search" style="color:#c9a84c;"></i>
+          </span>
+        </div>
+        <input type="text" id="searchInput" class="form-control" placeholder="Search patients..." style="border:1px solid #dee2e6;border-left:none;border-radius:0 8px 8px 0;padding:10px 40px 10px 15px;height:45px;" onkeyup="filterTable()">
+        <button type="button" id="clearSearch" onclick="clearSearch()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);background:transparent;border:none;color:#6c757d;cursor:pointer;z-index:10;display:none;font-size:18px;">
+          <i class="fas fa-times-circle"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  {% endif %}
   <form id="deleteForm" method="POST" action="/doctor-delete-selected-discharge">
     {% csrf_token %}
     <div class="card border-0 shadow-sm">
@@ -29,9 +73,11 @@
           <table class="table table-hover mb-0">
             <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
               <tr>
+                {% if dischargedpatients %}
                 <th style="color:#c9a84c;padding:15px 15px;font-weight:600;border:none;width:50px;">
                   <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" style="width:18px;height:18px;cursor:pointer;">
                 </th>
+                {% endif %}
                 <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Name</th>
                 <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
                 <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Release Date</th>
@@ -54,7 +100,7 @@
                 <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
               </tr>
               {% empty %}
-              <tr><td colspan="7" class="text-center py-4 text-muted">No discharged patients found</td></tr>
+              <tr id="emptyRow"><td colspan="7" class="text-center py-4 text-muted">No discharged patients found</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -67,7 +113,7 @@
 <script>
 function toggleSelectAll() {
   var selectAll = document.getElementById('selectAll');
-  var checkboxes = document.querySelectorAll('.patient-checkbox');
+  var checkboxes = document.querySelectorAll('.patient-checkbox:not(.hidden-row)');
   checkboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
   updateSelectedCount();
 }
@@ -78,8 +124,8 @@ function updateSelectedCount() {
   document.getElementById('selectedCount').textContent = count;
   document.getElementById('deleteSelectedBtn').style.display = count > 0 ? 'inline-block' : 'none';
   
-  var allCheckboxes = document.querySelectorAll('.patient-checkbox');
-  document.getElementById('selectAll').checked = allCheckboxes.length > 0 && count === allCheckboxes.length;
+  var visibleCheckboxes = document.querySelectorAll('.patient-checkbox:not(.hidden-row)');
+  document.getElementById('selectAll').checked = visibleCheckboxes.length > 0 && count === visibleCheckboxes.length;
 }
 
 function confirmDeleteSelected() {
@@ -87,6 +133,81 @@ function confirmDeleteSelected() {
   if (count > 0 && confirm('Are you sure you want to delete ' + count + ' selected record(s)? This action cannot be undone.')) {
     document.getElementById('deleteForm').submit();
   }
+}
+
+function filterTable() {
+  var input = document.getElementById('searchInput');
+  var filter = input.value.toUpperCase();
+  var clearBtn = document.getElementById('clearSearch');
+  var table = document.querySelector('.table tbody');
+  var rows = table.getElementsByTagName('tr');
+  var visibleCount = 0;
+  
+  // Show/hide clear button
+  clearBtn.style.display = input.value ? 'block' : 'none';
+  
+  for (var i = 0; i < rows.length; i++) {
+    var row = rows[i];
+    
+    // Skip empty state row and no results row
+    if (row.id === 'emptyRow' || row.id === 'noResultsRow') {
+      continue;
+    }
+    
+    var cells = row.getElementsByTagName('td');
+    if (cells.length <= 1) continue;
+    
+    var found = false;
+    
+    // Search across all text columns (name, admit date, release date, symptoms, mobile, address)
+    for (var j = 1; j < cells.length; j++) {
+      var cell = cells[j];
+      if (cell) {
+        var textValue = cell.textContent || cell.innerText;
+        if (textValue.toUpperCase().indexOf(filter) > -1) {
+          found = true;
+          break;
+        }
+      }
+    }
+    
+    if (found) {
+      row.style.display = '';
+      var checkbox = row.querySelector('.patient-checkbox');
+      if (checkbox) checkbox.classList.remove('hidden-row');
+      visibleCount++;
+    } else {
+      row.style.display = 'none';
+      var checkbox = row.querySelector('.patient-checkbox');
+      if (checkbox) {
+        checkbox.classList.add('hidden-row');
+        checkbox.checked = false;
+      }
+    }
+  }
+  
+  // Show/hide no results message
+  var noResultsRow = document.getElementById('noResultsRow');
+  if (filter && visibleCount === 0) {
+    if (!noResultsRow) {
+      noResultsRow = document.createElement('tr');
+      noResultsRow.id = 'noResultsRow';
+      noResultsRow.innerHTML = '<td colspan="7" class="text-center py-4 text-muted"><i class="fas fa-search mr-2"></i>No results found</td>';
+      table.appendChild(noResultsRow);
+    }
+    noResultsRow.style.display = '';
+  } else if (noResultsRow) {
+    noResultsRow.style.display = 'none';
+  }
+  
+  updateSelectedCount();
+}
+
+function clearSearch() {
+  var input = document.getElementById('searchInput');
+  input.value = '';
+  filterTable();
+  input.focus();
 }
 </script>
 
