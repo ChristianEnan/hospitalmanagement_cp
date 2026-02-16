@@ -49,23 +49,38 @@
                 <div class="form-group">
                   <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Consultation Date</label>
                   <input type="date" name="consultationDate" class="form-control" required
-                         value="{{appointment.consultationDate|date:'Y-m-d'}}"
-                         style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;">
+                         {% if appointment.consultationDate %}value="{{appointment.consultationDate|date:'Y-m-d'}}"{% endif %}
+                         style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;height:45px;font-size:15px;color:#333;">
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
                   <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Consultation Time</label>
-                  <input type="time" name="consultationTime" class="form-control" required
-                         value="{{appointment.consultationTime|time:'H:i'}}"
-                         style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;">
+                  <select name="consultationTime" class="form-control" required
+                          style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;height:45px;font-size:15px;color:#333;">
+                    <option value="">Select Time</option>
+                    {% for hour in "08,09,10,11,12,13,14,15,16,17,18,19,20"|split:"," %}
+                      {% if hour|add:"0" < 12 %}
+                        <option value="{{hour}}:00:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':00' %}selected{% endif %}>{{hour}}:00 AM</option>
+                        <option value="{{hour}}:30:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':30' %}selected{% endif %}>{{hour}}:30 AM</option>
+                      {% elif hour == "12" %}
+                        <option value="12:00:00" {% if appointment.consultationTime|time:'H:i' == '12:00' %}selected{% endif %}>12:00 PM</option>
+                        <option value="12:30:00" {% if appointment.consultationTime|time:'H:i' == '12:30' %}selected{% endif %}>12:30 PM</option>
+                      {% else %}
+                        {% with pm_hour=hour|add:"-12" %}
+                        <option value="{{hour}}:00:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':00' %}selected{% endif %}>{{pm_hour|stringformat:"02d"}}:00 PM</option>
+                        <option value="{{hour}}:30:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':30' %}selected{% endif %}>{{pm_hour|stringformat:"02d"}}:30 PM</option>
+                        {% endwith %}
+                      {% endif %}
+                    {% endfor %}
+                  </select>
                 </div>
               </div>
               <div class="col-12">
                 <div class="form-group">
                   <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Notes for Patient (optional)</label>
                   <textarea name="consultationNotes" class="form-control" rows="3" placeholder="e.g., Bring previous reports, fasting required..."
-                            style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;">{{appointment.consultationNotes|default:""}}</textarea>
+                            style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;font-size:15px;color:#333;resize:vertical;">{{appointment.consultationNotes|default:""}}</textarea>
                 </div>
               </div>
             </div>

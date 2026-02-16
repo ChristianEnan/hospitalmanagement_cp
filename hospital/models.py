@@ -9,6 +9,11 @@ DEPARTMENTS = [
     ('Allergists/Immunologists', 'Allergists/Immunologists'),
     ('Anesthesiologists', 'Anesthesiologists'),
     ('Colon and Rectal Surgeons', 'Colon and Rectal Surgeons'),
+    ('General Medicine (General Physician)', 'General Medicine (General Physician)'),
+    ('Pediatrics', 'Pediatrics'),
+    ('Dermatology', 'Dermatology'),
+    ('ENT (Ear, Nose, and Throat)', 'ENT (Ear, Nose, and Throat)'),
+    ('Gastroenterology', 'Gastroenterology'),
 ]
 
 
