@@ -55,12 +55,15 @@ urlpatterns = [
     path('admin-approve-appointment', views.admin_approve_appointment_view, name='admin-approve-appointment'),
     path('approve-appointment/<int:pk>', views.approve_appointment_view, name='approve-appointment'),
     path('reject-appointment/<int:pk>', views.reject_appointment_view, name='reject-appointment'),
+    path('admin-delete-appointment/<int:pk>', views.admin_delete_appointment_view, name='admin-delete-appointment'),
 
     # Doctor
     path('doctor-dashboard', views.doctor_dashboard_view, name='doctor-dashboard'),
     path('search', views.search_view, name='search'),
     path('doctor-patient', views.doctor_patient_view, name='doctor-patient'),
     path('doctor-view-patient', views.doctor_view_patient_view, name='doctor-view-patient'),
+    path('doctor-discharge', views.doctor_discharge_patient_view, name='doctor-discharge'),
+    path('doctor-discharge-patient/<int:pk>', views.doctor_discharge_patient_action_view, name='doctor-discharge-patient'),
     path('doctor-view-discharge-patient', views.doctor_view_discharge_patient_view, name='doctor-view-discharge-patient'),
     path('doctor-clear-discharge-history', views.doctor_clear_discharge_history_view, name='doctor-clear-discharge-history'),
     path('doctor-delete-selected-discharge', views.doctor_delete_selected_discharge_view, name='doctor-delete-selected-discharge'),

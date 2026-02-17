@@ -23,6 +23,7 @@
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Patient Name</th>
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Description</th>
               <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Date</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;text-align:center;">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -32,9 +33,14 @@
               <td style="padding:12px 20px;vertical-align:middle;">{{a.patientName}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                <button class="btn btn-sm delete-btn" data-id="{{a.id}}" data-doctor="{{a.doctorName}}" data-patient="{{a.patientName}}" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;border:none;">
+                  <i class="fas fa-trash-alt mr-1"></i>Delete
+                </button>
+              </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" class="text-center py-4 text-muted">No appointments found</td></tr>
+            <tr><td colspan="5" class="text-center py-4 text-muted">No appointments found</td></tr>
             {% endfor %}
           </tbody>
         </table>
@@ -42,5 +48,65 @@
     </div>
   </div>
 </div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border-radius:15px;border:none;">
+      <div class="modal-header" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border:none;border-radius:15px 15px 0 0;">
+        <h5 class="modal-title" id="deleteModalLabel" style="color:#c9a84c;font-weight:600;">
+          <i class="fas fa-exclamation-triangle mr-2"></i>Confirm Deletion
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:0.8;">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:30px;">
+        <p style="font-size:16px;color:#333;margin:0;">
+          Are you sure you want to delete the appointment between <strong id="modalDoctor"></strong> and <strong id="modalPatient"></strong>?
+        </p>
+        <p style="font-size:14px;color:#666;margin-top:10px;margin-bottom:0;">
+          This action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer" style="border:none;padding:20px 30px;">
+        <button type="button" class="btn" data-dismiss="modal" style="background:#6c757d;color:#fff;border-radius:20px;padding:8px 25px;font-weight:600;">
+          <i class="fas fa-times mr-2"></i>Cancel
+        </button>
+        <button type="button" class="btn" id="confirmDelete" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:20px;padding:8px 25px;font-weight:600;">
+          <i class="fas fa-trash-alt mr-2"></i>Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  let deleteAppointmentId = null;
+  
+  // Handle delete button click
+  document.querySelectorAll('.delete-btn').forEach(button => {
+    button.addEventListener('click', function() {
+      deleteAppointmentId = this.getAttribute('data-id');
+      const doctorName = this.getAttribute('data-doctor');
+      const patientName = this.getAttribute('data-patient');
+      
+      // Update modal content
+      document.getElementById('modalDoctor').textContent = 'Dr. ' + doctorName;
+      document.getElementById('modalPatient').textContent = patientName;
+      
+      // Show modal
+      $('#deleteModal').modal('show');
+    });
+  });
+  
+  // Handle confirm delete button click
+  document.getElementById('confirmDelete').addEventListener('click', function() {
+    if (deleteAppointmentId) {
+      // Redirect to delete URL
+      window.location.href = "{% url 'admin-delete-appointment' 0 %}".replace('0', deleteAppointmentId);
+    }
+  });
+</script>
 
 {% endblock content %}

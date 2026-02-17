@@ -44,43 +44,62 @@
 
           <form method="post">
             {% csrf_token %}
-            <div class="row">
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Consultation Date</label>
+            <div class="row mb-3">
+              <div class="col-md-6 mb-3 mb-md-0">
+                <div class="form-group mb-0">
+                  <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:8px;">Consultation Date</label>
                   <input type="date" name="consultationDate" class="form-control" required
                          {% if appointment.consultationDate %}value="{{appointment.consultationDate|date:'Y-m-d'}}"{% endif %}
-                         style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;height:45px;font-size:15px;color:#333;">
+                         style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;height:45px;font-size:15px;color:#333;width:100%;">
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="form-group">
-                  <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Consultation Time</label>
-                  <select name="consultationTime" class="form-control" required
-                          style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;height:45px;font-size:15px;color:#333;">
-                    <option value="">Select Time</option>
-                    {% for hour in "08,09,10,11,12,13,14,15,16,17,18,19,20"|split:"," %}
-                      {% if hour|add:"0" < 12 %}
-                        <option value="{{hour}}:00:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':00' %}selected{% endif %}>{{hour}}:00 AM</option>
-                        <option value="{{hour}}:30:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':30' %}selected{% endif %}>{{hour}}:30 AM</option>
-                      {% elif hour == "12" %}
-                        <option value="12:00:00" {% if appointment.consultationTime|time:'H:i' == '12:00' %}selected{% endif %}>12:00 PM</option>
-                        <option value="12:30:00" {% if appointment.consultationTime|time:'H:i' == '12:30' %}selected{% endif %}>12:30 PM</option>
-                      {% else %}
-                        {% with pm_hour=hour|add:"-12" %}
-                        <option value="{{hour}}:00:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':00' %}selected{% endif %}>{{pm_hour|stringformat:"02d"}}:00 PM</option>
-                        <option value="{{hour}}:30:00" {% if appointment.consultationTime|time:'H:i' == hour|add:':30' %}selected{% endif %}>{{pm_hour|stringformat:"02d"}}:30 PM</option>
-                        {% endwith %}
-                      {% endif %}
-                    {% endfor %}
-                  </select>
+                <div class="form-group mb-0">
+                  <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:8px;">Consultation Time</label>
+                  <div class="row">
+                    <div class="col-4">
+                      <select name="consultationHour" class="form-control" required
+                              style="border:2px solid #e8e8e8;border-radius:10px;padding:8px;height:45px;font-size:14px;color:#333;">
+                        <option value="">Hour</option>
+                        <option value="01">01</option>
+                        <option value="02">02</option>
+                        <option value="03">03</option>
+                        <option value="04">04</option>
+                        <option value="05">05</option>
+                        <option value="06">06</option>
+                        <option value="07">07</option>
+                        <option value="08">08</option>
+                        <option value="09">09</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                      </select>
+                    </div>
+                    <div class="col-4">
+                      <select name="consultationMinute" class="form-control" required
+                              style="border:2px solid #e8e8e8;border-radius:10px;padding:8px;height:45px;font-size:14px;color:#333;">
+                        <option value="">Minute</option>
+                        <option value="00">00</option><option value="01">01</option><option value="02">02</option><option value="03">03</option><option value="04">04</option><option value="05">05</option><option value="06">06</option><option value="07">07</option><option value="08">08</option><option value="09">09</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17">17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option>
+                      </select>
+                    </div>
+                    <div class="col-4">
+                      <select name="consultationPeriod" class="form-control" required
+                              style="border:2px solid #e8e8e8;border-radius:10px;padding:8px;height:45px;font-size:14px;color:#333;">
+                        <option value="">AM/PM</option>
+                        <option value="AM">AM</option>
+                        <option value="PM">PM</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
+            </div>
+            <div class="row">
               <div class="col-12">
                 <div class="form-group">
-                  <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;">Notes for Patient (optional)</label>
+                  <label style="color:#333;font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:8px;">Notes for Patient (optional)</label>
                   <textarea name="consultationNotes" class="form-control" rows="3" placeholder="e.g., Bring previous reports, fasting required..."
-                            style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;font-size:15px;color:#333;resize:vertical;">{{appointment.consultationNotes|default:""}}</textarea>
+                            style="border:2px solid #e8e8e8;border-radius:10px;padding:11px 15px;font-size:15px;color:#333;resize:vertical;width:100%;">{{appointment.consultationNotes|default:""}}</textarea>
                 </div>
               </div>
             </div>

@@ -39,6 +39,24 @@
         <p>Register as a medical professional</p>
       </div>
       {% if userForm.errors or doctorForm.errors %}
+      <!-- Check if username already exists error -->
+      {% if 'username' in userForm.errors %}
+        {% for error in userForm.errors.username %}
+          {% if 'already exists' in error %}
+      <div class="alert" style="border-radius:12px;border:2px solid #3498db;background:#e8f4fd;color:#2874a6;font-size:14px;padding:20px;margin-bottom:20px;text-align:center;">
+        <i class="fas fa-info-circle" style="font-size:36px;margin-bottom:12px;"></i>
+        <h5 style="color:#2874a6;font-weight:700;margin-bottom:10px;">Username Already Registered</h5>
+        <p style="margin-bottom:15px;font-size:15px;">The username "<strong>{{ userForm.data.username }}</strong>" is already registered in our system.</p>
+        <p style="margin-bottom:15px;">If this is your account, please login to continue.</p>
+        <a href="{% url 'doctorlogin' %}" class="btn" style="background:linear-gradient(135deg,#3498db,#2874a6);color:#fff;padding:12px 30px;border-radius:8px;font-weight:600;text-decoration:none;display:inline-block;">
+          <i class="fas fa-sign-in-alt mr-2"></i>Go to Login
+        </a>
+        <p style="margin-top:15px;margin-bottom:0;font-size:13px;">Or use a different username to create a new account.</p>
+      </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      
       <div class="alert" style="border-radius:12px;border:none;background:#fff3f3;color:#c0392b;font-size:14px;padding:15px 18px;margin-bottom:20px;">
         <i class="fas fa-exclamation-triangle mr-2"></i> <strong>Please fix the errors below:</strong>
         <ul class="mb-0 mt-2" style="padding-left:20px;">

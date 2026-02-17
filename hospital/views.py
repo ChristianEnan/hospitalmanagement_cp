@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from . import forms, models
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required, user_passes_test
@@ -123,6 +123,22 @@ def admin_login_view(request):
             else:
                 error_message = 'This account is not registered as an Administrator. Please use the correct login portal.'
                 form = AuthenticationForm()
+        else:
+            # Check if username exists but password is wrong
+            username = request.POST.get('username', '')
+            if username:
+                try:
+                    user = User.objects.get(username=username)
+                    # Username exists, so password must be wrong
+                    if is_admin(user):
+                        error_message = 'Invalid password. Please check your password and try again.'
+                    else:
+                        error_message = 'This account is not registered as an Administrator. Please use the correct login portal.'
+                    form = AuthenticationForm()
+                except User.DoesNotExist:
+                    # Username doesn't exist
+                    error_message = 'Username not found. Please check your username or contact the system administrator.'
+                    form = AuthenticationForm()
     return render(request, 'hospital/admin/login.html', {'form': form, 'error_message': error_message})
 
 
@@ -139,6 +155,22 @@ def doctor_login_view(request):
             else:
                 error_message = 'This account is not registered as a Doctor. Please use the correct login portal.'
                 form = AuthenticationForm()
+        else:
+            # Check if username exists but password is wrong
+            username = request.POST.get('username', '')
+            if username:
+                try:
+                    user = User.objects.get(username=username)
+                    # Username exists, so password must be wrong
+                    if is_doctor(user):
+                        error_message = 'Invalid password. Please check your password and try again.'
+                    else:
+                        error_message = 'This account is not registered as a Doctor. Please use the correct login portal.'
+                    form = AuthenticationForm()
+                except User.DoesNotExist:
+                    # Username doesn't exist
+                    error_message = 'Username not found. Please check your username or sign up for a new account.'
+                    form = AuthenticationForm()
     return render(request, 'hospital/doctor/login.html', {'form': form, 'error_message': error_message})
 
 
@@ -155,6 +187,22 @@ def patient_login_view(request):
             else:
                 error_message = 'This account is not registered as a Patient. Please use the correct login portal.'
                 form = AuthenticationForm()
+        else:
+            # Check if username exists but password is wrong
+            username = request.POST.get('username', '')
+            if username:
+                try:
+                    user = User.objects.get(username=username)
+                    # Username exists, so password must be wrong
+                    if is_patient(user):
+                        error_message = 'Invalid password. Please check your password and try again.'
+                    else:
+                        error_message = 'This account is not registered as a Patient. Please use the correct login portal.'
+                    form = AuthenticationForm()
+                except User.DoesNotExist:
+                    # Username doesn't exist
+                    error_message = 'Username not found. Please check your username or sign up for a new account.'
+                    form = AuthenticationForm()
     return render(request, 'hospital/patient/login.html', {'form': form, 'error_message': error_message})
 
 def afterlogin_view(request):
@@ -489,7 +537,7 @@ def render_to_pdf(template_src, context_dict):
     template = get_template(template_src)
     html = template.render(context_dict)
     result = io.BytesIO()
-    pdf = pisa.pisaDocument(io.BytesIO(html.encode("ISO-8859-1")), result)
+    pdf = pisa.pisaDocument(io.BytesIO(html.encode("UTF-8")), result, encoding='UTF-8')
     if not pdf.err:
         return HttpResponse(result.getvalue(), content_type='application/pdf')
     return HttpResponse('Error generating PDF', status=400)
@@ -572,6 +620,13 @@ def reject_appointment_view(request, pk):
     appointment.delete()
     return redirect('admin-approve-appointment')
 
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_delete_appointment_view(request, pk):
+    appointment = models.Appointment.objects.get(id=pk)
+    appointment.delete()
+    return redirect('admin-view-appointment')
+
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
@@ -621,6 +676,68 @@ def search_view(request):
         Q(symptoms__icontains=query) | Q(user__first_name__icontains=query)
     )
     return render(request, 'hospital/doctor/view_patient.html', {'patients': patients, 'doctor': doctor})
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_discharge_patient_view(request):
+    patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
+    doctor = models.Doctor.objects.get(user_id=request.user.id)
+    return render(request, 'hospital/doctor/discharge_patient.html', {'patients': patients, 'doctor': doctor})
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_discharge_patient_action_view(request, pk):
+    patient = models.Patient.objects.get(id=pk)
+    days = (date.today() - patient.admitDate)
+    assignedDoctor = models.User.objects.filter(id=patient.assignedDoctorId)
+    d = max(days.days, 1)  # Minimum 1 day for billing
+    patientDict = {
+        'patientId': pk,
+        'name': patient.get_name,
+        'mobile': patient.mobile,
+        'address': patient.address,
+        'symptoms': patient.symptoms,
+        'admitDate': patient.admitDate,
+        'todayDate': date.today(),
+        'day': d,
+        'assignedDoctorName': f"Dr. {assignedDoctor[0].first_name} {assignedDoctor[0].last_name}",
+    }
+    if request.method == 'POST':
+        feeDict = {
+            'roomCharge': int(request.POST['roomCharge']) * int(d),
+            'doctorFee': request.POST['doctorFee'],
+            'medicineCost': request.POST['medicineCost'],
+            'OtherCharge': request.POST['OtherCharge'],
+            'total': (int(request.POST['roomCharge']) * int(d)) + int(request.POST['doctorFee']) + int(request.POST['medicineCost']) + int(request.POST['OtherCharge'])
+        }
+        patientDict.update(feeDict)
+        pDD = models.PatientDischargeDetails()
+        pDD.patientId = pk
+        pDD.patientName = patient.get_name
+        pDD.assignedDoctorName = f"Dr. {assignedDoctor[0].first_name} {assignedDoctor[0].last_name}"
+        pDD.address = patient.address
+        pDD.mobile = patient.mobile
+        pDD.symptoms = patient.symptoms
+        pDD.admitDate = patient.admitDate
+        pDD.releaseDate = date.today()
+        pDD.daySpent = int(d)
+        pDD.medicineCost = int(request.POST['medicineCost'])
+        pDD.roomCharge = int(request.POST['roomCharge']) * int(d)
+        pDD.doctorFee = int(request.POST['doctorFee'])
+        pDD.OtherCharge = int(request.POST['OtherCharge'])
+        pDD.total = (int(request.POST['roomCharge']) * int(d)) + int(request.POST['doctorFee']) + int(request.POST['medicineCost']) + int(request.POST['OtherCharge'])
+        pDD.canReapply = request.POST.get('canReapply', '') == 'on'
+        pDD.followUpNotes = request.POST.get('followUpNotes', '')
+        pDD.save()
+        
+        # Mark patient as discharged
+        patient.status = False
+        patient.save()
+        
+        return render(request, 'hospital/patient/final_bill.html', context=patientDict)
+    return render(request, 'hospital/patient/generate_bill.html', context=patientDict)
 
 
 @login_required(login_url='doctorlogin')
@@ -704,7 +821,19 @@ def doctor_schedule_consultation_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     if request.method == 'POST':
         appointment.consultationDate = request.POST.get('consultationDate')
-        appointment.consultationTime = request.POST.get('consultationTime')
+        
+        # Convert separate time fields to 24-hour format
+        hour = int(request.POST.get('consultationHour'))
+        minute = request.POST.get('consultationMinute')
+        period = request.POST.get('consultationPeriod')
+        
+        # Convert 12-hour to 24-hour format
+        if period == 'PM' and hour != 12:
+            hour += 12
+        elif period == 'AM' and hour == 12:
+            hour = 0
+        
+        appointment.consultationTime = f"{hour:02d}:{minute}:00"
         appointment.consultationNotes = request.POST.get('consultationNotes', '')
         appointment.save()
         messages.success(request, f'Consultation scheduled for {appointment.patientName}.')

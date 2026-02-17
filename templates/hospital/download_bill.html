@@ -1,198 +1,368 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-
-
+<html lang="en">
 <head>
   <meta charset="utf-8">
+  <title>Hospital Bill - Invoice</title>
   <style>
     @page {
       size: A4;
-      margin: 1cm;
-
-      @frame footer {
-        -pdf-frame-content: footerContent;
-        bottom: 0cm;
-        margin-left: 9cm;
-        margin-right: 9cm;
-        height: 1cm;
-      }
+      margin: 1.5cm;
     }
-
-    .invoice-box {
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      line-height: 1.6;
+    }
+    
+    .invoice-container {
       max-width: 800px;
-      margin: auto;
-      padding: 30px;
-      border: 1px solid #eee;
-      box-shadow: 0 0 10px rgba(0, 0, 0, .15);
-      font-size: 16px;
-      line-height: 24px;
-      font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+      margin: 0 auto;
+      background: #fff;
+    }
+    
+    /* Header Section */
+    .invoice-header {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      color: #fff;
+      padding: 30px 40px;
+      border-radius: 8px 8px 0 0;
+      margin-bottom: 30px;
+    }
+    
+    .hospital-name {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 5px;
+      color: #c9a84c;
+      letter-spacing: 1px;
+    }
+    
+    .invoice-subtitle {
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      font-weight: 400;
+    }
+    
+    .invoice-title-section {
+      display: table;
+      width: 100%;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid rgba(201,168,76,0.3);
+    }
+    
+    .invoice-title {
+      display: table-cell;
+      font-size: 24px;
+      font-weight: 600;
+      color: #c9a84c;
+    }
+    
+    .invoice-dates {
+      display: table-cell;
+      text-align: right;
+      font-size: 13px;
+      color: rgba(255,255,255,0.9);
+      vertical-align: middle;
+    }
+    
+    .date-label {
+      font-weight: 600;
+      color: #c9a84c;
+    }
+    
+    /* Main Content */
+    .invoice-body {
+      padding: 0 40px 40px 40px;
+    }
+    
+    /* Info Boxes */
+    .info-section {
+      display: table;
+      width: 100%;
+      margin-bottom: 30px;
+    }
+    
+    .info-box {
+      display: table-cell;
+      width: 48%;
+      padding: 20px;
+      background: #f8f9fa;
+      border-left: 4px solid #0f3460;
+      border-radius: 6px;
+    }
+    
+    .info-box:last-child {
+      float: right;
+    }
+    
+    .info-box-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #0f3460;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+    
+    .info-line {
+      font-size: 14px;
+      margin-bottom: 8px;
       color: #555;
     }
-
-    .invoice-box table {
+    
+    .info-label {
+      font-weight: 600;
+      color: #333;
+      display: inline-block;
+      min-width: 100px;
+    }
+    
+    /* Symptoms Section */
+    .symptoms-section {
+      background: #fff9e6;
+      border-left: 4px solid #c9a84c;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 6px;
+    }
+    
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a2e;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    
+    .symptoms-text {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.8;
+      padding-left: 15px;
+    }
+    
+    /* Charges Table */
+    .charges-section {
+      margin-bottom: 30px;
+    }
+    
+    .charges-table {
       width: 100%;
-      line-height: inherit;
+      border-collapse: collapse;
+      margin-top: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .charges-table thead {
+      background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+      color: #fff;
+    }
+    
+    .charges-table th {
+      padding: 15px;
       text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #c9a84c;
     }
-
-    .invoice-box table td {
-      padding: 5px;
-      vertical-align: top;
-    }
-
-    .invoice-box table tr td:nth-child(2) {
+    
+    .charges-table th:last-child {
       text-align: right;
     }
-
-    .invoice-box table tr.top table td {
-      padding-bottom: 20px;
+    
+    .charges-table tbody tr {
+      border-bottom: 1px solid #e8e8e8;
     }
-
-    .invoice-box table tr.top table td.title {
-      font-size: 45px;
-      line-height: 45px;
-      color: #333;
-    }
-
-    .invoice-box table tr.information table td {
-      padding-bottom: 40px;
-    }
-
-    .invoice-box table tr.heading td {
-      background: #eee;
-      border-bottom: 1px solid #ddd;
-      font-weight: bold;
-    }
-
-    .invoice-box table tr.details td {
-      padding-bottom: 20px;
-    }
-
-    .invoice-box table tr.item td {
-      border-bottom: 1px solid #eee;
-    }
-
-    .invoice-box table tr.item.last td {
+    
+    .charges-table tbody tr:last-child {
       border-bottom: none;
     }
-
-    .invoice-box table tr.total td:nth-child(2) {
-      border-top: 2px solid #eee;
-      font-weight: bold;
+    
+    .charges-table td {
+      padding: 15px;
+      font-size: 14px;
+      color: #555;
     }
-
-    @media only screen and (max-width: 600px) {
-      .invoice-box table tr.top table td {
-        width: 100%;
-        display: block;
-        text-align: center;
-      }
-
-      .invoice-box table tr.information table td {
-        width: 100%;
-        display: block;
-        text-align: center;
-      }
-    }
-
-    /** RTL **/
-    .rtl {
-      direction: rtl;
-      font-family: Tahoma, 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-    }
-
-    .rtl table {
+    
+    .charges-table td:last-child {
       text-align: right;
+      font-weight: 600;
+      color: #333;
     }
-
-    .rtl table tr td:nth-child(2) {
-      text-align: left;
+    
+    .charges-table .total-row {
+      background: #f8f9fa;
+      font-weight: 700;
+    }
+    
+    .charges-table .total-row td {
+      padding: 20px 15px;
+      font-size: 16px;
+      color: #1a1a2e;
+      border-top: 3px solid #0f3460;
+    }
+    
+    .currency {
+      font-family: Arial, sans-serif;
+      font-weight: 600;
+    }
+    
+    /* Footer */
+    .invoice-footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 2px solid #e8e8e8;
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+    }
+    
+    .footer-text {
+      margin-bottom: 8px;
+    }
+    
+    .footer-bold {
+      font-weight: 600;
+      color: #0f3460;
+    }
+    
+    /* Signature Section */
+    .signature-section {
+      display: table;
+      width: 100%;
+      margin-top: 40px;
+    }
+    
+    .signature-box {
+      display: table-cell;
+      width: 48%;
+      text-align: center;
+      padding: 20px 0;
+    }
+    
+    .signature-line {
+      border-top: 2px solid #333;
+      width: 200px;
+      margin: 40px auto 10px;
+    }
+    
+    .signature-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #555;
     }
   </style>
 </head>
-
 <body>
-
-  <br><br><br>
-  <div class="invoice-box">
-    <table cellpadding="0" cellspacing="0">
-      <tr class="top">
-        <td colspan="2">
-          <table>
+  <div class="invoice-container">
+    <!-- Header -->
+    <div class="invoice-header">
+      <div class="hospital-name">Hospital Management</div>
+      <div class="invoice-subtitle">Quality Healthcare Management System</div>
+      
+      <div class="invoice-title-section">
+        <div class="invoice-title">DISCHARGE INVOICE</div>
+        <div class="invoice-dates">
+          <div><span class="date-label">Admit Date:</span> {{admitDate}}</div>
+          <div><span class="date-label">Release Date:</span> {{releaseDate}}</div>
+          <div><span class="date-label">Days Spent:</span> {{daySpent}}</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Body -->
+    <div class="invoice-body">
+      <!-- Patient and Doctor Info -->
+      <div class="info-section">
+        <div class="info-box">
+          <div class="info-box-title">Patient Information</div>
+          <div class="info-line"><span class="info-label">Name:</span> {{patientName}}</div>
+          <div class="info-line"><span class="info-label">Mobile:</span> {{mobile}}</div>
+          <div class="info-line"><span class="info-label">Address:</span> {{address}}</div>
+        </div>
+        
+        <div class="info-box" style="float:right;">
+          <div class="info-box-title">Doctor Information</div>
+          <div class="info-line"><span class="info-label">Doctor:</span> {{assignedDoctorName}}</div>
+          <div class="info-line"><span class="info-label">Department:</span> Medical Services</div>
+        </div>
+      </div>
+      
+      <div style="clear:both;"></div>
+      
+      <!-- Symptoms -->
+      <div class="symptoms-section">
+        <div class="section-title">Disease & Symptoms</div>
+        <div class="symptoms-text">{{symptoms}}</div>
+      </div>
+      
+      <!-- Charges Table -->
+      <div class="charges-section">
+        <div class="section-title">Billing Summary</div>
+        <table class="charges-table">
+          <thead>
             <tr>
-              <td class="title">
-                <h5>Hospital Management</h5>
-              </td>
-
-              <td>
-
-                Admit Date: {{admitDate}}<br>
-                Release Date: {{releaseDate}}<br>
-                Days Spent: {{daySpent}}
-              </td>
+              <th>Description</th>
+              <th>Amount</th>
             </tr>
-          </table>
-        </td>
-      </tr>
-
-      <tr class="information">
-        <td colspan="2">
-          <table>
+          </thead>
+          <tbody>
             <tr>
-              <td>
-                Patient Name : {{patientName}}<br>
-                Patient Mobile : {{mobile}}<br>
-                Patient Addres : {{address}}<br>
-              </td>
-
-              <td>
-                Doctor Name :<br>
-                {{assignedDoctorName}}<br>
-
-              </td>
+              <td>Room Charges ({{daySpent}} days)</td>
+              <td><span class="currency">Rs.</span> {{roomCharge}}</td>
             </tr>
-          </table>
-        </td>
-      </tr>
-
-
-      <tr class="information">
-        <td colspan="2">
-          <table>
             <tr>
-              <td>
-                Disease and Symptoms :<br>
-                &nbsp &nbsp &nbsp &nbsp &nbsp {{symptoms}}
-              </td>
-
+              <td>Doctor Consultation Fee</td>
+              <td><span class="currency">Rs.</span> {{doctorFee}}</td>
             </tr>
-          </table>
-        </td>
-      </tr>
-
-
-
-      <tr class="information">
-        <td colspan="2">
-          <table>
             <tr>
-              <td>
-                Charges :<br><br>
-                Room Charge of {{daySpent}} Days : {{roomCharge}}<br>
-                Doctor Fee : {{doctorFee}}<br>
-                Medicine Cost : {{medicineCost}}<br>
-                Other Charge : {{OtherCharge}} <br><br>
-                &nbsp &nbsp &nbsp &nbsp &nbsp Total Rupees : {{total}}
-              </td>
+              <td>Medicine & Pharmacy</td>
+              <td><span class="currency">Rs.</span> {{medicineCost}}</td>
             </tr>
-          </table>
-        </td>
-      </tr>
-
-
-    </table>
+            <tr>
+              <td>Other Charges & Services</td>
+              <td><span class="currency">Rs.</span> {{OtherCharge}}</td>
+            </tr>
+            <tr class="total-row">
+              <td><strong>TOTAL AMOUNT</strong></td>
+              <td><strong><span class="currency">Rs.</span> {{total}}</strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Signature Section -->
+      <div class="signature-section">
+        <div class="signature-box">
+          <div class="signature-line"></div>
+          <div class="signature-label">Patient Signature</div>
+        </div>
+        <div class="signature-box">
+          <div class="signature-line"></div>
+          <div class="signature-label">Authorized Signature</div>
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div class="invoice-footer">
+        <div class="footer-text"><span class="footer-bold">Note:</span> This is a computer-generated invoice and does not require a physical signature.</div>
+        <div class="footer-text">For any queries, please contact our billing department.</div>
+        <div class="footer-text" style="margin-top:15px;color:#0f3460;font-weight:600;">Thank you for choosing our services!</div>
+      </div>
+    </div>
   </div>
 </body>
-
 </html>
