@@ -1,0 +1,70 @@
+{% extends 'hospital/patient/base.html' %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="mb-3">
+    <a href="/patient-dashboard" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
+      <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+    </a>
+  </div>
+  
+  <div class="section-header mb-4">
+    <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
+      <i class="fas fa-history" style="color:#c9a84c;margin-right:10px;"></i>Appointment History
+    </h2>
+    <p class="text-muted mt-1 mb-0">View all your appointments including past consultations</p>
+  </div>
+  
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+            <tr>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Doctor Name</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Description</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Date</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;text-align:center;">Status</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;text-align:center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in appointments %}
+            <tr style="transition:all 0.2s;">
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{a.doctorName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                {% if a.status %}
+                  <span class="badge" style="background:#28a745;color:#fff;padding:6px 12px;border-radius:15px;font-size:12px;">
+                    <i class="fas fa-check-circle mr-1"></i>Approved
+                  </span>
+                {% else %}
+                  <span class="badge" style="background:#ffc107;color:#fff;padding:6px 12px;border-radius:15px;font-size:12px;">
+                    <i class="fas fa-clock mr-1"></i>Pending
+                  </span>
+                {% endif %}
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                {% if not a.status %}
+                  <a href="{% url 'patient-update-appointment' a.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#17a2b8,#138496);color:#fff;border-radius:20px;padding:5px 15px;">
+                    <i class="fas fa-edit mr-1"></i>Edit
+                  </a>
+                {% else %}
+                  <span class="text-muted" style="font-size:13px;">
+                    <i class="fas fa-check mr-1"></i>Completed
+                  </span>
+                {% endif %}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="text-center py-4 text-muted">No appointments found</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,77 @@
+{% extends 'hospital/patient/base.html' %}
+{% load widget_tweaks %}
+{% block content %}
+
+<div class="container-fluid py-4">
+  <div class="mb-3">
+    <a href="{% url 'patient-view-appointment' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
+      <i class="fas fa-arrow-left mr-2"></i>Back to Appointments
+    </a>
+  </div>
+  
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="border-radius:10px;border:none;">
+        {% if message.tags == 'success' %}
+          <i class="fas fa-check-circle mr-2"></i>
+        {% elif message.tags == 'error' %}
+          <i class="fas fa-exclamation-circle mr-2"></i>
+        {% endif %}
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+    {% endfor %}
+  {% endif %}
+  
+  <div class="card border-0 shadow-sm">
+    <div class="card-header" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border:none;padding:20px;">
+      <h3 style="color:#c9a84c;font-family: 'Playfair Display', serif;margin:0;">
+        <i class="fas fa-edit mr-2"></i>Update Appointment
+      </h3>
+      <p class="text-white mb-0 mt-2" style="font-size:14px;opacity:0.9;">Edit your appointment details</p>
+    </div>
+    <div class="card-body p-4">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row">
+          <div class="col-md-6 mb-4">
+            <label style="font-weight:600;color:#1a1a2e;margin-bottom:8px;">
+              <i class="fas fa-user-md mr-2" style="color:#c9a84c;"></i>Doctor
+            </label>
+            {% render_field appointmentForm.doctorId class="form-control" style="border-radius:10px;border:2px solid #e0e0e0;padding:12px;" %}
+          </div>
+          
+          <div class="col-md-6 mb-4">
+            <label style="font-weight:600;color:#1a1a2e;margin-bottom:8px;">
+              <i class="fas fa-calendar-alt mr-2" style="color:#c9a84c;"></i>Appointment Date
+            </label>
+            {% render_field appointmentForm.appointmentDate class="form-control" style="border-radius:10px;border:2px solid #e0e0e0;padding:12px;" %}
+          </div>
+        </div>
+        
+        <div class="mb-4">
+          <label style="font-weight:600;color:#1a1a2e;margin-bottom:8px;">
+            <i class="fas fa-notes-medical mr-2" style="color:#c9a84c;"></i>Description
+          </label>
+          {% render_field appointmentForm.description class="form-control" rows="4" style="border-radius:10px;border:2px solid #e0e0e0;padding:12px;" %}
+        </div>
+        
+        <div class="alert" style="background:#fff9e6;border-left:4px solid #c9a84c;border-radius:8px;">
+          <i class="fas fa-info-circle" style="color:#c9a84c;"></i>
+          <strong>Note:</strong> Your updated appointment will need to be approved by admin before it becomes active.
+        </div>
+        
+        <div class="text-center mt-4">
+          <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#b8973f);color:#fff;border-radius:25px;padding:12px 40px;font-weight:600;font-size:16px;border:none;">
+            <i class="fas fa-save mr-2"></i>Update Appointment
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -627,6 +627,27 @@ def admin_delete_appointment_view(request, pk):
     appointment.delete()
     return redirect('admin-view-appointment')
 
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_appointment_history_view(request):
+    # Get all appointments (including completed/cancelled ones)
+    appointments = models.Appointment.objects.all().order_by('-appointmentDate')
+    return render(request, 'hospital/admin/appointment_history.html', {'appointments': appointments})
+
+@login_required(login_url='adminlogin')
+@user_passes_test(is_admin)
+def admin_update_appointment_view(request, pk):
+    appointment = models.Appointment.objects.get(id=pk)
+    appointmentForm = forms.AppointmentForm(instance=appointment)
+    mydict = {'appointmentForm': appointmentForm, 'appointment': appointment}
+    if request.method == 'POST':
+        appointmentForm = forms.AppointmentForm(request.POST, instance=appointment)
+        if appointmentForm.is_valid():
+            appointmentForm.save()
+            messages.success(request, 'Appointment updated successfully!')
+            return redirect('admin-view-appointment')
+    return render(request, 'hospital/admin/update_appointment.html', context=mydict)
+
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
 def doctor_dashboard_view(request):
@@ -812,6 +833,31 @@ def delete_appointment_view(request, pk):
     appointments = zip(appointments, patients)
     return render(request, 'hospital/doctor/delete_appointment.html', {'appointments': appointments, 'doctor': doctor})
 
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_appointment_history_view(request):
+    doctor = models.Doctor.objects.get(user_id=request.user.id)
+    appointments = models.Appointment.objects.filter(doctorId=request.user.id).order_by('-appointmentDate')
+    patientid = [a.patientId for a in appointments]
+    patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
+    appointments = zip(appointments, patients)
+    return render(request, 'hospital/doctor/appointment_history.html', {'appointments': appointments, 'doctor': doctor})
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_update_appointment_view(request, pk):
+    doctor = models.Doctor.objects.get(user_id=request.user.id)
+    appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
+    appointmentForm = forms.AppointmentForm(instance=appointment)
+    mydict = {'appointmentForm': appointmentForm, 'appointment': appointment, 'doctor': doctor}
+    if request.method == 'POST':
+        appointmentForm = forms.AppointmentForm(request.POST, instance=appointment)
+        if appointmentForm.is_valid():
+            appointmentForm.save()
+            messages.success(request, 'Appointment updated successfully!')
+            return redirect('doctor-view-appointment')
+    return render(request, 'hospital/doctor/update_appointment.html', context=mydict)
+
 
 # ──────────────── DOCTOR: SCHEDULE CONSULTATION ────────────────
 @login_required(login_url='doctorlogin')
@@ -922,6 +968,28 @@ def patient_view_appointment_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(patientId=request.user.id)
     return render(request, 'hospital/patient/view_appointment.html', {'appointments': appointments, 'patient': patient})
+
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def patient_appointment_history_view(request):
+    patient = models.Patient.objects.get(user_id=request.user.id)
+    appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-appointmentDate')
+    return render(request, 'hospital/patient/appointment_history.html', {'appointments': appointments, 'patient': patient})
+
+@login_required(login_url='patientlogin')
+@user_passes_test(is_patient)
+def patient_update_appointment_view(request, pk):
+    patient = models.Patient.objects.get(user_id=request.user.id)
+    appointment = models.Appointment.objects.get(id=pk, patientId=request.user.id)
+    appointmentForm = forms.PatientAppointmentForm(instance=appointment)
+    mydict = {'appointmentForm': appointmentForm, 'appointment': appointment, 'patient': patient}
+    if request.method == 'POST':
+        appointmentForm = forms.PatientAppointmentForm(request.POST, instance=appointment)
+        if appointmentForm.is_valid():
+            appointmentForm.save()
+            messages.success(request, 'Appointment updated successfully!')
+            return redirect('patient-view-appointment')
+    return render(request, 'hospital/patient/update_appointment.html', context=mydict)
 
 
 @login_required(login_url='patientlogin')
