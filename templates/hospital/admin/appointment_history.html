@@ -47,9 +47,15 @@
                 {% endif %}
               </td>
               <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
-                <a href="{% url 'admin-update-appointment' a.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#17a2b8,#138496);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;margin-right:5px;">
-                  <i class="fas fa-edit mr-1"></i>Edit
-                </a>
+                {% if a.status %}
+                  <span class="badge" style="background:#28a745;color:#fff;padding:6px 15px;border-radius:15px;font-size:13px;">
+                    <i class="fas fa-check-circle mr-1"></i>Completed
+                  </span>
+                {% else %}
+                  <a href="{% url 'admin-update-appointment' a.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#17a2b8,#138496);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;">
+                    <i class="fas fa-edit mr-1"></i>Edit
+                  </a>
+                {% endif %}
               </td>
             </tr>
             {% empty %}
