@@ -124,6 +124,27 @@
       closeModal();
     }
   }
+  
+  // Event listeners for approve/reject buttons
+  document.addEventListener('DOMContentLoaded', function() {
+    // Approve buttons
+    document.querySelectorAll('.approve-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const patientName = this.getAttribute('data-patient-name');
+        const actionUrl = this.getAttribute('data-action-url');
+        showModal('Approve Appointment', 'Approve appointment request from ' + patientName + '?', actionUrl, 'modal-btn-confirm', 'Approve');
+      });
+    });
+    
+    // Reject buttons
+    document.querySelectorAll('.reject-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        const patientName = this.getAttribute('data-patient-name');
+        const actionUrl = this.getAttribute('data-action-url');
+        showModal('Reject Appointment', 'Reject appointment request from ' + patientName + '? This will permanently delete this request.', actionUrl, 'modal-btn-reject', 'Reject');
+      });
+    });
+  });
 </script>
 
 <div class="container-fluid py-4">
