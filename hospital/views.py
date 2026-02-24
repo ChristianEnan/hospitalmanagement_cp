@@ -801,6 +801,34 @@ def doctor_appointment_view(request):
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
+def doctor_approve_appointment_view(request):
+    doctor = models.Doctor.objects.get(user_id=request.user.id)
+    appointments = models.Appointment.objects.filter(status=False, doctorId=request.user.id).order_by('-id')
+    patientid = [a.patientId for a in appointments]
+    patients = models.Patient.objects.filter(user_id__in=patientid)
+    appointments = zip(appointments, patients)
+    return render(request, 'hospital/doctor/approve_appointment.html', {'appointments': appointments, 'doctor': doctor})
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_approve_appointment_action_view(request, pk):
+    appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
+    appointment.status = True
+    appointment.save()
+    return redirect('doctor-approve-appointment')
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
+def doctor_reject_appointment_view(request, pk):
+    appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
+    appointment.delete()
+    return redirect('doctor-approve-appointment')
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor)
 def doctor_view_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
@@ -826,12 +854,7 @@ def doctor_delete_appointment_view(request):
 def delete_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     appointment.delete()
-    doctor = models.Doctor.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
-    patientid = [a.patientId for a in appointments]
-    patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
-    appointments = zip(appointments, patients)
-    return render(request, 'hospital/doctor/delete_appointment.html', {'appointments': appointments, 'doctor': doctor})
+    return redirect('doctor-appointment-history')
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor)
@@ -957,7 +980,9 @@ def search_doctor_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     query = request.GET.get('query', '')
     doctors = models.Doctor.objects.filter(status=True).filter(
-        Q(department__icontains=query) | Q(user__first_name__icontains=query)
+        Q(department__icontains=query) | 
+        Q(user__first_name__icontains=query) | 
+        Q(user__last_name__icontains=query)
     )
     return render(request, 'hospital/patient/view_doctor.html', {'patient': patient, 'doctors': doctors})
 

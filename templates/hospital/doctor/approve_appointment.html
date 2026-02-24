@@ -1,0 +1,203 @@
+{% extends 'hospital/doctor/base.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    animation: fadeIn 0.3s;
+  }
+  .custom-modal-content {
+    background: #fff;
+    margin: 15% auto;
+    padding: 0;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+    animation: slideDown 0.3s;
+  }
+  .custom-modal-header {
+    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+    padding: 20px 25px;
+    border-radius: 16px 16px 0 0;
+    color: #c9a84c;
+  }
+  .custom-modal-body {
+    padding: 25px;
+    font-size: 16px;
+    color: #333;
+    line-height: 1.6;
+  }
+  .custom-modal-footer {
+    padding: 15px 25px 25px;
+    text-align: right;
+  }
+  .modal-btn {
+    border: none;
+    padding: 10px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-left: 10px;
+  }
+  .modal-btn-confirm {
+    background: linear-gradient(135deg, #2a9d8f, #238276);
+    color: #fff;
+  }
+  .modal-btn-confirm:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(42,157,143,0.4);
+  }
+  .modal-btn-reject {
+    background: linear-gradient(135deg, #e76f51, #c1553d);
+    color: #fff;
+  }
+  .modal-btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(231,111,81,0.4);
+  }
+  .modal-btn-cancel {
+    background: #6c757d;
+    color: #fff;
+  }
+  .modal-btn-cancel:hover {
+    background: #5a6268;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+</style>
+
+<!-- Custom Confirmation Modal -->
+<div id="customModal" class="custom-modal">
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h5 style="margin:0;"><i class="fas fa-exclamation-circle mr-2"></i><span id="modalTitle">Confirm Action</span></h5>
+    </div>
+    <div class="custom-modal-body">
+      <p id="modalMessage"></p>
+    </div>
+    <div class="custom-modal-footer">
+      <button class="modal-btn modal-btn-cancel" onclick="closeModal()">Cancel</button>
+      <button id="modalConfirmBtn" class="modal-btn">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let confirmAction = null;
+  
+  function showModal(title, message, actionUrl, btnClass, btnText) {
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalMessage').innerText = message;
+    document.getElementById('customModal').style.display = 'block';
+    
+    const confirmBtn = document.getElementById('modalConfirmBtn');
+    confirmBtn.className = 'modal-btn ' + btnClass;
+    confirmBtn.innerText = btnText;
+    confirmBtn.onclick = function() {
+      window.location.href = actionUrl;
+    };
+  }
+  
+  function closeModal() {
+    document.getElementById('customModal').style.display = 'none';
+  }
+  
+  window.onclick = function(event) {
+    const modal = document.getElementById('customModal');
+    if (event.target == modal) {
+      closeModal();
+    }
+  }
+</script>
+
+<div class="container-fluid py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="section-header mb-0">
+      <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
+        <i class="fas fa-calendar-check" style="color:#c9a84c;margin-right:10px;"></i>Appointment Approval Requests
+      </h2>
+      <p class="text-muted mt-1 mb-0">Review and approve pending appointment requests</p>
+    </div>
+    <a href="{% url 'doctor-appointment' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
+      <i class="fas fa-arrow-left mr-2"></i>Back to Appointments
+    </a>
+  </div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+            <tr>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Patient Name</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Photo</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Description</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Date</th>
+              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;text-align:center;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a,p in appointments %}
+            <tr style="transition:all 0.2s;">
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{a.patientName}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">
+                {% if p.profile_pic %}
+                  <img src="{% static p.profile_pic.url %}" alt="Photo" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;">
+                {% else %}
+                  <div style="width:40px;height:40px;border-radius:50%;background:#0f3460;display:inline-flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-user" style="color:#c9a84c;font-size:16px;"></i>
+                  </div>
+                {% endif %}
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                <button class="btn btn-sm mr-2 approve-btn" 
+                   data-patient-name="{{a.patientName}}"
+                   data-action-url="{% url 'doctor-approve-appointment-action' a.id %}"
+                   style="background:linear-gradient(135deg,#2a9d8f,#238276);color:#fff;border-radius:20px;padding:6px 16px;font-weight:600;transition:all 0.3s;border:none;"
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(42,157,143,0.4)'"
+                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                  <i class="fas fa-check mr-1"></i>Approve
+                </button>
+                <button class="btn btn-sm reject-btn" 
+                   data-patient-name="{{a.patientName}}"
+                   data-action-url="{% url 'doctor-reject-appointment' a.id %}"
+                   style="background:linear-gradient(135deg,#e76f51,#c1553d);color:#fff;border-radius:20px;padding:6px 16px;font-weight:600;transition:all 0.3s;border:none;"
+                   onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 4px 12px rgba(231,111,81,0.4)'"
+                   onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+                  <i class="fas fa-times mr-1"></i>Reject
+                </button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="6" class="text-center py-4 text-muted">
+              <i class="fas fa-inbox fa-2x mb-2" style="opacity:0.3;"></i>
+              <p class="mb-0">No pending appointment requests</p>
+            </td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
