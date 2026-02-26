@@ -4,16 +4,16 @@ from django.contrib.auth.models import User
 
 DEPARTMENTS = [
     ('Cardiologist', 'Cardiologist'),
-    ('Dermatologists', 'Dermatologists'),
-    ('Emergency Medicine Specialists', 'Emergency Medicine Specialists'),
-    ('Allergists/Immunologists', 'Allergists/Immunologists'),
-    ('Anesthesiologists', 'Anesthesiologists'),
-    ('Colon and Rectal Surgeons', 'Colon and Rectal Surgeons'),
-    ('General Medicine (General Physician)', 'General Medicine (General Physician)'),
-    ('Pediatrics', 'Pediatrics'),
     ('Dermatology', 'Dermatology'),
-    ('ENT (Ear, Nose, and Throat)', 'ENT (Ear, Nose, and Throat)'),
+    ('Emergency Medicine', 'Emergency Medicine'),
+    ('ENT', 'ENT'),
     ('Gastroenterology', 'Gastroenterology'),
+    ('General Medicine', 'General Medicine'),
+    ('Neurology', 'Neurology'),
+    ('Orthopedics', 'Orthopedics'),
+    ('Pediatrics', 'Pediatrics'),
+    ('Pulmonology', 'Pulmonology'),
+    ('Urology', 'Urology'),
 ]
 
 
