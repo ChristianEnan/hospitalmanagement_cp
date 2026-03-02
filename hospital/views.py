@@ -30,6 +30,9 @@ def home_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request, 'hospital/index.html')
 
+def access_denied_view(request):
+    return render(request, 'hospital/access_denied.html')
+
 
 def adminclick_view(request):
     if request.user.is_authenticated:

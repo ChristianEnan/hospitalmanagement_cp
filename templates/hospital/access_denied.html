@@ -1,0 +1,111 @@
+{% extends 'hospital/homebase.html' %}
+{% load static %}
+{% block content %}
+
+<style>
+  .access-denied-container {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
+    padding: 40px 20px;
+  }
+  .access-denied-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 50px;
+    max-width: 600px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .denied-icon {
+    font-size: 100px;
+    color: #e76f51;
+    margin-bottom: 20px;
+    animation: shake 0.5s;
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+  }
+  .denied-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 48px;
+    color: #1a1a2e;
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  .denied-message {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  .denied-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .denied-btn {
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: none;
+  }
+  .btn-primary-denied {
+    background: linear-gradient(135deg, #c9a84c, #8a6d1b);
+    color: #fff;
+  }
+  .btn-primary-denied:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(201,168,76,0.4);
+    color: #fff;
+  }
+  .btn-secondary-denied {
+    background: #0f3460;
+    color: #fff;
+  }
+  .btn-secondary-denied:hover {
+    background: #1a1a2e;
+    transform: translateY(-2px);
+    color: #fff;
+  }
+</style>
+
+<div class="access-denied-container">
+  <div class="access-denied-card">
+    <div class="denied-icon">
+      <i class="fas fa-ban"></i>
+    </div>
+    <h1 class="denied-title">Access Denied</h1>
+    <p class="denied-message">
+      You don't have permission to access this page.<br>
+      {% if request.user.is_authenticated %}
+        You are logged in as <strong>{{ request.user.username }}</strong>, but this page requires different credentials.
+      {% else %}
+        Please login with appropriate credentials to access this page.
+      {% endif %}
+    </p>
+    <div class="denied-buttons">
+      <a href="{% url 'home' %}" class="denied-btn btn-primary-denied">
+        <i class="fas fa-home mr-2"></i>Go to Home
+      </a>
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'afterlogin' %}" class="denied-btn btn-secondary-denied">
+          <i class="fas fa-tachometer-alt mr-2"></i>My Dashboard
+        </a>
+      {% else %}
+        <a href="{% url 'adminlogin' %}" class="denied-btn btn-secondary-denied">
+          <i class="fas fa-sign-in-alt mr-2"></i>Login
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

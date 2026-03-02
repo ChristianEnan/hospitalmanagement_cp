@@ -6,9 +6,10 @@ from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_view, name=''),
+    path('', views.home_view, name='home'),
     path('aboutus', views.aboutus_view),
     path('contactus', views.contactus_view),
+    path('access-denied', views.access_denied_view, name='access-denied'),
 
     # Role selection pages
     path('adminclick', views.adminclick_view),
