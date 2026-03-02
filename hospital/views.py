@@ -956,13 +956,15 @@ def patient_book_appointment_view(request):
         appointmentForm = forms.PatientAppointmentForm(request.POST)
         if appointmentForm.is_valid():
             appointment = appointmentForm.save(commit=False)
-            appointment.doctorId = request.POST.get('doctorId')
+            doctor = appointmentForm.cleaned_data['doctorId']
+            appointment.doctorId = doctor.user_id
+            appointment.doctorName = doctor.get_name
             appointment.patientId = request.user.id
-            appointment.doctorName = models.User.objects.get(id=request.POST.get('doctorId')).first_name
             appointment.patientName = request.user.first_name
             appointment.status = False
             appointment.save()
-        return HttpResponseRedirect('patient-view-appointment')
+            messages.success(request, 'Appointment booked successfully! Awaiting approval.')
+            return redirect('patient-view-appointment')
     return render(request, 'hospital/patient/book_appointment.html', context=mydict)
 
 
@@ -1006,13 +1008,29 @@ def patient_appointment_history_view(request):
 def patient_update_appointment_view(request, pk):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointment = models.Appointment.objects.get(id=pk, patientId=request.user.id)
-    appointmentForm = forms.PatientAppointmentForm(instance=appointment)
+    
+    # Get initial doctor for dropdown
+    initial_doctor = None
+    if appointment.doctorId:
+        try:
+            initial_doctor = models.Doctor.objects.get(user_id=appointment.doctorId)
+        except:
+            pass
+    
+    appointmentForm = forms.PatientAppointmentForm(instance=appointment, initial={'doctorId': initial_doctor})
     mydict = {'appointmentForm': appointmentForm, 'appointment': appointment, 'patient': patient}
+    
     if request.method == 'POST':
         appointmentForm = forms.PatientAppointmentForm(request.POST, instance=appointment)
         if appointmentForm.is_valid():
-            appointmentForm.save()
-            messages.success(request, 'Appointment updated successfully!')
+            appointment = appointmentForm.save(commit=False)
+            # Get the selected doctor and save their info
+            doctor = appointmentForm.cleaned_data['doctorId']
+            appointment.doctorId = doctor.user_id
+            appointment.doctorName = doctor.get_name
+            appointment.status = False  # Requires re-approval after update
+            appointment.save()
+            messages.success(request, 'Appointment updated successfully! Awaiting approval.')
             return redirect('patient-view-appointment')
     return render(request, 'hospital/patient/update_appointment.html', context=mydict)
 

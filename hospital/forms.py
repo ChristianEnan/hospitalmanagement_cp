@@ -82,10 +82,14 @@ class PatientAppointmentForm(forms.ModelForm):
         empty_label="-- Select a Doctor --",
         to_field_name="user_id",
     )
+    appointmentDate = forms.DateField(
+        widget=forms.DateInput(attrs={'type': 'date'}),
+        required=True
+    )
 
     class Meta:
         model = models.Appointment
-        fields = ['description', 'status']
+        fields = ['doctorId', 'appointmentDate', 'description']
 
 
 class ContactusForm(forms.Form):
