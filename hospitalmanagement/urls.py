@@ -17,9 +17,9 @@ urlpatterns = [
     path('patientclick', views.patientclick_view),
 
     # Signup
-    path('adminsignup', views.admin_signup_view),
+    path('adminsignup', views.admin_signup_view, name='adminsignup'),
     path('doctorsignup', views.doctor_signup_view, name='doctorsignup'),
-    path('patientsignup', views.patient_signup_view),
+    path('patientsignup', views.patient_signup_view, name='patientsignup'),
 
     # Login / Logout
     path('adminlogin', views.admin_login_view, name='adminlogin'),
@@ -27,6 +27,7 @@ urlpatterns = [
     path('patientlogin', views.patient_login_view, name='patientlogin'),
     path('afterlogin', views.afterlogin_view, name='afterlogin'),
     path('logout', LogoutView.as_view(template_name='hospital/index.html'), name='logout'),
+    path('forgot-password', views.forgot_password_view, name='forgot-password'),
 
     # Admin
     path('admin-dashboard', views.admin_dashboard_view, name='admin-dashboard'),
@@ -70,6 +71,7 @@ urlpatterns = [
     path('doctor-view-discharge-patient', views.doctor_view_discharge_patient_view, name='doctor-view-discharge-patient'),
     path('doctor-clear-discharge-history', views.doctor_clear_discharge_history_view, name='doctor-clear-discharge-history'),
     path('doctor-delete-selected-discharge', views.doctor_delete_selected_discharge_view, name='doctor-delete-selected-discharge'),
+    path('doctor-delete-discharge-record', views.doctor_delete_discharge_record_view, name='doctor-delete-discharge-record'),
     path('doctor-appointment', views.doctor_appointment_view, name='doctor-appointment'),
     path('doctor-view-appointment', views.doctor_view_appointment_view, name='doctor-view-appointment'),
     path('doctor-approve-appointment', views.doctor_approve_appointment_view, name='doctor-approve-appointment'),

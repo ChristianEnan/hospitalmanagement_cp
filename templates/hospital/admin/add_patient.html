@@ -4,26 +4,26 @@
 
 <style>
   .add-card { max-width: 900px; margin: 0 auto; }
-  .form-label { font-weight: 600; color: #1a1a2e; font-size: 0.85rem; margin-bottom: 6px; display: block; }
+  .form-label { font-weight: 600; color: #1e2a4a; font-size: 0.85rem; margin-bottom: 6px; display: block; }
   .form-input { border-radius: 8px; border: 2px solid #e0e0e0; padding: 12px 15px; width: 100%; transition: all 0.3s; }
-  .form-input:focus { border-color: #c9a84c; outline: none; box-shadow: 0 0 0 3px rgba(201,168,76,0.15); }
+  .form-input:focus { border-color: #d4a855; outline: none; box-shadow: 0 0 0 3px rgba(212,168,85,0.15); }
   .section-box { background: #f8f9fa; border-radius: 10px; padding: 20px; margin-bottom: 25px; }
-  .section-title { color: #0f3460; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #c9a84c; padding-bottom: 10px; }
+  .section-title { color: #3d5a99; font-weight: 700; margin-bottom: 20px; border-bottom: 2px solid #d4a855; padding-bottom: 10px; }
 </style>
 
 <div class="container-fluid py-4">
   <div class="add-card">
     <!-- Back Button -->
     <div class="mb-3">
-      <a href="{% url 'admin-patient' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
+      <a href="{% url 'admin-patient' %}" class="btn" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
         <i class="fas fa-arrow-left mr-2"></i>Back to Patient Management
       </a>
     </div>
     
-    <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
+    <div class="card border-0 shadow-sm" style="border-top:4px solid #d4a855!important;">
       <div class="card-body p-0">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
-          <i class="fas fa-user-injured fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
+        <div style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);padding:25px 30px;text-align:center;">
+          <i class="fas fa-user-injured fa-2x" style="color:#d4a855;margin-bottom:10px;"></i>
           <h4 style="color:#fff;font-family: 'Playfair Display', serif !important;margin:0;">Admit New Patient</h4>
         </div>
         
@@ -100,10 +100,10 @@
               <div class="row align-items-center">
                 <div class="col-md-3 text-center mb-3 mb-md-0">
                   <div id="imagePreviewContainer">
-                    <div id="defaultAvatar" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1a1a2e,#0f3460);display:flex;align-items:center;justify-content:center;margin:0 auto;">
-                      <i class="fas fa-user fa-3x" style="color:#c9a84c;"></i>
+                    <div id="defaultAvatar" style="width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,#1e2a4a,#3d5a99);display:flex;align-items:center;justify-content:center;margin:0 auto;">
+                      <i class="fas fa-user fa-3x" style="color:#d4a855;"></i>
                     </div>
-                    <img id="imagePreview" src="" alt="Photo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #c9a84c;display:none;">
+                    <img id="imagePreview" src="" alt="Photo" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:3px solid #d4a855;display:none;">
                   </div>
                 </div>
                 <div class="col-md-9">
@@ -119,7 +119,7 @@
               <a href="{% url 'admin-patient' %}" class="btn mr-2" style="background:#6c757d;color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
                 <i class="fas fa-times mr-2"></i>Cancel
               </a>
-              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:12px 40px;font-weight:600;">
+              <button type="submit" class="btn" style="background:linear-gradient(135deg,#d4a855,#b8922d);color:#fff;border-radius:25px;padding:12px 40px;font-weight:600;">
                 <i class="fas fa-user-plus mr-2"></i>Admit Patient
               </button>
             </div>

@@ -3,13 +3,13 @@
 
 <div class="container-fluid py-4 px-4">
   <div class="mb-3">
-    <a href="/patient-dashboard" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
+    <a href="/patient-dashboard" class="btn" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
       <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
     </a>
   </div>
   <div class="section-header mb-4">
-    <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
-      <i class="fas fa-redo" style="color:#c9a84c;margin-right:10px;"></i>Reapply for Treatment
+    <h2 style="font-family: 'Playfair Display', serif !important;color:#1e2a4a;margin:0;">
+      <i class="fas fa-redo" style="color:#d4a855;margin-right:10px;"></i>Reapply for Treatment
     </h2>
     <p class="text-muted mt-1 mb-0">Submit a new treatment request after discharge</p>
   </div>
@@ -27,41 +27,41 @@
     <div class="col-lg-8">
       <!-- Previous Discharge Info -->
       <div class="card border-0 shadow-sm mb-4" style="border-top:4px solid #FF6B6B!important;border-radius:12px;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
-          <h6 style="color:#c9a84c;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
+        <div style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);padding:15px 20px;border-radius:12px 12px 0 0;">
+          <h6 style="color:#d4a855;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
             <i class="fas fa-file-medical-alt mr-2"></i>Previous Discharge Summary
           </h6>
         </div>
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-6 mb-3">
-              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #0f3460;">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #3d5a99;">
                 <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Attending Doctor</small>
-                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">Dr. {{lastDischarge.assignedDoctorName}}</div>
+                <div style="font-weight:600;color:#1e2a4a;margin-top:4px;">Dr. {{lastDischarge.assignedDoctorName}}</div>
               </div>
             </div>
             <div class="col-md-6 mb-3">
-              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #c9a84c;">
+              <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #d4a855;">
                 <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Previous Symptoms</small>
-                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{lastDischarge.symptoms}}</div>
+                <div style="font-weight:600;color:#1e2a4a;margin-top:4px;">{{lastDischarge.symptoms}}</div>
               </div>
             </div>
             <div class="col-md-4 mb-3">
               <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #2a9d8f;">
                 <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Discharge Date</small>
-                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{lastDischarge.releaseDate}}</div>
+                <div style="font-weight:600;color:#1e2a4a;margin-top:4px;">{{lastDischarge.releaseDate}}</div>
               </div>
             </div>
             <div class="col-md-4 mb-3">
               <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #6C5CE7;">
                 <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Days Spent</small>
-                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">{{lastDischarge.daySpent}} days</div>
+                <div style="font-weight:600;color:#1e2a4a;margin-top:4px;">{{lastDischarge.daySpent}} days</div>
               </div>
             </div>
             <div class="col-md-4 mb-3">
               <div style="background:#f8f9fa;border-radius:10px;padding:15px;border-left:4px solid #FF6B6B;">
                 <small style="color:#888;text-transform:uppercase;font-weight:600;font-size:11px;">Total Bill</small>
-                <div style="font-weight:600;color:#1a1a2e;margin-top:4px;">&#8377; {{lastDischarge.total}}</div>
+                <div style="font-weight:600;color:#1e2a4a;margin-top:4px;">&#8377; {{lastDischarge.total}}</div>
               </div>
             </div>
           </div>
@@ -76,8 +76,8 @@
 
       <!-- Reapply Form -->
       <div class="card border-0 shadow-sm" style="border-top:4px solid #2a9d8f!important;border-radius:12px;">
-        <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:15px 20px;border-radius:12px 12px 0 0;">
-          <h6 style="color:#c9a84c;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
+        <div style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);padding:15px 20px;border-radius:12px 12px 0 0;">
+          <h6 style="color:#d4a855;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
             <i class="fas fa-plus-circle mr-2"></i>New Treatment Request
           </h6>
         </div>
@@ -92,7 +92,7 @@
                         placeholder="Describe your current symptoms or reason for seeking treatment again..."
                         style="border:2px solid #e8e8e8;border-radius:10px;padding:15px;font-size:14px;">{{patient.symptoms}}</textarea>
             </div>
-            <div class="alert" style="border-radius:10px;background:#fff8e1;border:1px solid #c9a84c;color:#856404;font-size:13px;">
+            <div class="alert" style="border-radius:10px;background:#fff8e1;border:1px solid #d4a855;color:#856404;font-size:13px;">
               <i class="fas fa-info-circle mr-2"></i>
               After submission, your request will need to be approved by the admin before you can access the dashboard again.
             </div>

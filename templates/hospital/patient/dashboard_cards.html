@@ -1,26 +1,49 @@
 <!-- Patient Dashboard Cards (included snippet) -->
 <style>
     .stats-card {
-      border-radius: 12px; padding: 25px; color: white;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1); transition: all 0.3s ease;
+      border-radius: 16px; padding: 28px; color: white;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12); transition: all 0.4s ease;
       margin-bottom: 20px; position: relative; overflow: hidden;
     }
     .stats-card::before {
       content: ''; position: absolute; top: -50%; right: -50%;
-      width: 200px; height: 200px; background: rgba(255,255,255,0.1); border-radius: 50%;
+      width: 200px; height: 200px; background: rgba(255,255,255,0.08); border-radius: 50%;
     }
-    .stats-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
-    .stats-card.card-doctor { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); }
-    .stats-card.card-symptoms { background: linear-gradient(135deg, #4ECDC4 0%, #44A08D 100%); }
-    .stats-card.card-mobile { background: linear-gradient(135deg, #c9a84c 0%, #b8963e 100%); color: #1a1a2e; }
-    .stats-card.card-mobile .stats-label, .stats-card.card-mobile .stats-subtitle { color: #1a1a2e; }
-    .stats-card.card-address { background: linear-gradient(135deg, #FF6B6B 0%, #FF8E8E 100%); }
-    .stats-card.card-department { background: linear-gradient(135deg, #6C5CE7 0%, #A29BFE 100%); }
-    .stats-card.card-date { background: linear-gradient(135deg, #0f3460 0%, #1a1a2e 100%); }
-    .stats-number { font-size: 18px; font-weight: 400; margin-bottom: 8px; position: relative; z-index: 1; word-break: break-word; line-height: 1.4; }
-    .stats-label { font-size: 13px; font-weight: 400; margin-bottom: 5px; position: relative; z-index: 1; opacity: 0.9; }
-    .stats-icon { position: absolute; right: 20px; top: 20px; font-size: 42px; opacity: 0.2; z-index: 0; }
-    .market-updates { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px 0; }
+    .stats-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.2); }
+    .stats-card.card-doctor { background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%); }
+    .stats-card.card-symptoms { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+    .stats-card.card-mobile { background: linear-gradient(135deg, #d4a855 0%, #e8c87a 100%); color: #1e2a4a; }
+    .stats-card.card-mobile .stats-label, .stats-card.card-mobile .stats-value { color: #1e2a4a; }
+    .stats-card.card-address { background: linear-gradient(135deg, #ef4444 0%, #f87171 100%); }
+    .stats-card.card-department { background: linear-gradient(135deg, #6366f1 0%, #818cf8 100%); }
+    .stats-card.card-date { background: linear-gradient(135deg, #3d5a99 0%, #1e2a4a 100%); }
+    .stats-value { 
+      font-size: 22px; 
+      font-weight: 700; 
+      font-family: 'Inter', sans-serif !important;
+      margin-bottom: 12px; 
+      position: relative; 
+      z-index: 1; 
+      word-break: break-word; 
+      line-height: 1.4;
+      color: inherit;
+    }
+    .stats-label { 
+      font-size: 11px; 
+      font-weight: 700; 
+      font-family: 'Inter', sans-serif !important;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      position: relative; 
+      z-index: 1; 
+      background: rgba(0,0,0,0.2);
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 20px;
+      color: inherit;
+    }
+    .stats-icon { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); font-size: 50px; opacity: 0.15; z-index: 0; }
+    .market-updates { display: flex; flex-wrap: wrap; gap: 24px; padding: 20px 24px; }
     .market-update-gd { flex: 1; min-width: 280px; }
     @media (max-width: 768px) { .market-update-gd { flex: 1 1 100%; } }
   </style>
@@ -30,21 +53,21 @@
       <div class="market-update-gd">
         <div class="stats-card card-doctor">
           <div class="stats-icon"><i class="fas fa-user-md"></i></div>
-          <div class="stats-number">{{doctorName}}</div>
+          <div class="stats-value">{{doctorName}}</div>
           <div class="stats-label">Your Doctor</div>
         </div>
       </div>
       <div class="market-update-gd">
         <div class="stats-card card-symptoms">
           <div class="stats-icon"><i class="fas fa-notes-medical"></i></div>
-          <div class="stats-number">{{symptoms}}</div>
+          <div class="stats-value">{{symptoms}}</div>
           <div class="stats-label">Symptoms</div>
         </div>
       </div>
       <div class="market-update-gd">
         <div class="stats-card card-mobile">
           <div class="stats-icon"><i class="fas fa-phone-alt"></i></div>
-          <div class="stats-number">{{doctorMobile}}</div>
+          <div class="stats-value">{{doctorMobile}}</div>
           <div class="stats-label">Doctor Mobile</div>
         </div>
       </div>
@@ -53,21 +76,21 @@
       <div class="market-update-gd">
         <div class="stats-card card-address">
           <div class="stats-icon"><i class="fas fa-map-marker-alt"></i></div>
-          <div class="stats-number">{{doctorAddress}}</div>
+          <div class="stats-value">{{doctorAddress}}</div>
           <div class="stats-label">Doctor Address</div>
         </div>
       </div>
       <div class="market-update-gd">
         <div class="stats-card card-department">
           <div class="stats-icon"><i class="fas fa-hospital"></i></div>
-          <div class="stats-number">{{doctorDepartment}}</div>
+          <div class="stats-value">{{doctorDepartment}}</div>
           <div class="stats-label">Department</div>
         </div>
       </div>
       <div class="market-update-gd">
         <div class="stats-card card-date">
           <div class="stats-icon"><i class="fas fa-calendar-alt"></i></div>
-          <div class="stats-number">{{admitDate}}</div>
+          <div class="stats-value">{{admitDate}}</div>
           <div class="stats-label">Admit Date</div>
         </div>
       </div>

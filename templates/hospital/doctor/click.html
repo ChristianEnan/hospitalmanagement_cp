@@ -3,109 +3,148 @@
 {% block content %}
 
 <style>
-  .role-card {
-    background: white;
-    border-radius: 15px;
-    padding: 50px 30px;
+  .portal-wrapper {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    background: linear-gradient(180deg, #fafaf8 0%, #f7f5f2 100%);
+  }
+  .portal-card {
+    background: #ffffff;
+    border-radius: 28px;
+    padding: 60px 50px;
     text-align: center;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
-    margin: 30px auto;
-    max-width: 500px;
-    transition: all 0.3s ease;
+    box-shadow: 0 10px 40px rgba(30, 42, 74, 0.08);
+    max-width: 520px;
+    width: 100%;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
   }
-
-  .role-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+  .portal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: linear-gradient(90deg, #d4a855, #e8c87a);
   }
-
-  .role-icon {
-    font-size: 80px;
-    color: #c9a84c;
-    margin-bottom: 20px;
+  .portal-card:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 24px 60px rgba(30, 42, 74, 0.15);
   }
-
-  .role-card h2 {
-    color: #333;
-    margin-bottom: 15px;
-    font-weight: bold;
+  .portal-icon {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    font-size: 42px;
+    color: #d4a855;
+    box-shadow: 0 10px 30px rgba(30, 42, 74, 0.2);
+  }
+  .portal-card h2 {
+    color: #1a1f36;
+    margin-bottom: 12px;
+    font-weight: 700;
     font-size: 32px;
+    font-family: 'Playfair Display', serif;
   }
-
-  .role-card p {
-    color: #666;
-    margin-bottom: 30px;
-    font-size: 16px;
-    line-height: 1.6;
+  .portal-card p {
+    color: #6e685e;
+    margin-bottom: 32px;
+    font-size: 15px;
+    line-height: 1.8;
+    font-family: 'Inter', sans-serif;
   }
-
   .button-container {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     justify-content: center;
     flex-wrap: wrap;
   }
-
-  .btn-custom {
-    padding: 12px 30px;
-    border-radius: 8px;
+  .btn-portal {
+    padding: 14px 36px;
+    border-radius: 50px;
     border: none;
-    font-weight: bold;
-    font-size: 16px;
-    transition: all 0.3s ease;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     text-decoration: none;
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
   }
-
   .btn-apply {
-    background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-    color: #c9a84c;
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
+    color: #d4a855;
+    box-shadow: 0 4px 16px rgba(30, 42, 74, 0.25);
   }
-
   .btn-apply:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(201, 168, 76, 0.4);
-    background: #c9a84c;
-    color: #1a1a2e;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(30, 42, 74, 0.35);
+    background: linear-gradient(135deg, #d4a855 0%, #e8c87a 100%);
+    color: #1e2a4a;
+    text-decoration: none;
   }
-
   .btn-login {
-    background: linear-gradient(135deg, #c9a84c 0%, #d4b85c 100%);
-    color: #1a1a2e;
+    background: linear-gradient(135deg, #d4a855 0%, #e8c87a 100%);
+    color: #1e2a4a;
+    box-shadow: 0 4px 20px rgba(212, 168, 85, 0.3);
   }
-
   .btn-login:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(201, 168, 76, 0.4);
-    color: #1a1a2e;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(212, 168, 85, 0.4);
+    color: #1e2a4a;
+    text-decoration: none;
+  }
+  .back-link {
+    margin-top: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #6e685e;
+    font-weight: 500;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+  }
+  .back-link:hover {
+    color: #d4a855;
+    text-decoration: none;
   }
 </style>
 
-<br><br>
-
-<div class="container">
-  <div class="jumbotron" style="text-align: center; background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); color: white; border-radius: 15px;">
-    <h1 class="display-4">Welcome to Doctor Portal</h1>
-    <p class="lead">Apply for a position or login to manage your appointments and patient interactions</p>
-  </div>
-
-  <div class="role-card">
-    <div class="role-icon">
+<div class="portal-wrapper">
+  <div class="portal-card">
+    <div class="portal-icon">
       <i class="fas fa-stethoscope"></i>
     </div>
-    <h2>Doctor</h2>
-    <p>Join our team of experienced medical professionals. Apply now to access the doctor dashboard and manage your appointments efficiently.</p>
+    <h2>Doctor Portal</h2>
+    <p>Join our team of medical professionals. Apply now to access your dashboard and manage appointments efficiently.</p>
     <div class="button-container">
-      <a href="/doctorsignup" class="btn btn-custom btn-apply">
+      <a href="/doctorsignup" class="btn-portal btn-apply">
         <i class="fas fa-file-upload"></i> Apply Now
       </a>
-      <a href="/doctorlogin" class="btn btn-custom btn-login">
+      <a href="/doctorlogin" class="btn-portal btn-login">
         <i class="fas fa-sign-in-alt"></i> Login
       </a>
     </div>
+    <a href="{% url 'home' %}" class="back-link">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
   </div>
 </div>
-
-<br><br><br>
 
 {% endblock content %}

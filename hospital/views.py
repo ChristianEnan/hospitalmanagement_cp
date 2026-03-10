@@ -51,6 +51,66 @@ def patientclick_view(request):
         return HttpResponseRedirect('afterlogin')
     return render(request, 'hospital/patient/click.html')
 
+
+def forgot_password_view(request):
+    """Handle password reset for admin, doctor, and patient users"""
+    import secrets
+    import string
+    
+    if request.method == 'POST':
+        role = request.POST.get('role')
+        username = request.POST.get('username')
+        
+        if not role or not username:
+            return render(request, 'hospital/forgot_password.html', {
+                'error_message': 'Please provide both account type and username.'
+            })
+        
+        # Generate a secure random password
+        alphabet = string.ascii_letters + string.digits
+        new_password = ''.join(secrets.choice(alphabet) for _ in range(10))
+        
+        try:
+            user = User.objects.get(username=username)
+            
+            # Verify user belongs to the selected role
+            if role == 'admin' and user.groups.filter(name='ADMIN').exists():
+                user.set_password(new_password)
+                user.save()
+                return render(request, 'hospital/forgot_password.html', {
+                    'password_reset': True,
+                    'new_password': new_password,
+                    'login_url': '/adminlogin'
+                })
+            elif role == 'doctor' and user.groups.filter(name='DOCTOR').exists():
+                user.set_password(new_password)
+                user.save()
+                return render(request, 'hospital/forgot_password.html', {
+                    'password_reset': True,
+                    'new_password': new_password,
+                    'login_url': '/doctorlogin'
+                })
+            elif role == 'patient' and user.groups.filter(name='PATIENT').exists():
+                user.set_password(new_password)
+                user.save()
+                return render(request, 'hospital/forgot_password.html', {
+                    'password_reset': True,
+                    'new_password': new_password,
+                    'login_url': '/patientlogin'
+                })
+            else:
+                return render(request, 'hospital/forgot_password.html', {
+                    'error_message': f'No {role} account found with username "{username}". Please check your account type.'
+                })
+                
+        except User.DoesNotExist:
+            return render(request, 'hospital/forgot_password.html', {
+                'error_message': f'No account found with username "{username}". Please check your username.'
+            })
+    
+    return render(request, 'hospital/forgot_password.html')
+
+
 def admin_signup_view(request):
     form = forms.AdminSigupForm()
     if request.method == 'POST':
@@ -225,7 +285,7 @@ def afterlogin_view(request):
             return render(request, 'hospital/patient/wait_for_approval.html')
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_dashboard_view(request):
     doctors = models.Doctor.objects.all().order_by('-id')
     patients = models.Patient.objects.all().order_by('-id')
@@ -249,20 +309,20 @@ def admin_dashboard_view(request):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_doctor_view(request):
     return render(request, 'hospital/admin/doctor.html')
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_view_doctor_view(request):
     doctors = models.Doctor.objects.filter(status=True)
     return render(request, 'hospital/admin/view_doctor.html', {'doctors': doctors})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def delete_doctor_from_hospital_view(request, pk):
     doctor = models.Doctor.objects.get(id=pk)
     user = models.User.objects.get(id=doctor.user_id)
@@ -272,7 +332,7 @@ def delete_doctor_from_hospital_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def update_doctor_view(request, pk):
     doctor = models.Doctor.objects.get(id=pk)
     user = models.User.objects.get(id=doctor.user_id)
@@ -302,7 +362,7 @@ def update_doctor_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_add_doctor_view(request):
     userForm = forms.DoctorUserForm()
     doctorForm = forms.DoctorForm()
@@ -325,14 +385,14 @@ def admin_add_doctor_view(request):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_approve_doctor_view(request):
     doctors = models.Doctor.objects.filter(status=False)
     return render(request, 'hospital/admin/approve_doctor.html', {'doctors': doctors})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def approve_doctor_view(request, pk):
     doctor = models.Doctor.objects.get(id=pk)
     doctor.status = True
@@ -341,7 +401,7 @@ def approve_doctor_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def reject_doctor_view(request, pk):
     doctor = models.Doctor.objects.get(id=pk)
     user = models.User.objects.get(id=doctor.user_id)
@@ -351,27 +411,27 @@ def reject_doctor_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_view_doctor_specialisation_view(request):
     doctors = models.Doctor.objects.filter(status=True)
     return render(request, 'hospital/admin/view_doctor_specialisation.html', {'doctors': doctors})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_patient_view(request):
     return render(request, 'hospital/admin/patient.html')
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_view_patient_view(request):
     patients = models.Patient.objects.filter(status=True)
     return render(request, 'hospital/admin/view_patient.html', {'patients': patients})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def delete_patient_from_hospital_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     user = models.User.objects.get(id=patient.user_id)
@@ -381,7 +441,7 @@ def delete_patient_from_hospital_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def update_patient_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     user = models.User.objects.get(id=patient.user_id)
@@ -425,7 +485,7 @@ def update_patient_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_add_patient_view(request):
     userForm = forms.PatientUserForm()
     patientForm = forms.PatientForm()
@@ -450,14 +510,14 @@ def admin_add_patient_view(request):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_approve_patient_view(request):
     patients = models.Patient.objects.filter(status=False)
     return render(request, 'hospital/admin/approve_patient.html', {'patients': patients})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def approve_patient_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     patient.status = True
@@ -466,7 +526,7 @@ def approve_patient_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def reject_patient_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     user = models.User.objects.get(id=patient.user_id)
@@ -475,14 +535,14 @@ def reject_patient_view(request, pk):
     return redirect('admin-approve-patient')
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_discharge_patient_view(request):
     patients = models.Patient.objects.filter(status=True)
     return render(request, 'hospital/admin/discharge_patient.html', {'patients': patients})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def discharge_patient_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     days = (date.today() - patient.admitDate)
@@ -569,20 +629,20 @@ def download_pdf_view(request, pk):
 
 # ──────────────── APPOINTMENTS (ADMIN) ────────────────
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_appointment_view(request):
     return render(request, 'hospital/admin/appointment.html')
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_view_appointment_view(request):
     appointments = models.Appointment.objects.filter(status=True)
     return render(request, 'hospital/admin/view_appointment.html', {'appointments': appointments})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_add_appointment_view(request):
     appointmentForm = forms.AppointmentForm()
     mydict = {'appointmentForm': appointmentForm}
@@ -601,14 +661,14 @@ def admin_add_appointment_view(request):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_approve_appointment_view(request):
     appointments = models.Appointment.objects.filter(status=False)
     return render(request, 'hospital/admin/approve_appointment.html', {'appointments': appointments})
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def approve_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     appointment.status = True
@@ -617,28 +677,28 @@ def approve_appointment_view(request, pk):
 
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def reject_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     appointment.delete()
     return redirect('admin-approve-appointment')
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_delete_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     appointment.delete()
     return redirect('admin-view-appointment')
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_appointment_history_view(request):
     # Get all appointments (including completed/cancelled ones)
     appointments = models.Appointment.objects.all().order_by('-appointmentDate')
     return render(request, 'hospital/admin/appointment_history.html', {'appointments': appointments})
 
 @login_required(login_url='adminlogin')
-@user_passes_test(is_admin)
+@user_passes_test(is_admin, login_url='access-denied')
 def admin_update_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     appointmentForm = forms.AppointmentForm(instance=appointment)
@@ -652,7 +712,7 @@ def admin_update_appointment_view(request, pk):
     return render(request, 'hospital/admin/update_appointment.html', context=mydict)
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_dashboard_view(request):
     patientcount = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id).count()
     appointmentcount = models.Appointment.objects.filter(status=True, doctorId=request.user.id).count()
@@ -673,7 +733,7 @@ def doctor_dashboard_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_patient_view(request):
     mydict = {
         'doctor': models.Doctor.objects.get(user_id=request.user.id),
@@ -682,7 +742,7 @@ def doctor_patient_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_view_patient_view(request):
     patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
     doctor = models.Doctor.objects.get(user_id=request.user.id)
@@ -690,7 +750,7 @@ def doctor_view_patient_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def search_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     query = request.GET.get('query', '')
@@ -703,7 +763,7 @@ def search_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_discharge_patient_view(request):
     patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
     doctor = models.Doctor.objects.get(user_id=request.user.id)
@@ -711,7 +771,7 @@ def doctor_discharge_patient_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_discharge_patient_action_view(request, pk):
     patient = models.Patient.objects.get(id=pk)
     days = (date.today() - patient.admitDate)
@@ -765,7 +825,7 @@ def doctor_discharge_patient_action_view(request, pk):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_view_discharge_patient_view(request):
     doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
     dischargedpatients = models.PatientDischargeDetails.objects.distinct().filter(assignedDoctorName=doctorFullName)
@@ -774,36 +834,60 @@ def doctor_view_discharge_patient_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_clear_discharge_history_view(request):
-    doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
-    models.PatientDischargeDetails.objects.filter(assignedDoctorName=doctorFullName).delete()
+    # DISABLED: Discharge records are permanent medical records and cannot be deleted
+    # doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+    # models.PatientDischargeDetails.objects.filter(assignedDoctorName=doctorFullName).delete()
+    messages.error(request, 'Discharge records are permanent medical records and cannot be deleted.')
     return redirect('doctor-view-discharge-patient')
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_delete_selected_discharge_view(request):
-    if request.method == 'POST':
-        selected_ids = request.POST.getlist('selected_patients')
-        if selected_ids:
-            doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
-            models.PatientDischargeDetails.objects.filter(
-                id__in=selected_ids,
-                assignedDoctorName=doctorFullName
-            ).delete()
+    # DISABLED: Discharge records are permanent medical records and cannot be deleted
+    # if request.method == 'POST':
+    #     selected_ids = request.POST.getlist('selected_patients')
+    #     if selected_ids:
+    #         doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+    #         models.PatientDischargeDetails.objects.filter(
+    #             id__in=selected_ids,
+    #             assignedDoctorName=doctorFullName
+    #         ).delete()
+    messages.error(request, 'Discharge records are permanent medical records and cannot be deleted.')
     return redirect('doctor-view-discharge-patient')
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
+def doctor_delete_discharge_record_view(request):
+    if request.method == 'POST':
+        patient_id = request.POST.get('patient_id')
+        if patient_id:
+            doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
+            try:
+                discharge_record = models.PatientDischargeDetails.objects.get(
+                    id=patient_id,
+                    assignedDoctorName=doctorFullName
+                )
+                patient_name = discharge_record.patientName
+                discharge_record.delete()
+                messages.success(request, f'Discharge record for {patient_name} has been deleted successfully.')
+            except models.PatientDischargeDetails.DoesNotExist:
+                messages.error(request, 'Discharge record not found or you do not have permission to delete it.')
+    return redirect('doctor-view-discharge-patient')
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     return render(request, 'hospital/doctor/appointment.html', {'doctor': doctor})
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_approve_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=False, doctorId=request.user.id).order_by('-id')
@@ -814,7 +898,7 @@ def doctor_approve_appointment_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_approve_appointment_action_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
     appointment.status = True
@@ -823,7 +907,7 @@ def doctor_approve_appointment_action_view(request, pk):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_reject_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
     appointment.delete()
@@ -831,7 +915,7 @@ def doctor_reject_appointment_view(request, pk):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_view_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
@@ -842,7 +926,7 @@ def doctor_view_appointment_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_delete_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
@@ -853,14 +937,14 @@ def doctor_delete_appointment_view(request):
 
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def delete_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
     appointment.delete()
     return redirect('doctor-appointment-history')
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_appointment_history_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(doctorId=request.user.id).order_by('-appointmentDate')
@@ -870,7 +954,7 @@ def doctor_appointment_history_view(request):
     return render(request, 'hospital/doctor/appointment_history.html', {'appointments': appointments, 'doctor': doctor})
 
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_update_appointment_view(request, pk):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
@@ -887,7 +971,7 @@ def doctor_update_appointment_view(request, pk):
 
 # ──────────────── DOCTOR: SCHEDULE CONSULTATION ────────────────
 @login_required(login_url='doctorlogin')
-@user_passes_test(is_doctor)
+@user_passes_test(is_doctor, login_url='access-denied')
 def doctor_schedule_consultation_view(request, pk):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointment = models.Appointment.objects.get(id=pk)
@@ -916,7 +1000,7 @@ def doctor_schedule_consultation_view(request, pk):
     })
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_dashboard_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     doctor = models.Doctor.objects.get(user_id=patient.assignedDoctorId)
@@ -942,14 +1026,14 @@ def patient_dashboard_view(request):
 
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_appointment_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     return render(request, 'hospital/patient/appointment.html', {'patient': patient})
 
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_book_appointment_view(request):
     appointmentForm = forms.PatientAppointmentForm()
     patient = models.Patient.objects.get(user_id=request.user.id)
@@ -972,7 +1056,7 @@ def patient_book_appointment_view(request):
 
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_view_doctor_view(request):
     doctors = models.Doctor.objects.filter(status=True)
     patient = models.Patient.objects.get(user_id=request.user.id)
@@ -980,7 +1064,7 @@ def patient_view_doctor_view(request):
 
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def search_doctor_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     query = request.GET.get('query', '')
@@ -993,21 +1077,21 @@ def search_doctor_view(request):
 
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_view_appointment_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(patientId=request.user.id)
     return render(request, 'hospital/patient/view_appointment.html', {'appointments': appointments, 'patient': patient})
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_appointment_history_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-appointmentDate')
     return render(request, 'hospital/patient/appointment_history.html', {'appointments': appointments, 'patient': patient})
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_update_appointment_view(request, pk):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointment = models.Appointment.objects.get(id=pk, patientId=request.user.id)
@@ -1039,7 +1123,7 @@ def patient_update_appointment_view(request, pk):
 
 
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_discharge_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     dischargeDetails = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-id')[:1]
@@ -1074,7 +1158,7 @@ def patient_discharge_view(request):
 
 # ──────────────── PATIENT: MEDICAL RECORDS TIMELINE ────────────────
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_medical_records_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-appointmentDate')
@@ -1133,7 +1217,7 @@ def patient_medical_records_view(request):
 
 # ──────────────── PATIENT: REAPPLY AFTER DISCHARGE ────────────────
 @login_required(login_url='patientlogin')
-@user_passes_test(is_patient)
+@user_passes_test(is_patient, login_url='access-denied')
 def patient_reapply_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     # Check if patient was discharged and can reapply

@@ -2,49 +2,26 @@
 {% load static %}
 {% block content %}
 
-<style>
-  /* Hide checkboxes by default, show on hover */
-  .patient-checkbox {
-    opacity: 0;
-    transition: opacity 0.2s ease;
-  }
-  
-  tbody tr:hover .patient-checkbox {
-    opacity: 1;
-  }
-  
-  /* Always show checked checkboxes */
-  .patient-checkbox:checked {
-    opacity: 1;
-  }
-  
-  /* Keep select all checkbox always visible */
-  #selectAll {
-    opacity: 1 !important;
-  }
-</style>
-
 <div class="container-fluid py-4">
   <div class="mb-3">
-    <a href="/doctor-dashboard" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
+    <a href="/doctor-dashboard" class="btn" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
       <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
     </a>
   </div>
   <div class="row align-items-center mb-4">
-    <div class="col-md-6">
-      <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
-        <i class="fas fa-procedures" style="color:#c9a84c;margin-right:10px;"></i>Discharged Patients
+    <div class="col-md-8">
+      <h2 style="font-family: 'Playfair Display', serif !important;color:#1e2a4a;margin:0;">
+        <i class="fas fa-procedures" style="color:#d4a855;margin-right:10px;"></i>Discharged Patients History
       </h2>
-      <p class="text-muted mt-1 mb-0">Your discharged patient history</p>
+      <p class="text-muted mt-1 mb-0">
+        <i class="fas fa-info-circle mr-1"></i>Your discharged patient records
+      </p>
     </div>
-    <div class="col-md-6 text-md-right mt-3 mt-md-0">
+    <div class="col-md-4 text-md-right mt-3 mt-md-0">
       {% if dischargedpatients %}
-      <button type="button" class="btn mr-2" id="deleteSelectedBtn" style="background:linear-gradient(135deg,#ff9800,#f57c00);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;border:none;box-shadow:0 2px 8px rgba(255,152,0,0.3);display:none;" onclick="confirmDeleteSelected()">
-        <i class="fas fa-trash mr-2"></i>Delete Selected (<span id="selectedCount">0</span>)
-      </button>
-      <button type="button" class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;border:none;box-shadow:0 2px 8px rgba(220,53,69,0.3);" data-toggle="modal" data-target="#clearHistoryModal">
-        <i class="fas fa-trash-alt mr-2"></i>Clear All
-      </button>
+      <span class="badge badge-pill py-2 px-3" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#d4a855;font-size:14px;">
+        <i class="fas fa-file-medical mr-2"></i>Total Records: {{ dischargedpatients.count }}
+      </span>
       {% endif %}
     </div>
   </div>
@@ -53,8 +30,8 @@
     <div style="max-width:400px;position:relative;">
       <div class="input-group">
         <div class="input-group-prepend">
-          <span class="input-group-text" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border:none;border-radius:8px 0 0 8px;padding:10px 15px;">
-            <i class="fas fa-search" style="color:#c9a84c;"></i>
+          <span class="input-group-text" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);border:none;border-radius:8px 0 0 8px;padding:10px 15px;">
+            <i class="fas fa-search" style="color:#d4a855;"></i>
           </span>
         </div>
         <input type="text" id="searchInput" class="form-control" placeholder="Search patients..." style="border:1px solid #dee2e6;border-left:none;border-radius:0 8px 8px 0;padding:10px 40px 10px 15px;height:45px;" onkeyup="filterTable()">
@@ -65,76 +42,62 @@
     </div>
   </div>
   {% endif %}
-  <form id="deleteForm" method="POST" action="/doctor-delete-selected-discharge">
-    {% csrf_token %}
-    <div class="card border-0 shadow-sm">
-      <div class="card-body p-0">
-        <div class="table-responsive">
-          <table class="table table-hover mb-0">
-            <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
-              <tr>
-                {% if dischargedpatients %}
-                <th style="color:#c9a84c;padding:15px 15px;font-weight:600;border:none;width:50px;">
-                  <input type="checkbox" id="selectAll" onclick="toggleSelectAll()" style="width:18px;height:18px;cursor:pointer;">
-                </th>
-                {% endif %}
-                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Name</th>
-                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
-                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Release Date</th>
-                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
-                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
-                <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Address</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for p in dischargedpatients %}
-              <tr style="transition:all 0.2s;">
-                <td style="padding:12px 15px;vertical-align:middle;">
-                  <input type="checkbox" name="selected_patients" value="{{p.id}}" class="patient-checkbox" onclick="updateSelectedCount()" style="width:18px;height:18px;cursor:pointer;">
-                </td>
-                <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">{{p.patientName}}</td>
-                <td style="padding:12px 20px;vertical-align:middle;">{{p.admitDate}}</td>
-                <td style="padding:12px 20px;vertical-align:middle;">{{p.releaseDate}}</td>
-                <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
-                <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
-                <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
-              </tr>
-              {% empty %}
-              <tr id="emptyRow"><td colspan="7" class="text-center py-4 text-muted">No discharged patients found</td></tr>
-              {% endfor %}
-            </tbody>
-          </table>
-        </div>
+  <div class="card border-0 shadow-sm">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover mb-0">
+          <thead style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);">
+            <tr>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Name</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Release Date</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Address</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;text-align:center;">Days Spent</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;text-align:center;">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in dischargedpatients %}
+            <tr style="transition:all 0.2s;">
+              <td style="padding:12px 20px;vertical-align:middle;font-weight:600;">
+                <i class="fas fa-user-circle mr-2" style="color:#d4a855;"></i>{{p.patientName}}
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.admitDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.releaseDate}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;">
+                <i class="fas fa-phone mr-2" style="color:#3d5a99;"></i>{{p.mobile}}
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                <span class="badge badge-pill py-1 px-3" style="background:linear-gradient(135deg,#2a9d8f,#238077);color:#fff;">
+                  {{p.daySpent}} days
+                </span>
+              </td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                <button type="button" class="btn btn-sm" onclick="confirmDelete({{p.id}}, '{{p.patientName}}')" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:6px;padding:6px 15px;border:none;font-weight:500;">
+                  <i class="fas fa-trash-alt mr-1"></i>Delete
+                </button>
+              </td>
+            </tr>
+            {% empty %}
+            <tr id="emptyRow">
+              <td colspan="8" class="text-center py-5">
+                <i class="fas fa-folder-open" style="font-size:48px;color:#dee2e6;margin-bottom:15px;display:block;"></i>
+                <p class="text-muted mb-0">No discharged patients found</p>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
       </div>
     </div>
-  </form>
+  </div>
 </div>
 
 <script>
-function toggleSelectAll() {
-  var selectAll = document.getElementById('selectAll');
-  var checkboxes = document.querySelectorAll('.patient-checkbox:not(.hidden-row)');
-  checkboxes.forEach(function(cb) { cb.checked = selectAll.checked; });
-  updateSelectedCount();
-}
-
-function updateSelectedCount() {
-  var checkboxes = document.querySelectorAll('.patient-checkbox:checked');
-  var count = checkboxes.length;
-  document.getElementById('selectedCount').textContent = count;
-  document.getElementById('deleteSelectedBtn').style.display = count > 0 ? 'inline-block' : 'none';
-  
-  var visibleCheckboxes = document.querySelectorAll('.patient-checkbox:not(.hidden-row)');
-  document.getElementById('selectAll').checked = visibleCheckboxes.length > 0 && count === visibleCheckboxes.length;
-}
-
-function confirmDeleteSelected() {
-  var count = document.querySelectorAll('.patient-checkbox:checked').length;
-  if (count > 0 && confirm('Are you sure you want to delete ' + count + ' selected record(s)? This action cannot be undone.')) {
-    document.getElementById('deleteForm').submit();
-  }
-}
-
 function filterTable() {
   var input = document.getElementById('searchInput');
   var filter = input.value.toUpperCase();
@@ -159,8 +122,8 @@ function filterTable() {
     
     var found = false;
     
-    // Search across all text columns (name, admit date, release date, symptoms, mobile, address)
-    for (var j = 1; j < cells.length; j++) {
+    // Search across all text columns
+    for (var j = 0; j < cells.length; j++) {
       var cell = cells[j];
       if (cell) {
         var textValue = cell.textContent || cell.innerText;
@@ -173,16 +136,9 @@ function filterTable() {
     
     if (found) {
       row.style.display = '';
-      var checkbox = row.querySelector('.patient-checkbox');
-      if (checkbox) checkbox.classList.remove('hidden-row');
       visibleCount++;
     } else {
       row.style.display = 'none';
-      var checkbox = row.querySelector('.patient-checkbox');
-      if (checkbox) {
-        checkbox.classList.add('hidden-row');
-        checkbox.checked = false;
-      }
     }
   }
   
@@ -192,15 +148,15 @@ function filterTable() {
     if (!noResultsRow) {
       noResultsRow = document.createElement('tr');
       noResultsRow.id = 'noResultsRow';
-      noResultsRow.innerHTML = '<td colspan="7" class="text-center py-4 text-muted"><i class="fas fa-search mr-2"></i>No results found</td>';
+      noResultsRow.innerHTML = '<td colspan="8" class="text-center py-5"><i class="fas fa-search mr-2"></i>No results found for "' + input.value + '"</td>';
       table.appendChild(noResultsRow);
+    } else {
+      noResultsRow.innerHTML = '<td colspan="8" class="text-center py-5"><i class="fas fa-search mr-2"></i>No results found for "' + input.value + '"</td>';
+      noResultsRow.style.display = '';
     }
-    noResultsRow.style.display = '';
   } else if (noResultsRow) {
     noResultsRow.style.display = 'none';
   }
-  
-  updateSelectedCount();
 }
 
 function clearSearch() {
@@ -209,33 +165,82 @@ function clearSearch() {
   filterTable();
   input.focus();
 }
+
+function confirmDelete(patientId, patientName) {
+  // Set the patient details in modal
+  document.getElementById('deletePatientName').textContent = patientName;
+  document.getElementById('confirmDeleteBtn').setAttribute('data-patient-id', patientId);
+  
+  // Show the modal
+  $('#deleteConfirmModal').modal('show');
+}
+
+function deleteDischargeRecord() {
+  var patientId = document.getElementById('confirmDeleteBtn').getAttribute('data-patient-id');
+  
+  // Create form and submit
+  var form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/doctor-delete-discharge-record';
+  
+  // Add CSRF token
+  var csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+  if (csrfToken) {
+    var csrfInput = document.createElement('input');
+    csrfInput.type = 'hidden';
+    csrfInput.name = 'csrfmiddlewaretoken';
+    csrfInput.value = csrfToken.value;
+    form.appendChild(csrfInput);
+  }
+  
+  // Add patient ID
+  var idInput = document.createElement('input');
+  idInput.type = 'hidden';
+  idInput.name = 'patient_id';
+  idInput.value = patientId;
+  form.appendChild(idInput);
+  
+  document.body.appendChild(form);
+  form.submit();
+}
 </script>
 
-<!-- Clear History Confirmation Modal -->
-<div class="modal fade" id="clearHistoryModal" tabindex="-1" role="dialog" aria-labelledby="clearHistoryModalLabel" aria-hidden="true">
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content" style="border-radius:12px;border:none;overflow:hidden;">
-      <div class="modal-header" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);border:none;padding:20px;">
-        <h5 class="modal-title" id="clearHistoryModalLabel" style="color:#c9a84c;font-family:'Playfair Display',serif;">
-          <i class="fas fa-exclamation-triangle mr-2"></i>Confirm Clear History
+    <div class="modal-content" style="border-radius:12px;border:none;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.15);">
+      <div class="modal-header" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);border:none;padding:20px 25px;">
+        <h5 class="modal-title" id="deleteConfirmModalLabel" style="color:#d4a855;font-family:'Playfair Display',serif;font-weight:600;">
+          <i class="fas fa-exclamation-triangle mr-2"></i>Confirm Delete
         </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:0.8;">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body" style="padding:30px;text-align:center;">
-        <i class="fas fa-trash-alt" style="font-size:48px;color:#dc3545;margin-bottom:20px;"></i>
-        <h5 style="color:#1a1a2e;margin-bottom:10px;">Are you sure?</h5>
-        <p class="text-muted mb-0">This will permanently delete all your discharged patient records. This action cannot be undone.</p>
+        <i class="fas fa-trash-alt" style="font-size:56px;color:#dc3545;margin-bottom:20px;"></i>
+        <h5 style="color:#1e2a4a;margin-bottom:15px;font-weight:600;">Are you sure?</h5>
+        <p class="text-muted mb-2">You are about to delete the discharge record for:</p>
+        <p style="color:#1e2a4a;font-weight:600;font-size:16px;margin-bottom:15px;">
+          <i class="fas fa-user mr-2" style="color:#d4a855;"></i>
+          <span id="deletePatientName"></span>
+        </p>
+        <p class="text-muted mb-0"><small><i class="fas fa-info-circle mr-1"></i>This action cannot be undone.</small></p>
       </div>
       <div class="modal-footer" style="border:none;padding:15px 30px 25px;justify-content:center;gap:15px;">
-        <button type="button" class="btn" data-dismiss="modal" style="background:#f0f0f0;color:#1a1a2e;border-radius:8px;padding:10px 25px;font-weight:500;">Cancel</button>
-        <a href="/doctor-clear-discharge-history" class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:8px;padding:10px 25px;font-weight:500;border:none;">
-          <i class="fas fa-trash-alt mr-2"></i>Yes, Clear All
-        </a>
+        <button type="button" class="btn" data-dismiss="modal" style="background:#f0f0f0;color:#1e2a4a;border-radius:8px;padding:10px 30px;font-weight:500;border:none;">
+          <i class="fas fa-times mr-2"></i>Cancel
+        </button>
+        <button type="button" id="confirmDeleteBtn" onclick="deleteDischargeRecord()" class="btn" style="background:linear-gradient(135deg,#dc3545,#c82333);color:#fff;border-radius:8px;padding:10px 30px;font-weight:500;border:none;box-shadow:0 2px 8px rgba(220,53,69,0.3);">
+          <i class="fas fa-trash-alt mr-2"></i>Delete
+        </button>
       </div>
     </div>
   </div>
 </div>
+
+<form style="display:none;">
+  {% csrf_token %}
+</form>
 
 {% endblock content %}

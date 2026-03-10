@@ -4,13 +4,13 @@
 <div class="container-fluid py-4">
   <div class="row align-items-center mb-4">
     <div class="col-md-6">
-      <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
-        <i class="fas fa-sign-out-alt" style="color:#c9a84c;margin-right:10px;"></i>Discharge Patient
+      <h2 style="font-family: 'Playfair Display', serif !important;color:#1e2a4a;margin:0;">
+        <i class="fas fa-sign-out-alt" style="color:#d4a855;margin-right:10px;"></i>Discharge Patient
       </h2>
       <p class="text-muted mt-1 mb-0">Select a patient to discharge</p>
     </div>
     <div class="col-md-6 text-md-right mt-3 mt-md-0">
-      <a href="/doctor-dashboard" class="btn mr-2" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;">
+      <a href="/doctor-dashboard" class="btn mr-2" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;">
         <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
       </a>
       <a href="/doctor-view-discharge-patient" class="btn" style="background:linear-gradient(135deg,#2a9d8f,#21867a);color:#fff;border-radius:8px;padding:10px 20px;font-weight:500;">
@@ -22,13 +22,13 @@
     <div class="card-body p-0">
       <div class="table-responsive">
         <table class="table table-hover mb-0">
-          <thead style="background:linear-gradient(135deg,#1a1a2e,#0f3460);">
+          <thead style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);">
             <tr>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Name</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
-              <th style="color:#c9a84c;padding:15px 20px;font-weight:600;border:none;text-align:center;">Action</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Name</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Admit Date</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;text-align:center;">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -39,7 +39,7 @@
               <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.admitDate}}</td>
               <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
-                <a href="{% url 'doctor-discharge-patient' p.id %}" class="btn btn-sm" style="background:#c9a84c;color:#1a1a2e;border-radius:20px;padding:6px 20px;font-weight:600;">
+                <a href="{% url 'doctor-discharge-patient' p.id %}" class="btn btn-sm" style="background:#d4a855;color:#1e2a4a;border-radius:20px;padding:6px 20px;font-weight:600;">
                   <i class="fas fa-file-invoice-dollar mr-1"></i>Generate Bill & Discharge
                 </a>
               </td>
@@ -51,7 +51,7 @@
                   <div style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#f8f9fa,#e9ecef);display:flex;align-items:center;justify-content:center;margin:0 auto 15px;">
                     <i class="fas fa-check-circle fa-2x" style="color:#2a9d8f;"></i>
                   </div>
-                  <h6 style="color:#1a1a2e;font-family: 'Playfair Display', serif !important;">No Patients to Discharge</h6>
+                  <h6 style="color:#1e2a4a;font-family: 'Playfair Display', serif !important;">No Patients to Discharge</h6>
                   <p class="text-muted small mb-0">All your assigned patients are currently under treatment or already discharged.</p>
                 </div>
               </td>

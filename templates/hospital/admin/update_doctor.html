@@ -6,7 +6,7 @@
   <!-- Back Button -->
   <div class="row justify-content-center mb-3">
     <div class="col-lg-8">
-      <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
+      <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
         <i class="fas fa-arrow-left mr-2"></i>Back to Doctor Management
       </a>
     </div>
@@ -14,10 +14,10 @@
   
   <div class="row justify-content-center">
     <div class="col-lg-8">
-      <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
+      <div class="card border-0 shadow-sm" style="border-top:4px solid #d4a855!important;">
         <div class="card-body p-0">
-          <div style="background:linear-gradient(135deg,#1a1a2e,#0f3460);padding:25px 30px;text-align:center;">
-            <i class="fas fa-user-edit fa-2x" style="color:#c9a84c;margin-bottom:10px;"></i>
+          <div style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);padding:25px 30px;text-align:center;">
+            <i class="fas fa-user-edit fa-2x" style="color:#d4a855;margin-bottom:10px;"></i>
             <h4 style="color:#fff;font-family: 'Playfair Display', serif !important;margin:0;">Update Doctor Details</h4>
           </div>
           <form method="post" enctype="multipart/form-data" style="padding:30px;">
@@ -25,40 +25,40 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">First Name</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">First Name</label>
                   {% render_field userForm.first_name class="form-control" placeholder="First Name" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Username</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Username</label>
                   {% render_field userForm.username class="form-control" placeholder="Username" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Mobile</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Mobile</label>
                   {% render_field doctorForm.mobile class="form-control" placeholder="Mobile" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Department</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Department</label>
                   {% render_field doctorForm.department class="form-control" placeholder="Department" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
               </div>
               <div class="col-md-6">
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Last Name</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Last Name</label>
                   {% render_field userForm.last_name class="form-control" placeholder="Last Name" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Password</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Password</label>
                   {% render_field userForm.password class="form-control" placeholder="Enter new password" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
-                  <a href="#" onclick="this.closest('.form-group').querySelector('input').value='';this.textContent='Password field cleared';this.style.color='#2a9d8f';return false;" style="font-size:12px;color:#c9a84c;text-decoration:none;font-weight:600;margin-top:5px;display:inline-block;">
+                  <a href="#" onclick="this.closest('.form-group').querySelector('input').value='';this.textContent='Password field cleared';this.style.color='#2a9d8f';return false;" style="font-size:12px;color:#d4a855;text-decoration:none;font-weight:600;margin-top:5px;display:inline-block;">
                     <i class="fas fa-key mr-1"></i>Reset Password
                   </a>
                 </div>
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Address</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Address</label>
                   {% render_field doctorForm.address class="form-control" placeholder="Address" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
                 <div class="form-group">
-                  <label style="font-weight:600;color:#1a1a2e;font-size:0.85rem;">Profile Picture</label>
+                  <label style="font-weight:600;color:#1e2a4a;font-size:0.85rem;">Profile Picture</label>
                   {% render_field doctorForm.profile_pic class="form-control" style="border-radius:8px;border:2px solid #e0e0e0;padding:10px 15px;" %}
                 </div>
               </div>
@@ -67,7 +67,7 @@
               <a href="{% url 'admin-doctor' %}" class="btn mr-2" style="background:#6c757d;color:#fff;border-radius:25px;padding:10px 35px;font-weight:600;">
                 <i class="fas fa-times mr-2"></i>Cancel
               </a>
-              <button type="submit" class="btn" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:10px 40px;font-weight:600;font-size:1rem;">
+              <button type="submit" class="btn" style="background:linear-gradient(135deg,#d4a855,#b8922d);color:#fff;border-radius:25px;padding:10px 40px;font-weight:600;font-size:1rem;">
                 <i class="fas fa-save mr-2"></i>Update Doctor
               </button>
             </div>

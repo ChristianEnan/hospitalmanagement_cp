@@ -7,30 +7,30 @@
     max-width:800px;margin:0 auto;padding:30px;
     background:#fff;border-radius:12px;
     box-shadow:0 4px 20px rgba(0,0,0,0.08);
-    border-top:4px solid #c9a84c;
+    border-top:4px solid #d4a855;
   }
   .invoice-box table { width:100%;line-height:inherit;text-align:left; }
   .invoice-box table td { padding:8px;vertical-align:top; }
   .invoice-box table tr td:nth-child(2) { text-align:right; }
   .invoice-box table tr.top table td { padding-bottom:20px; }
-  .invoice-box table tr.top table td.title { font-size:28px;line-height:32px;color:#1a1a2e;font-family: 'Playfair Display', serif !important; }
+  .invoice-box table tr.top table td.title { font-size:28px;line-height:32px;color:#1e2a4a;font-family: 'Playfair Display', serif !important; }
   .invoice-box table tr.information table td { padding-bottom:30px;color:#555; }
-  .invoice-box table tr.heading td { background:#1a1a2e;color:#c9a84c;border:none;font-weight:600;padding:10px 8px;border-radius:4px; }
+  .invoice-box table tr.heading td { background:#1e2a4a;color:#d4a855;border:none;font-weight:600;padding:10px 8px;border-radius:4px; }
   .invoice-box table tr.details td { padding-bottom:20px;color:#555; }
   .invoice-box table tr.item td { border-bottom:1px solid #eee;padding:10px 8px; }
   .invoice-box table tr.item.last td { border-bottom:none; }
-  .invoice-box table tr.total td:nth-child(2) { border-top:3px solid #c9a84c;font-weight:700;color:#1a1a2e;font-size:1.1rem;padding-top:12px; }
+  .invoice-box table tr.total td:nth-child(2) { border-top:3px solid #d4a855;font-weight:700;color:#1e2a4a;font-size:1.1rem;padding-top:12px; }
 </style>
 
 <div class="container-fluid py-4">
   <div class="mb-3">
-    <a href="/patient-dashboard" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
+    <a href="/patient-dashboard" class="btn" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:8px;padding:8px 20px;font-weight:500;">
       <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
     </a>
   </div>
   <div class="section-header mb-4">
-    <h2 style="font-family: 'Playfair Display', serif !important;color:#1a1a2e;margin:0;">
-      <i class="fas fa-file-invoice-dollar" style="color:#c9a84c;margin-right:10px;"></i>Discharge Details
+    <h2 style="font-family: 'Playfair Display', serif !important;color:#1e2a4a;margin:0;">
+      <i class="fas fa-file-invoice-dollar" style="color:#d4a855;margin-right:10px;"></i>Discharge Details
     </h2>
     <p class="text-muted mt-1 mb-0">Your billing and discharge information</p>
   </div>
@@ -42,7 +42,7 @@
         <td colspan="2">
           <table>
             <tr>
-              <td class="title"><i class="fas fa-hospital" style="color:#c9a84c;margin-right:8px;"></i>Hospital Management</td>
+              <td class="title"><i class="fas fa-hospital" style="color:#d4a855;margin-right:8px;"></i>Hospital Management</td>
               <td style="color:#555;">Admit Date: {{admitDate}}<br>Release Date: {{releaseDate}}<br>Days Spent: <strong>{{daySpent}}</strong></td>
             </tr>
           </table>
@@ -69,7 +69,7 @@
     </table>
   </div>
   <div class="text-center mt-4">
-    <a href="{% url 'download-pdf' patientId %}" class="btn mr-2" style="background:linear-gradient(135deg,#c9a84c,#8a6d1b);color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
+    <a href="{% url 'download-pdf' patientId %}" class="btn mr-2" style="background:linear-gradient(135deg,#d4a855,#b8922d);color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
       <i class="fas fa-download mr-2"></i>Download Invoice
     </a>
     <a href="{% url 'patient-reapply' %}" class="btn" style="background:linear-gradient(135deg,#2a9d8f,#44A08D);color:#fff;border-radius:25px;padding:12px 35px;font-weight:600;">
@@ -77,10 +77,10 @@
     </a>
   </div>
   {% else %}
-  <div class="card border-0 shadow-sm" style="border-top:4px solid #c9a84c!important;">
+  <div class="card border-0 shadow-sm" style="border-top:4px solid #d4a855!important;">
     <div class="card-body text-center py-5">
-      <i class="fas fa-hospital-user fa-3x mb-3" style="color:#c9a84c;"></i>
-      <h4 style="color:#1a1a2e;font-family: 'Playfair Display', serif !important;">Treatment In Progress</h4>
+      <i class="fas fa-hospital-user fa-3x mb-3" style="color:#d4a855;"></i>
+      <h4 style="color:#1e2a4a;font-family: 'Playfair Display', serif !important;">Treatment In Progress</h4>
       <p class="text-muted mt-2">You have not been discharged yet. Your treatment is ongoing.</p>
       <p class="text-muted small">Your invoice will be available once you are discharged.</p>
     </div>

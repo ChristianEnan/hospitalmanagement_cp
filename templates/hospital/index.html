@@ -3,253 +3,973 @@
 
 {% block content %}
 <style>
+  /* ========== HERO SECTION ========== */
   .hero-section {
     margin-top: 0;
     margin-bottom: 0;
-    background: linear-gradient(135deg, rgba(26, 26, 46, 0.92) 0%, rgba(15, 52, 96, 0.88) 100%), url('{% static "images/bg.jpg" %}');
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(30, 42, 74, 0.95) 50%, rgba(61, 90, 153, 0.93) 100%), url('{% static "images/bg.jpg" %}');
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
-    padding: 120px 20px 100px;
-    min-height: 600px;
+    padding: 160px 20px 140px;
+    min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 1000px;
+    height: 1000px;
+    background: radial-gradient(circle, rgba(212, 168, 85, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .hero-section::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -20%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+    animation: float 10s ease-in-out infinite reverse;
+  }
+  @keyframes float {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(30px, 30px); }
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212, 168, 85, 0.12);
+    border: 1px solid rgba(212, 168, 85, 0.25);
+    padding: 10px 24px;
+    border-radius: 50px;
+    margin-bottom: 28px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #e8c87a;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-family: 'Inter', sans-serif;
+    animation: fadeInDown 0.8s ease;
+  }
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
   .hero-title {
     font-family: 'Playfair Display', serif !important;
-    font-size: 52px;
+    font-size: 64px;
     font-weight: 700;
     color: #ffffff;
-    text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
-    margin-bottom: 20px;
-    line-height: 1.2;
+    margin-bottom: 28px;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    animation: fadeInUp 0.8s ease 0.2s both;
   }
-  .hero-title span { color: #c9a84c; }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-title span { 
+    color: #d4a855;
+    position: relative;
+    display: inline-block;
+  }
+  .hero-title span::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background: rgba(212, 168, 85, 0.3);
+    z-index: -1;
+  }
   .hero-subtitle {
-    font-family: 'Poppins', sans-serif !important;
-    font-size: 18px;
-    color: rgba(255,255,255,0.85);
-    margin-bottom: 40px;
-    font-weight: 300;
-    letter-spacing: 0.5px;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 19px;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 48px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    line-height: 1.8;
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: fadeInUp 0.8s ease 0.4s both;
+  }
+  .hero-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.8s ease 0.6s both;
   }
   .hero-btn {
-    padding: 16px 45px;
-    font-size: 16px;
+    padding: 18px 42px;
+    font-size: 13px;
     border-radius: 50px;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(201, 168, 76, 0.3);
-    background: linear-gradient(135deg, #c9a84c, #d4b85c);
-    color: #1a1a2e;
+    font-weight: 700;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 30px rgba(212, 168, 85, 0.3);
+    background: linear-gradient(135deg, #d4a855 0%, #e8c87a 100%);
+    color: #1e2a4a;
     border: none;
     text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-family: 'Poppins', sans-serif !important;
+    letter-spacing: 2px;
+    font-family: 'Inter', sans-serif !important;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
   }
   .hero-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(201, 168, 76, 0.5);
-    color: #1a1a2e;
+    transform: translateY(-4px);
+    box-shadow: 0 16px 45px rgba(212, 168, 85, 0.45);
+    color: #1e2a4a;
     text-decoration: none;
   }
-  .feature-section {
-    padding: 80px 20px;
-    background: #f8f6f2;
-  }
-  .feature-section .section-title {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #1a1a2e;
-    font-family: 'Playfair Display', serif !important;
-    font-size: 36px;
+  .hero-btn:hover::before { left: 100%; }
+  .hero-btn i { margin-right: 10px; }
+  .hero-btn-outline {
+    padding: 18px 42px;
+    font-size: 13px;
+    border-radius: 50px;
     font-weight: 700;
+    transition: all 0.4s ease;
+    background: transparent;
+    color: #fff;
+    border: 2px solid rgba(255,255,255,0.3);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-family: 'Inter', sans-serif !important;
   }
-  .feature-section .section-subtitle {
+  .hero-btn-outline:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+    text-decoration: none;
+    transform: translateY(-4px);
+  }
+  .hero-btn-outline i { margin-right: 10px; }
+  
+  /* Hero Stats */
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    margin-top: 80px;
+    padding-top: 50px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    animation: fadeInUp 0.8s ease 0.8s both;
+  }
+  .hero-stat {
     text-align: center;
-    color: #888;
-    margin-bottom: 50px;
+  }
+  .hero-stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 700;
+    color: #d4a855;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .hero-stat-label {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+
+  /* ========== ABOUT SECTION ========== */
+  .about-section {
+    padding: 120px 20px;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+  }
+  .about-content {
+    position: relative;
+    z-index: 1;
+  }
+  .about-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #d4a855;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 16px;
+  }
+  .about-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 44px;
+    font-weight: 700;
+    color: #1e2a4a;
+    margin-bottom: 24px;
+    line-height: 1.2;
+  }
+  .about-text {
     font-size: 16px;
+    color: #64748b;
+    line-height: 1.9;
+    margin-bottom: 20px;
   }
-  .feature-card {
-    background: white;
+  .about-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .about-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: linear-gradient(135deg, #f8fafc, #f1f5f9);
     border-radius: 12px;
-    padding: 35px 25px;
-    text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06);
     transition: all 0.3s ease;
-    margin-bottom: 25px;
-    border: 1px solid rgba(0,0,0,0.04);
   }
-  .feature-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+  .about-feature:hover {
+    transform: translateX(8px);
+    background: linear-gradient(135deg, #1e2a4a, #3d5a99);
   }
-  .feature-icon {
-    width: 75px;
-    height: 75px;
-    background: linear-gradient(135deg, #1a1a2e, #0f3460);
+  .about-feature:hover i,
+  .about-feature:hover span { color: #fff; }
+  .about-feature i {
+    color: #d4a855;
+    font-size: 18px;
+    transition: color 0.3s;
+  }
+  .about-feature span {
+    font-weight: 600;
+    color: #1e2a4a;
+    font-size: 14px;
+    transition: color 0.3s;
+  }
+  .about-image-wrapper {
+    position: relative;
+    z-index: 1;
+  }
+  .about-image {
+    width: 100%;
+    border-radius: 24px;
+    box-shadow: 0 30px 60px rgba(30, 42, 74, 0.15);
+  }
+  .about-image-badge {
+    position: absolute;
+    bottom: -30px;
+    left: -30px;
+    background: linear-gradient(135deg, #1e2a4a, #3d5a99);
+    padding: 28px 32px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(30, 42, 74, 0.25);
+  }
+  .about-badge-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 700;
+    color: #d4a855;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .about-badge-text {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  /* ========== SERVICES SECTION ========== */
+  .services-section {
+    padding: 120px 20px;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+  }
+  .section-header {
+    text-align: center;
+    margin-bottom: 70px;
+  }
+  .section-label {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #d4a855;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 14px;
+    font-family: 'Inter', sans-serif;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif !important;
+    font-size: 46px;
+    font-weight: 700;
+    color: #1e2a4a;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+  }
+  .section-subtitle {
+    color: #64748b;
+    font-size: 17px;
+    max-width: 580px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+  }
+  .service-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 4px 25px rgba(30, 42, 74, 0.06);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+  .service-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #d4a855, #e8c87a);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .service-card:hover {
+    transform: translateY(-16px);
+    box-shadow: 0 25px 60px rgba(30, 42, 74, 0.14);
+  }
+  .service-card:hover::before { transform: scaleX(1); }
+  .service-icon {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 28px;
+    font-size: 34px;
+    color: #d4a855;
+    transition: all 0.4s ease;
+  }
+  .service-card:hover .service-icon {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 15px 35px rgba(30, 42, 74, 0.25);
+  }
+  .service-card h4 {
+    color: #1e2a4a;
+    font-family: 'Playfair Display', serif !important;
+    font-weight: 700;
+    margin-bottom: 16px;
+    font-size: 24px;
+  }
+  .service-card p {
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 0;
+  }
+
+  /* ========== HOW IT WORKS SECTION ========== */
+  .how-section {
+    padding: 120px 20px;
+    background: #fff;
+  }
+  .step-card {
+    text-align: center;
+    position: relative;
+    padding: 0 20px;
+  }
+  .step-number {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #d4a855, #e8c87a);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 20px;
+    margin: 0 auto 24px;
+    font-family: 'Playfair Display', serif;
     font-size: 28px;
-    color: #c9a84c;
+    font-weight: 700;
+    color: #1e2a4a;
+    box-shadow: 0 10px 30px rgba(212, 168, 85, 0.3);
+    position: relative;
+    z-index: 2;
   }
-  .feature-card h4 {
-    color: #1a1a2e;
-    font-family: 'Playfair Display', serif !important;
-    font-weight: 600;
+  .step-connector {
+    position: absolute;
+    top: 35px;
+    left: 60%;
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, #d4a855, #e2e8f0);
+    z-index: 1;
+  }
+  .step-card:last-child .step-connector { display: none; }
+  .step-card h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: #1e2a4a;
+    font-weight: 700;
     margin-bottom: 12px;
-    font-size: 20px;
   }
-  .feature-card p {
-    color: #777;
-    font-size: 14px;
+  .step-card p {
+    color: #64748b;
+    font-size: 15px;
     line-height: 1.7;
   }
-  .roles-section {
-    padding: 80px 20px;
-    background: #fff;
+
+  /* ========== TESTIMONIALS SECTION ========== */
+  .testimonials-section {
+    padding: 120px 20px;
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
+    position: relative;
+    overflow: hidden;
   }
-  .roles-section .section-title {
-    text-align: center;
-    margin-bottom: 15px;
-    color: #1a1a2e;
-    font-family: 'Playfair Display', serif !important;
-    font-size: 36px;
-    font-weight: 700;
+  .testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -30%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(212, 168, 85, 0.08) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .roles-section .section-subtitle {
+  .testimonials-section .section-label { color: #e8c87a; }
+  .testimonials-section .section-title { color: #fff; }
+  .testimonials-section .section-subtitle { color: rgba(255,255,255,0.7); }
+  .testimonial-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px;
+    padding: 40px 32px;
     text-align: center;
-    color: #888;
-    margin-bottom: 50px;
+    transition: all 0.4s ease;
+    height: 100%;
+  }
+  .testimonial-card:hover {
+    background: rgba(255,255,255,0.1);
+    transform: translateY(-10px);
+  }
+  .testimonial-quote {
+    font-size: 40px;
+    color: #d4a855;
+    margin-bottom: 20px;
+  }
+  .testimonial-text {
+    color: rgba(255,255,255,0.85);
     font-size: 16px;
+    line-height: 1.8;
+    margin-bottom: 28px;
+    font-style: italic;
+  }
+  .testimonial-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    object-fit: cover;
+    border: 3px solid #d4a855;
+  }
+  .testimonial-name {
+    color: #fff;
+    font-weight: 700;
+    font-size: 18px;
+    margin-bottom: 4px;
+  }
+  .testimonial-role {
+    color: #d4a855;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .testimonial-stars {
+    color: #d4a855;
+    font-size: 14px;
+    margin-top: 12px;
+  }
+
+  /* ========== ROLES/PORTAL SECTION ========== */
+  .roles-section {
+    padding: 120px 20px;
+    background: linear-gradient(180deg, #f8fafc 0%, #fff 100%);
   }
   .role-card {
     background: #fff;
-    border-radius: 16px;
+    border-radius: 24px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-    transition: all 0.4s ease;
-    margin-bottom: 25px;
-    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 8px 35px rgba(30, 42, 74, 0.08);
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-bottom: 30px;
+    border: 1px solid rgba(0, 0, 0, 0.04);
   }
   .role-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 15px 40px rgba(0,0,0,0.18);
+    transform: translateY(-20px);
+    box-shadow: 0 30px 70px rgba(30, 42, 74, 0.16);
   }
-  .role-card-img {
-    width: 100%;
-    height: 220px;
-    background-size: cover;
-    background-position: center;
+  .role-card-header {
+    padding: 50px 30px;
+    text-align: center;
     position: relative;
+    overflow: hidden;
   }
-  .role-card-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: linear-gradient(135deg, rgba(26, 26, 46, 0.5) 0%, rgba(15, 52, 96, 0.4) 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.4s ease;
+  .role-card:nth-child(1) .role-card-header {
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
   }
-  .role-card:hover .role-card-overlay {
-    background: linear-gradient(135deg, rgba(26, 26, 46, 0.7) 0%, rgba(15, 52, 96, 0.6) 100%);
+  .role-card:nth-child(2) .role-card-header {
+    background: linear-gradient(135deg, #065f46 0%, #10b981 100%);
+  }
+  .role-card:nth-child(3) .role-card-header {
+    background: linear-gradient(135deg, #4338ca 0%, #6366f1 100%);
   }
   .role-card-icon {
-    width: 65px; height: 65px;
-    background: rgba(201, 168, 76, 0.9);
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px; color: #fff;
-    box-shadow: 0 4px 15px rgba(201, 168, 76, 0.4);
-    transition: all 0.4s ease;
+    width: 90px; 
+    height: 90px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 24px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 36px; 
+    color: #fff;
+    margin: 0 auto;
+    transition: all 0.5s ease;
+    backdrop-filter: blur(5px);
   }
   .role-card:hover .role-card-icon {
-    transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(201, 168, 76, 0.6);
+    transform: scale(1.1) rotate(-5deg);
+    background: rgba(255,255,255,0.25);
   }
   .role-card-body {
-    padding: 25px;
+    padding: 36px 30px;
     text-align: center;
   }
   .role-card-body h4 {
     font-family: 'Playfair Display', serif !important;
-    color: #1a1a2e;
+    color: #1e2a4a;
     font-weight: 700;
-    margin-bottom: 10px;
-    font-size: 22px;
+    margin-bottom: 14px;
+    font-size: 26px;
   }
   .role-desc {
-    color: #888;
-    font-size: 13px;
-    line-height: 1.6;
-    margin-bottom: 18px;
+    color: #64748b;
+    font-size: 15px;
+    line-height: 1.8;
+    margin-bottom: 28px;
   }
-  .role-card-body .role-btn {
+  .role-features {
+    text-align: left;
+    margin-bottom: 28px;
+  }
+  .role-feature-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #475569;
+  }
+  .role-feature-item:last-child { border-bottom: none; }
+  .role-feature-item i {
+    color: #10b981;
+    font-size: 14px;
+  }
+  .role-btn {
     display: inline-block;
-    padding: 10px 30px;
-    background: linear-gradient(135deg, #1a1a2e, #0f3460);
-    color: #c9a84c;
-    border-radius: 25px;
-    font-weight: 600;
+    width: 100%;
+    padding: 16px 32px;
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
+    color: #fff;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    transition: all 0.4s ease;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: none;
+    box-shadow: 0 4px 20px rgba(30, 42, 74, 0.2);
+  }
+  .role-btn:hover {
+    background: linear-gradient(135deg, #d4a855 0%, #e8c87a 100%);
+    color: #1e2a4a;
+    text-decoration: none;
+    box-shadow: 0 10px 30px rgba(212, 168, 85, 0.35);
+    transform: translateY(-2px);
+  }
+  .role-btn i { margin-right: 8px; }
+
+  /* ========== CTA SECTION ========== */
+  .cta-section {
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #d4a855 0%, #e8c87a 100%);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: -100px;
+    width: 300px;
+    height: 300px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .cta-section::after {
+    content: '';
+    position: absolute;
+    bottom: -150px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+  }
+  .cta-content {
+    position: relative;
+    z-index: 1;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 44px;
+    color: #1e2a4a;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+  .cta-text {
+    font-size: 18px;
+    color: rgba(30, 42, 74, 0.8);
+    margin-bottom: 32px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 18px 48px;
+    background: #1e2a4a;
+    color: #d4a855;
+    border-radius: 50px;
+    font-weight: 700;
     font-size: 14px;
     text-decoration: none;
-    transition: all 0.3s ease;
-    letter-spacing: 1px;
+    transition: all 0.4s ease;
+    letter-spacing: 2px;
     text-transform: uppercase;
-    border: 1px solid rgba(201, 168, 76, 0.3);
+    box-shadow: 0 10px 30px rgba(30, 42, 74, 0.3);
   }
-  .role-card-body .role-btn:hover {
-    background: #c9a84c;
-    color: #1a1a2e;
+  .cta-btn:hover {
+    background: #0f172a;
+    color: #e8c87a;
     text-decoration: none;
-    box-shadow: 0 5px 15px rgba(201, 168, 76, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 40px rgba(30, 42, 74, 0.4);
+  }
+  .cta-btn i { margin-right: 10px; }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 992px) {
+    .hero-title { font-size: 48px; }
+    .hero-stats { gap: 40px; }
+    .hero-stat-number { font-size: 36px; }
+    .about-image-badge { position: relative; bottom: 0; left: 0; margin-top: 30px; display: inline-block; }
+    .step-connector { display: none; }
+  }
+  @media (max-width: 768px) {
+    .hero-title { font-size: 38px; }
+    .hero-subtitle { font-size: 16px; }
+    .hero-section { padding: 120px 20px 100px; min-height: auto; }
+    .hero-buttons { flex-direction: column; align-items: center; }
+    .hero-stats { flex-direction: column; gap: 30px; }
+    .section-title { font-size: 32px; }
+    .about-title { font-size: 32px; }
+    .about-features { grid-template-columns: 1fr; }
+    .cta-title { font-size: 32px; }
   }
 </style>
 
 <!-- Hero Section -->
 <div class="hero-section">
   <div class="container">
-    <h1 class="hero-title">Exceptional <span>Healthcare</span><br>You Can Trust</h1>
-    <p class="hero-subtitle">Advanced hospital management with a commitment to patient-centered care</p>
-    <a class="btn hero-btn" href="/patientclick" role="button">
-      <i class="fas fa-calendar-check"></i> Book Appointment
-    </a>
+    <div class="hero-content">
+      <span class="hero-badge"><i class="fas fa-star"></i> Premium Healthcare Excellence</span>
+      <h1 class="hero-title">Exceptional <span>Healthcare</span><br>You Can Trust</h1>
+      <p class="hero-subtitle">Experience world-class medical care with our advanced hospital management system. We combine cutting-edge technology with compassionate care to deliver the best healthcare experience.</p>
+      <div class="hero-buttons">
+        <a class="btn hero-btn" href="/patientclick" role="button">
+          <i class="fas fa-calendar-check"></i> Book Appointment
+        </a>
+        <a class="btn hero-btn-outline" href="/aboutus" role="button">
+          <i class="fas fa-info-circle"></i> Learn More
+        </a>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-number">50+</div>
+          <div class="hero-stat-label">Expert Doctors</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">10K+</div>
+          <div class="hero-stat-label">Patients Served</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">15+</div>
+          <div class="hero-stat-label">Departments</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-number">24/7</div>
+          <div class="hero-stat-label">Emergency Care</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- Features Section -->
-<div class="feature-section">
+<!-- About Section -->
+<div class="about-section">
   <div class="container">
-    <h2 class="section-title">Why Choose Us?</h2>
-    <p class="section-subtitle">Delivering excellence in every aspect of healthcare</p>
+    <div class="row align-items-center">
+      <div class="col-lg-6 mb-5 mb-lg-0">
+        <div class="about-content">
+          <span class="about-label">About Our Hospital</span>
+          <h2 class="about-title">Committed to Excellence in Healthcare</h2>
+          <p class="about-text">For over two decades, we have been at the forefront of medical innovation, providing comprehensive healthcare services with a patient-first approach. Our state-of-the-art facilities and expert medical team ensure you receive the highest quality care.</p>
+          <p class="about-text">We believe in treating every patient with dignity, compassion, and personalized attention. Our mission is to make quality healthcare accessible to everyone while maintaining the highest standards of medical excellence.</p>
+          <div class="about-features">
+            <div class="about-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Board Certified Physicians</span>
+            </div>
+            <div class="about-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Advanced Technology</span>
+            </div>
+            <div class="about-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>Personalized Care Plans</span>
+            </div>
+            <div class="about-feature">
+              <i class="fas fa-check-circle"></i>
+              <span>24/7 Emergency Services</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="about-image-wrapper">
+          <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=600&h=500&fit=crop&q=80" alt="Hospital" class="about-image">
+          <div class="about-image-badge">
+            <div class="about-badge-number">20+</div>
+            <div class="about-badge-text">Years of Excellence</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Services Section -->
+<div class="services-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Our Services</span>
+      <h2 class="section-title">Comprehensive Healthcare Solutions</h2>
+      <p class="section-subtitle">We offer a wide range of medical services designed to meet all your healthcare needs under one roof.</p>
+    </div>
     <div class="row">
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-hospital"></i></div>
-          <h4>Modern Healthcare</h4>
-          <p>State-of-the-art medical facilities and advanced technology for better patient care and outcomes.</p>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-heartbeat"></i></div>
+          <h4>Cardiology</h4>
+          <p>Expert cardiac care including diagnostics, treatment, and rehabilitation for all heart-related conditions.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-user-md"></i></div>
-          <h4>Expert Doctors</h4>
-          <p>Highly qualified and experienced medical professionals dedicated to your health and well-being.</p>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-brain"></i></div>
+          <h4>Neurology</h4>
+          <p>Comprehensive treatment for neurological disorders with advanced diagnostic and therapeutic procedures.</p>
         </div>
       </div>
-      <div class="col-md-4">
-        <div class="feature-card">
-          <div class="feature-icon"><i class="fas fa-clock"></i></div>
-          <h4>24/7 Service</h4>
-          <p>Round-the-clock medical services and emergency care available for all patients at any time.</p>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-bone"></i></div>
+          <h4>Orthopedics</h4>
+          <p>Complete musculoskeletal care from joint replacements to sports injuries and rehabilitation.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-baby"></i></div>
+          <h4>Pediatrics</h4>
+          <p>Specialized healthcare for infants, children, and adolescents in a child-friendly environment.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-lungs"></i></div>
+          <h4>Pulmonology</h4>
+          <p>Expert care for respiratory conditions including asthma, COPD, and lung diseases.</p>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="service-card">
+          <div class="service-icon"><i class="fas fa-ambulance"></i></div>
+          <h4>Emergency Care</h4>
+          <p>Round-the-clock emergency services with rapid response teams and critical care facilities.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- How It Works Section -->
+<div class="how-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Simple Process</span>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-subtitle">Getting the care you need is simple with our streamlined appointment process.</p>
+    </div>
+    <div class="row">
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card">
+          <div class="step-connector"></div>
+          <div class="step-number">1</div>
+          <h4>Register</h4>
+          <p>Create your account in minutes with basic information</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card">
+          <div class="step-connector"></div>
+          <div class="step-number">2</div>
+          <h4>Choose Doctor</h4>
+          <p>Browse and select from our expert specialists</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card">
+          <div class="step-connector"></div>
+          <div class="step-number">3</div>
+          <h4>Book Appointment</h4>
+          <p>Schedule your visit at your convenience</p>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="step-card">
+          <div class="step-number">4</div>
+          <h4>Get Care</h4>
+          <p>Receive quality treatment from our medical team</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Testimonials Section -->
+<div class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <span class="section-label">Testimonials</span>
+      <h2 class="section-title">What Our Patients Say</h2>
+      <p class="section-subtitle">Real stories from real patients who trusted us with their healthcare needs.</p>
+    </div>
+    <div class="row">
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="testimonial-card">
+          <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+          <p class="testimonial-text">"The care I received was exceptional. The doctors took time to explain everything and the staff was incredibly supportive throughout my treatment."</p>
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&q=80" alt="Patient" class="testimonial-avatar">
+          <div class="testimonial-name">Robert Johnson</div>
+          <div class="testimonial-role">Cardiac Patient</div>
+          <div class="testimonial-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="testimonial-card">
+          <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+          <p class="testimonial-text">"From booking my appointment to post-treatment follow-up, every step was seamless. The online portal made managing my healthcare so convenient."</p>
+          <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&q=80" alt="Patient" class="testimonial-avatar">
+          <div class="testimonial-name">Sarah Williams</div>
+          <div class="testimonial-role">Regular Patient</div>
+          <div class="testimonial-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6 mb-4">
+        <div class="testimonial-card">
+          <div class="testimonial-quote"><i class="fas fa-quote-left"></i></div>
+          <p class="testimonial-text">"The pediatric department is amazing! My children were treated with such care and the doctors made them feel comfortable and safe."</p>
+          <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&q=80" alt="Patient" class="testimonial-avatar">
+          <div class="testimonial-name">Emily Davis</div>
+          <div class="testimonial-role">Parent</div>
+          <div class="testimonial-stars">
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+            <i class="fas fa-star"></i>
+          </div>
         </div>
       </div>
     </div>
@@ -259,51 +979,79 @@
 <!-- Roles Section -->
 <div class="roles-section">
   <div class="container">
-    <h2 class="section-title">Get Started</h2>
-    <p class="section-subtitle">Choose your portal to access the system</p>
+    <div class="section-header">
+      <span class="section-label">Access Portal</span>
+      <h2 class="section-title">Choose Your Portal</h2>
+      <p class="section-subtitle">Select the appropriate portal to access our comprehensive healthcare management system.</p>
+    </div>
     <div class="row justify-content-center">
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <div class="role-card">
-          <div class="role-card-img" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?w=600&h=400&fit=crop&q=80');">
-            <div class="role-card-overlay">
-              <div class="role-card-icon"><i class="fas fa-user-shield"></i></div>
-            </div>
+          <div class="role-card-header">
+            <div class="role-card-icon"><i class="fas fa-user-shield"></i></div>
           </div>
           <div class="role-card-body">
             <h4>Admin Portal</h4>
-            <p class="role-desc">Manage doctors, patients, appointments & hospital operations</p>
-            <a href="/adminclick" class="role-btn"><i class="fas fa-arrow-right"></i> Enter Portal</a>
+            <p class="role-desc">Complete system administration with full control over hospital operations.</p>
+            <div class="role-features">
+              <div class="role-feature-item"><i class="fas fa-check"></i> Manage Doctors & Patients</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Appointment Scheduling</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Generate Reports</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> System Configuration</div>
+            </div>
+            <a href="/adminclick" class="role-btn"><i class="fas fa-arrow-right"></i> Access Portal</a>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <div class="role-card">
-          <div class="role-card-img" style="background-image: url('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=600&h=400&fit=crop&q=80');">
-            <div class="role-card-overlay">
-              <div class="role-card-icon"><i class="fas fa-stethoscope"></i></div>
-            </div>
+          <div class="role-card-header">
+            <div class="role-card-icon"><i class="fas fa-stethoscope"></i></div>
           </div>
           <div class="role-card-body">
             <h4>Doctor Portal</h4>
-            <p class="role-desc">View appointments, manage patients & track medical records</p>
-            <a href="/doctorclick" class="role-btn"><i class="fas fa-arrow-right"></i> Enter Portal</a>
+            <p class="role-desc">Efficiently manage your patients and appointments with our intuitive interface.</p>
+            <div class="role-features">
+              <div class="role-feature-item"><i class="fas fa-check"></i> View Patient Records</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Manage Appointments</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Issue Prescriptions</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Discharge Patients</div>
+            </div>
+            <a href="/doctorclick" class="role-btn"><i class="fas fa-arrow-right"></i> Access Portal</a>
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-6">
         <div class="role-card">
-          <div class="role-card-img" style="background-image: url('https://images.unsplash.com/photo-1666214280557-f1b5022eb634?w=600&h=400&fit=crop&q=80');">
-            <div class="role-card-overlay">
-              <div class="role-card-icon"><i class="fas fa-heartbeat"></i></div>
-            </div>
+          <div class="role-card-header">
+            <div class="role-card-icon"><i class="fas fa-heartbeat"></i></div>
           </div>
           <div class="role-card-body">
             <h4>Patient Portal</h4>
-            <p class="role-desc">Book appointments, view prescriptions & discharge details</p>
-            <a href="/patientclick" class="role-btn"><i class="fas fa-arrow-right"></i> Enter Portal</a>
+            <p class="role-desc">Access your health records and manage appointments from anywhere.</p>
+            <div class="role-features">
+              <div class="role-feature-item"><i class="fas fa-check"></i> Book Appointments</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> View Medical Records</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Track Health History</div>
+              <div class="role-feature-item"><i class="fas fa-check"></i> Download Bills</div>
+            </div>
+            <a href="/patientclick" class="role-btn"><i class="fas fa-arrow-right"></i> Access Portal</a>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section">
+  <div class="container">
+    <div class="cta-content">
+      <h2 class="cta-title">Ready to Get Started?</h2>
+      <p class="cta-text">Join thousands of patients who trust us with their healthcare. Book your appointment today and experience the difference.</p>
+      <a href="/patientclick" class="cta-btn">
+        <i class="fas fa-calendar-plus"></i> Schedule Appointment
+      </a>
     </div>
   </div>
 </div>

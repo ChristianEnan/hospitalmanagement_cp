@@ -4,18 +4,18 @@
 <style>
   .section-header {
     font-family: 'Playfair Display', serif !important;
-    color: #1a1a2e;
+    color: #1e2a4a;
     font-weight: 700;
     margin-bottom: 25px;
     padding-bottom: 10px;
-    border-bottom: 2px solid #c9a84c;
+    border-bottom: 2px solid #d4a855;
   }
   .table { border-radius: 8px; overflow: hidden; }
-  .table thead th { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #c9a84c; border: none; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .table thead th { background: linear-gradient(135deg, #1e2a4a, #3d5a99); color: #d4a855; border: none; font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: 0.5px; }
   .table tbody tr:hover { background-color: #f8f6f2; }
   .table td { vertical-align: middle; }
-  .btn-edit { background: linear-gradient(135deg, #1a1a2e, #0f3460); color: #c9a84c; border: none; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
-  .btn-edit:hover { background: #c9a84c; color: #1a1a2e; }
+  .btn-edit { background: linear-gradient(135deg, #1e2a4a, #3d5a99); color: #d4a855; border: none; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
+  .btn-edit:hover { background: #d4a855; color: #1e2a4a; }
   .btn-delete { background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 6px; font-size: 13px; }
   .btn-delete:hover { background: #c82333; color: white; }
   /* Delete Confirmation Modal */
@@ -28,7 +28,7 @@
   .delete-modal-header h5 { color:#fff; margin:0; font-family: 'Playfair Display', serif !important; font-size:22px; }
   .delete-modal-body { padding:25px; text-align:center; }
   .delete-modal-body p { color:#555; font-size:15px; margin-bottom:5px; }
-  .delete-modal-body .name { font-weight:700; color:#1a1a2e; font-size:18px; }
+  .delete-modal-body .name { font-weight:700; color:#1e2a4a; font-size:18px; }
   .delete-modal-actions { display:flex; gap:12px; padding:0 25px 25px; }
   .delete-modal-actions .btn-cancel { flex:1; background:#f0f0f0; color:#555; border:none; padding:12px; border-radius:10px; font-weight:600; font-size:14px; cursor:pointer; transition:all 0.3s; }
   .delete-modal-actions .btn-cancel:hover { background:#e0e0e0; }
@@ -45,8 +45,8 @@
   {% endfor %}
   {% endif %}
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="section-header mb-0" style="border-bottom:none;padding-bottom:0;"><i class="fas fa-user-md" style="color: #c9a84c;"></i> Doctors List</h3>
-    <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1a1a2e,#0f3460);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
+    <h3 class="section-header mb-0" style="border-bottom:none;padding-bottom:0;"><i class="fas fa-user-md" style="color: #d4a855;"></i> Doctors List</h3>
+    <a href="{% url 'admin-doctor' %}" class="btn" style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);color:#fff;border-radius:25px;padding:10px 25px;font-weight:600;">
       <i class="fas fa-arrow-left mr-2"></i>Back to Doctor Management
     </a>
   </div>
@@ -67,7 +67,7 @@
         {% for d in doctors %}
         <tr>
           <td>{{d.get_name}}</td>
-          <td>{% if d.profile_pic %}<img src="{% static d.profile_pic.url %}" alt="Profile" style="height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid #c9a84c;" />{% else %}<div style="width:40px;height:40px;border-radius:50%;background:#0f3460;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-user-md" style="color:#c9a84c;font-size:16px;"></i></div>{% endif %}</td>
+          <td>{% if d.profile_pic %}<img src="{% static d.profile_pic.url %}" alt="Profile" style="height:40px;width:40px;border-radius:50%;object-fit:cover;border:2px solid #d4a855;" />{% else %}<div style="width:40px;height:40px;border-radius:50%;background:#3d5a99;display:inline-flex;align-items:center;justify-content:center;"><i class="fas fa-user-md" style="color:#d4a855;font-size:16px;"></i></div>{% endif %}</td>
           <td>{{d.mobile}}</td>
           <td>{{d.address}}</td>
           <td>{{d.department}}</td>
