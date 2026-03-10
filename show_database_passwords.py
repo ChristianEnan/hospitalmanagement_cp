@@ -84,4 +84,5 @@ Format: pbkdf2_sha256$iterations$salt$hash
 - hash: Final encrypted password
 """)
 
+
 print("\n" + "="*100 + "\n")
