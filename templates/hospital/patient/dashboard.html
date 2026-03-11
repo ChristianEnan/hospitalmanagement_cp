@@ -143,48 +143,102 @@
 </div>
 
 <!-- Recent Appointments Table -->
+<style>
+  .patient-appointments-table {
+    width: 100%;
+    margin-bottom: 0;
+    border-collapse: collapse;
+  }
+  .patient-appointments-table thead {
+    background: linear-gradient(135deg, #1e2a4a 0%, #3d5a99 100%);
+  }
+  .patient-appointments-table thead th {
+    color: #d4a855;
+    padding: 16px 20px;
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border: none;
+    white-space: nowrap;
+  }
+  .patient-appointments-table tbody td {
+    padding: 18px 20px;
+    vertical-align: middle;
+    border-bottom: 1px solid #f0f0f0;
+    color: #64748b;
+    font-size: 14px;
+  }
+  .patient-appointments-table tbody tr:hover {
+    background-color: #f8f9fa;
+  }
+  .patient-appointments-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+  .doctor-name-col {
+    font-weight: 600;
+    color: #1e2a4a;
+    font-size: 15px;
+  }
+  .appointment-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-block;
+  }
+  .badge-approved {
+    background: #2a9d8f;
+    color: #fff;
+  }
+  .badge-pending {
+    background: #d4a855;
+    color: #1e2a4a;
+  }
+  .badge-consultation {
+    background: #6366f1;
+    color: #fff;
+    white-space: nowrap;
+  }
+</style>
+
 <div class="container-fluid py-2 px-4">
   <div class="row">
     <div class="col-12">
-      <div class="card border-0 shadow-sm" style="border-top:4px solid #2a9d8f!important;border-radius:12px;">
-        <div style="background:linear-gradient(135deg,#1e2a4a,#3d5a99);padding:15px 20px;border-radius:12px 12px 0 0;">
-          <h6 style="color:#d4a855;margin:0;font-family: 'Playfair Display', serif !important;font-size:18px;">
-            <i class="fas fa-calendar-check mr-2"></i>Your Appointments
-          </h6>
-        </div>
+      <div class="card border-0 shadow-sm" style="border-radius:12px;overflow:hidden;">
         <div class="card-body p-0">
           {% if appointments %}
           <div class="table-responsive">
-            <table class="table table-hover mb-0">
+            <table class="patient-appointments-table">
               <thead>
                 <tr>
-                  <th style="color:#1e2a4a;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Doctor</th>
-                  <th style="color:#1e2a4a;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Description</th>
-                  <th style="color:#1e2a4a;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Date</th>
-                  <th style="color:#1e2a4a;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Status</th>
-                  <th style="color:#1e2a4a;padding:12px 15px;font-weight:600;font-size:0.85rem;border-top:none;">Consultation</th>
+                  <th>DOCTOR</th>
+                  <th>DESCRIPTION</th>
+                  <th>DATE</th>
+                  <th style="text-align:center;">STATUS</th>
+                  <th>CONSULTATION</th>
                 </tr>
               </thead>
               <tbody>
                 {% for a in appointments %}
                 <tr>
-                  <td style="padding:10px 15px;vertical-align:middle;font-weight:600;">Dr. {{a.doctorName}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{a.description}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">{{a.appointmentDate}}</td>
-                  <td style="padding:10px 15px;vertical-align:middle;">
+                  <td class="doctor-name-col">Dr. {{a.doctorName}}</td>
+                  <td>{{a.description}}</td>
+                  <td>{{a.appointmentDate}}</td>
+                  <td style="text-align:center;">
                     {% if a.status %}
-                      <span class="badge" style="background:#2a9d8f;color:#fff;padding:4px 10px;border-radius:12px;">Approved</span>
+                      <span class="appointment-badge badge-approved">Approved</span>
                     {% else %}
-                      <span class="badge" style="background:#d4a855;color:#1e2a4a;padding:4px 10px;border-radius:12px;">Pending</span>
+                      <span class="appointment-badge badge-pending">Pending</span>
                     {% endif %}
                   </td>
-                  <td style="padding:10px 15px;vertical-align:middle;">
+                  <td>
                     {% if a.consultationDate %}
-                      <span class="badge" style="background:#6C5CE7;color:#fff;padding:4px 10px;border-radius:12px;">
+                      <span class="appointment-badge badge-consultation">
                         {{a.consultationDate}} {{a.consultationTime|time:"h:i A"}}
                       </span>
                       {% if a.consultationNotes %}
-                      <br><small class="text-muted mt-1" style="font-size:11px;">{{a.consultationNotes}}</small>
+                      <br><small class="text-muted mt-1" style="font-size:11px;display:inline-block;margin-top:6px;">{{a.consultationNotes}}</small>
                       {% endif %}
                     {% else %}
                       <span class="text-muted" style="font-size:13px;">Not scheduled</span>

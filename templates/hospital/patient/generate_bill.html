@@ -190,6 +190,81 @@
         </tbody>
       </table>
 
+      <!-- Payment Section -->
+      <div class="section-label"><i class="fas fa-credit-card mr-2"></i>Payment & QR Scanner</div>
+      <div style="padding:0 16px 24px;border-bottom:1px solid #eee;margin-bottom:24px;">
+        <div style="background:linear-gradient(135deg,#f8f9fc,#eef3f8);border:2px dashed #3d5a99;border-radius:10px;padding:20px;">
+          <!-- Payment Method Selection -->
+          <div style="margin-bottom:20px;">
+            <label style="font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;color:#3d5a99;font-weight:700;margin-bottom:10px;display:block;">
+              <i class="fas fa-wallet mr-1"></i> Payment Method
+            </label>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;">
+              <label class="payment-option" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff;border:2px solid #ddd;border-radius:8px;cursor:pointer;transition:all 0.2s;">
+                <input type="radio" name="paymentMethod" value="UPI" checked style="cursor:pointer;">
+                <i class="fab fa-google-pay" style="font-size:20px;color:#4285f4;"></i>
+                <span style="font-weight:600;font-size:0.9rem;color:#333;">UPI</span>
+              </label>
+              <label class="payment-option" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff;border:2px solid #ddd;border-radius:8px;cursor:pointer;transition:all 0.2s;">
+                <input type="radio" name="paymentMethod" value="Card" style="cursor:pointer;">
+                <i class="fas fa-credit-card" style="font-size:18px;color:#d4a855;"></i>
+                <span style="font-weight:600;font-size:0.9rem;color:#333;">Card</span>
+              </label>
+              <label class="payment-option" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff;border:2px solid #ddd;border-radius:8px;cursor:pointer;transition:all 0.2s;">
+                <input type="radio" name="paymentMethod" value="Cash" style="cursor:pointer;">
+                <i class="fas fa-money-bill-wave" style="font-size:18px;color:#2a9d8f;"></i>
+                <span style="font-weight:600;font-size:0.9rem;color:#333;">Cash</span>
+              </label>
+              <label class="payment-option" style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff;border:2px solid #ddd;border-radius:8px;cursor:pointer;transition:all 0.2s;">
+                <input type="radio" name="paymentMethod" value="Bank" style="cursor:pointer;">
+                <i class="fas fa-university" style="font-size:18px;color:#6366f1;"></i>
+                <span style="font-weight:600;font-size:0.9rem;color:#333;">Bank</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- QR Code Scanner Section -->
+          <div id="qrScannerSection" style="background:#fff;border-radius:10px;padding:20px;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+              <h6 style="margin:0;font-weight:700;color:#1e2a4a;font-size:1rem;">
+                <i class="fas fa-qrcode mr-2" style="color:#d4a855;"></i>QR Code Scanner
+              </h6>
+              <button type="button" id="startScanner" class="btn btn-sm" style="background:#2a9d8f;color:#fff;padding:6px 16px;border-radius:6px;font-weight:600;">
+                <i class="fas fa-camera mr-1"></i>Start Camera
+              </button>
+            </div>
+            
+            <!-- Camera Preview -->
+            <div id="qrReaderContainer" style="position:relative;background:#f8f9fa;border-radius:8px;overflow:hidden;display:none;">
+              <div id="qr-reader" style="width:100%;"></div>
+              <div style="padding:12px;background:#1e2a4a;color:#fff;text-align:center;font-size:0.85rem;">
+                <i class="fas fa-info-circle mr-1"></i> Position QR code within the frame
+              </div>
+            </div>
+
+            <!-- Scan Result Display -->
+            <div id="scanResult" style="display:none;margin-top:15px;padding:15px;background:linear-gradient(135deg,#d4f4dd,#c3f0d0);border-left:4px solid #2a9d8f;border-radius:8px;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <i class="fas fa-check-circle" style="color:#2a9d8f;font-size:24px;"></i>
+                <div>
+                  <div style="font-weight:700;color:#1e2a4a;font-size:0.95rem;">Payment QR Scanned Successfully!</div>
+                  <div id="scannedData" style="font-size:0.85rem;color:#555;margin-top:3px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual Entry Option -->
+            <div style="margin-top:15px;padding-top:15px;border-top:1px solid #e9ecef;">
+              <label style="font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;color:#666;font-weight:600;margin-bottom:8px;display:block;">
+                Or Enter Payment Reference Manually
+              </label>
+              <input type="text" id="paymentReference" class="form-control" placeholder="Enter UPI ID / Transaction ID / Reference Number" 
+                     style="border:1px solid #ddd;border-radius:6px;padding:10px 12px;font-size:0.9rem;">
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Follow-up Options -->
       <div class="section-label">Follow-up & Reapplication</div>
       <div style="padding:0 16px 20px;">
@@ -217,5 +292,103 @@
     </form>
   </div>
 </div>
+
+<!-- QR Code Scanner Library -->
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+
+<style>
+  /* Payment Option Hover Effects */
+  .payment-option:has(input:checked) {
+    border-color: #d4a855 !important;
+    background: linear-gradient(135deg, #fef9f0, #fdf6e8) !important;
+    box-shadow: 0 2px 8px rgba(212, 168, 85, 0.25);
+  }
+  .payment-option:hover {
+    border-color: #3d5a99;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(61, 90, 153, 0.15);
+  }
+  .payment-option input[type="radio"] {
+    accent-color: #d4a855;
+  }
+</style>
+
+<script>
+  let html5QrCode;
+  let isScanning = false;
+
+  document.getElementById('startScanner').addEventListener('click', function() {
+    const qrReaderContainer = document.getElementById('qrReaderContainer');
+    const startButton = this;
+    
+    if (!isScanning) {
+      // Start scanner
+      qrReaderContainer.style.display = 'block';
+      startButton.innerHTML = '<i class="fas fa-stop mr-1"></i>Stop Camera';
+      startButton.style.background = '#e76f51';
+      
+      html5QrCode = new Html5Qrcode("qr-reader");
+      const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+      
+      html5QrCode.start(
+        { facingMode: "environment" },
+        config,
+        (decodedText, decodedResult) => {
+          // QR Code successfully scanned
+          document.getElementById('scanResult').style.display = 'block';
+          document.getElementById('scannedData').textContent = 'Data: ' + decodedText;
+          document.getElementById('paymentReference').value = decodedText;
+          
+          // Stop scanner after successful scan
+          html5QrCode.stop().then(() => {
+            qrReaderContainer.style.display = 'none';
+            startButton.innerHTML = '<i class="fas fa-camera mr-1"></i>Start Camera';
+            startButton.style.background = '#2a9d8f';
+            isScanning = false;
+          });
+        },
+        (errorMessage) => {
+          // QR Code scan error (can be ignored as it scans continuously)
+        }
+      ).catch((err) => {
+        alert('Error starting camera: ' + err + '\\n\\nPlease ensure camera permissions are granted.');
+        qrReaderContainer.style.display = 'none';
+        startButton.innerHTML = '<i class="fas fa-camera mr-1"></i>Start Camera';
+        startButton.style.background = '#2a9d8f';
+        isScanning = false;
+      });
+      
+      isScanning = true;
+    } else {
+      // Stop scanner
+      html5QrCode.stop().then(() => {
+        qrReaderContainer.style.display = 'none';
+        startButton.innerHTML = '<i class="fas fa-camera mr-1"></i>Start Camera';
+        startButton.style.background = '#2a9d8f';
+        isScanning = false;
+      });
+    }
+  });
+
+  // Handle payment method changes
+  document.querySelectorAll('input[name="paymentMethod"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      const qrScannerSection = document.getElementById('qrScannerSection');
+      if (this.value === 'UPI' || this.value === 'Card') {
+        qrScannerSection.style.display = 'block';
+      } else {
+        qrScannerSection.style.display = 'none';
+        // Stop scanner if running
+        if (isScanning && html5QrCode) {
+          html5QrCode.stop();
+          document.getElementById('qrReaderContainer').style.display = 'none';
+          document.getElementById('startScanner').innerHTML = '<i class="fas fa-camera mr-1"></i>Start Camera';
+          document.getElementById('startScanner').style.background = '#2a9d8f';
+          isScanning = false;
+        }
+      }
+    });
+  });
+</script>
 
 {% endblock content %}
