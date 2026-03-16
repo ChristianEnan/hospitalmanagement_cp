@@ -66,6 +66,7 @@ urlpatterns = [
     path('search', views.search_view, name='search'),
     path('doctor-patient', views.doctor_patient_view, name='doctor-patient'),
     path('doctor-view-patient', views.doctor_view_patient_view, name='doctor-view-patient'),
+    path('doctor-patient-medical-records/<int:pk>', views.doctor_patient_medical_records_view, name='doctor-patient-medical-records'),
     path('doctor-discharge', views.doctor_discharge_patient_view, name='doctor-discharge'),
     path('doctor-discharge-patient/<int:pk>', views.doctor_discharge_patient_action_view, name='doctor-discharge-patient'),
     path('doctor-view-discharge-patient', views.doctor_view_discharge_patient_view, name='doctor-view-discharge-patient'),

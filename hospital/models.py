@@ -73,6 +73,7 @@ class Appointment(models.Model):
     appointmentDate = models.DateField(null=True)
     description = models.TextField(max_length=500)
     status = models.BooleanField(default=False)
+    is_cancelled = models.BooleanField(default=False)
     consultationDate = models.DateField(null=True, blank=True)
     consultationTime = models.TimeField(null=True, blank=True)
     consultationNotes = models.TextField(max_length=1000, null=True, blank=True)

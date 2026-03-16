@@ -34,6 +34,7 @@
               <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Symptoms</th>
               <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Mobile</th>
               <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;">Address</th>
+              <th style="color:#d4a855;padding:15px 20px;font-weight:600;border:none;text-align:center;">Records</th>
             </tr>
           </thead>
           <tbody>
@@ -44,6 +45,11 @@
               <td style="padding:12px 20px;vertical-align:middle;">{{p.symptoms}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.mobile}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{p.address}}</td>
+              <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
+                <a href="{% url 'doctor-patient-medical-records' p.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#2a9d8f,#21867a);color:#fff;border-radius:20px;padding:6px 14px;font-weight:600;">
+                  <i class="fas fa-notes-medical mr-1"></i>View Records
+                </a>
+              </td>
             </tr>
             {% endfor %}
           </tbody>

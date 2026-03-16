@@ -26,6 +26,7 @@
     .stat-card.doctors { border-left-color: #3b82f6; }
     .stat-card.patients { border-left-color: #10b981; }
     .stat-card.appointments { border-left-color: #f59e0b; }
+    .stat-card.revenue { border-left-color: #8b5cf6; }
     
     .stat-card .stat-icon {
       width: 56px;
@@ -41,6 +42,7 @@
     .stat-card.doctors .stat-icon { background: rgba(59,130,246,0.1); color: #3b82f6; }
     .stat-card.patients .stat-icon { background: rgba(16,185,129,0.1); color: #10b981; }
     .stat-card.appointments .stat-icon { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .stat-card.revenue .stat-icon { background: rgba(139,92,246,0.12); color: #8b5cf6; }
     
     .stat-card .stat-number {
       font-size: 36px;
@@ -70,6 +72,27 @@
     .stat-card.doctors .stat-pending { background: rgba(59,130,246,0.1); color: #3b82f6; }
     .stat-card.patients .stat-pending { background: rgba(16,185,129,0.1); color: #10b981; }
     .stat-card.appointments .stat-pending { background: rgba(245,158,11,0.1); color: #f59e0b; }
+    .stat-card.revenue .stat-pending { background: rgba(139,92,246,0.12); color: #8b5cf6; }
+
+    .revenue-breakdown {
+      margin-top: 12px;
+      border-top: 1px dashed #e2e8f0;
+      padding-top: 10px;
+    }
+
+    .revenue-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 12px;
+      color: #475569;
+      margin-bottom: 4px;
+    }
+
+    .revenue-row span:last-child {
+      font-weight: 700;
+      color: #1e2a4a;
+    }
     
     .quick-actions {
       display: grid;
@@ -131,6 +154,10 @@
       <i class="fas fa-hourglass-half"></i>
       <span>{{pendingpatientcount}} Awaiting</span>
     </div>
+    <div class="stat-pending" style="margin-top:8px; background: rgba(16,185,129,0.14);">
+      <i class="fas fa-check-circle"></i>
+      <span>{{treatedpatientcount}} Treated</span>
+    </div>
   </div>
   
   <div class="stat-card appointments">
@@ -140,6 +167,22 @@
     <div class="stat-pending">
       <i class="fas fa-bell"></i>
       <span>{{pendingappointmentcount}} Pending</span>
+    </div>
+  </div>
+
+  <div class="stat-card revenue">
+    <div class="stat-icon"><i class="fas fa-hand-holding-usd"></i></div>
+    <div class="stat-number">Rs {{total_income}}</div>
+    <div class="stat-label">Total Revenue</div>
+    <div class="stat-pending">
+      <i class="fas fa-chart-line"></i>
+      <span>Auto Calculated</span>
+    </div>
+    <div class="revenue-breakdown">
+      <div class="revenue-row"><span>Appointments</span><span>Rs {{appointment_income}}</span></div>
+      <div class="revenue-row"><span>Treatments</span><span>Rs {{treatment_income}}</span></div>
+      <div class="revenue-row"><span>Room Charges</span><span>Rs {{room_income}}</span></div>
+      <div class="revenue-row"><span>Other Services</span><span>Rs {{other_income}}</span></div>
     </div>
   </div>
 </div>

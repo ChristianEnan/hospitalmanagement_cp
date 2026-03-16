@@ -15,6 +15,41 @@
     </h2>
     <p class="text-muted mt-1 mb-0">View all your appointments including past consultations</p>
   </div>
+
+  <div class="row mb-4">
+    <div class="col-md-3 col-6 mb-3">
+      <div class="card border-0 shadow-sm" style="border-left:4px solid #1e2a4a !important;">
+        <div class="card-body py-3">
+          <div class="text-muted small">Total</div>
+          <div style="font-size:1.6rem;font-weight:700;color:#1e2a4a;">{{ appointment_stats.total }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+      <div class="card border-0 shadow-sm" style="border-left:4px solid #28a745 !important;">
+        <div class="card-body py-3">
+          <div class="text-muted small">Completed</div>
+          <div style="font-size:1.6rem;font-weight:700;color:#28a745;">{{ appointment_stats.completed }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+      <div class="card border-0 shadow-sm" style="border-left:4px solid #ffc107 !important;">
+        <div class="card-body py-3">
+          <div class="text-muted small">Pending</div>
+          <div style="font-size:1.6rem;font-weight:700;color:#d4a855;">{{ appointment_stats.pending }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 col-6 mb-3">
+      <div class="card border-0 shadow-sm" style="border-left:4px solid #dc3545 !important;">
+        <div class="card-body py-3">
+          <div class="text-muted small">Cancelled</div>
+          <div style="font-size:1.6rem;font-weight:700;color:#dc3545;">{{ appointment_stats.cancelled }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
   
   <div class="card border-0 shadow-sm">
     <div class="card-body p-0">
@@ -46,7 +81,11 @@
               <td style="padding:12px 20px;vertical-align:middle;">{{a.description}}</td>
               <td style="padding:12px 20px;vertical-align:middle;">{{a.appointmentDate}}</td>
               <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
-                {% if a.status %}
+                {% if a.is_cancelled %}
+                  <span class="badge" style="background:#dc3545;color:#fff;padding:6px 12px;border-radius:15px;font-size:12px;">
+                    <i class="fas fa-ban mr-1"></i>Cancelled
+                  </span>
+                {% elif a.status %}
                   <span class="badge" style="background:#28a745;color:#fff;padding:6px 12px;border-radius:15px;font-size:12px;">
                     <i class="fas fa-check-circle mr-1"></i>Active
                   </span>
@@ -57,7 +96,9 @@
                 {% endif %}
               </td>
               <td style="padding:12px 20px;vertical-align:middle;text-align:center;">
-                {% if a.status %}
+                {% if a.is_cancelled %}
+                  <span class="text-muted small">No actions</span>
+                {% elif a.status %}
                   <button type="button"
                      class="btn btn-sm delete-btn" 
                      data-appointment-id="{{a.id}}"

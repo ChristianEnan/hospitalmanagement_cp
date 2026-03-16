@@ -9,7 +9,7 @@ from django.contrib.auth import login as auth_login
 from django.contrib import messages
 from datetime import date
 from django.conf import settings
-from django.db.models import Q
+from django.db.models import Q, Sum
 import io
 from xhtml2pdf import pisa
 from django.template.loader import get_template
@@ -293,8 +293,24 @@ def admin_dashboard_view(request):
     pendingdoctorcount = models.Doctor.objects.filter(status=False).count()
     patientcount = models.Patient.objects.filter(status=True).count()
     pendingpatientcount = models.Patient.objects.filter(status=False).count()
-    appointmentcount = models.Appointment.objects.filter(status=True).count()
-    pendingappointmentcount = models.Appointment.objects.filter(status=False).count()
+    treatedpatientcount = models.PatientDischargeDetails.objects.values('patientId').distinct().count()
+    appointmentcount = models.Appointment.objects.filter(status=True, is_cancelled=False).count()
+    pendingappointmentcount = models.Appointment.objects.filter(status=False, is_cancelled=False).count()
+
+    revenue = models.PatientDischargeDetails.objects.aggregate(
+        appointment_income=Sum('doctorFee'),
+        treatment_income=Sum('medicineCost'),
+        room_income=Sum('roomCharge'),
+        other_income=Sum('OtherCharge'),
+        total_income=Sum('total'),
+    )
+
+    appointment_income = revenue['appointment_income'] or 0
+    treatment_income = revenue['treatment_income'] or 0
+    room_income = revenue['room_income'] or 0
+    other_income = revenue['other_income'] or 0
+    total_income = revenue['total_income'] or (appointment_income + treatment_income + room_income + other_income)
+
     mydict = {
         'doctors': doctors,
         'patients': patients,
@@ -302,8 +318,14 @@ def admin_dashboard_view(request):
         'pendingdoctorcount': pendingdoctorcount,
         'patientcount': patientcount,
         'pendingpatientcount': pendingpatientcount,
+        'treatedpatientcount': treatedpatientcount,
         'appointmentcount': appointmentcount,
         'pendingappointmentcount': pendingappointmentcount,
+        'appointment_income': appointment_income,
+        'treatment_income': treatment_income,
+        'room_income': room_income,
+        'other_income': other_income,
+        'total_income': total_income,
     }
     return render(request, 'hospital/admin/dashboard.html', context=mydict)
 
@@ -637,7 +659,7 @@ def admin_appointment_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin, login_url='access-denied')
 def admin_view_appointment_view(request):
-    appointments = models.Appointment.objects.filter(status=True)
+    appointments = models.Appointment.objects.filter(status=True, is_cancelled=False)
     return render(request, 'hospital/admin/view_appointment.html', {'appointments': appointments})
 
 
@@ -663,7 +685,7 @@ def admin_add_appointment_view(request):
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin, login_url='access-denied')
 def admin_approve_appointment_view(request):
-    appointments = models.Appointment.objects.filter(status=False)
+    appointments = models.Appointment.objects.filter(status=False, is_cancelled=False)
     return render(request, 'hospital/admin/approve_appointment.html', {'appointments': appointments})
 
 
@@ -680,22 +702,29 @@ def approve_appointment_view(request, pk):
 @user_passes_test(is_admin, login_url='access-denied')
 def reject_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
-    appointment.delete()
+    appointment.is_cancelled = True
+    appointment.save(update_fields=['is_cancelled'])
     return redirect('admin-approve-appointment')
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin, login_url='access-denied')
 def admin_delete_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk)
-    appointment.delete()
+    appointment.is_cancelled = True
+    appointment.save(update_fields=['is_cancelled'])
     return redirect('admin-view-appointment')
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin, login_url='access-denied')
 def admin_appointment_history_view(request):
-    # Get all appointments (including completed/cancelled ones)
     appointments = models.Appointment.objects.all().order_by('-appointmentDate')
-    return render(request, 'hospital/admin/appointment_history.html', {'appointments': appointments})
+    stats = {
+        'total': appointments.count(),
+        'completed': appointments.filter(status=True, is_cancelled=False).count(),
+        'pending': appointments.filter(status=False, is_cancelled=False).count(),
+        'cancelled': appointments.filter(is_cancelled=True).count(),
+    }
+    return render(request, 'hospital/admin/appointment_history.html', {'appointments': appointments, 'appointment_stats': stats})
 
 @login_required(login_url='adminlogin')
 @user_passes_test(is_admin, login_url='access-denied')
@@ -715,10 +744,12 @@ def admin_update_appointment_view(request, pk):
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_dashboard_view(request):
     patientcount = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id).count()
-    appointmentcount = models.Appointment.objects.filter(status=True, doctorId=request.user.id).count()
+    appointmentcount = models.Appointment.objects.filter(status=True, doctorId=request.user.id, is_cancelled=False).count()
     doctorFullName = f"Dr. {request.user.first_name} {request.user.last_name}"
-    patientdischarged = models.PatientDischargeDetails.objects.distinct().filter(assignedDoctorName=doctorFullName).count()
-    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id).order_by('-id')
+    patientdischarged = models.PatientDischargeDetails.objects.filter(
+        assignedDoctorName=doctorFullName
+    ).values('patientId').distinct().count()
+    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id, is_cancelled=False).order_by('-id')
     patientid = [a.patientId for a in appointments]
     patients = models.Patient.objects.filter(status=True, user_id__in=patientid).order_by('-id')
     appointments = zip(appointments, patients)
@@ -747,6 +778,73 @@ def doctor_view_patient_view(request):
     patients = models.Patient.objects.filter(status=True, assignedDoctorId=request.user.id)
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     return render(request, 'hospital/doctor/view_patient.html', {'patients': patients, 'doctor': doctor})
+
+
+@login_required(login_url='doctorlogin')
+@user_passes_test(is_doctor, login_url='access-denied')
+def doctor_patient_medical_records_view(request, pk):
+    doctor = models.Doctor.objects.get(user_id=request.user.id)
+    patient = models.Patient.objects.get(id=pk)
+
+    # Doctor can view records only for assigned patients.
+    if patient.assignedDoctorId != request.user.id:
+        messages.error(request, 'You do not have permission to access this patient medical record.')
+        return redirect('doctor-view-patient')
+
+    appointments = models.Appointment.objects.filter(patientId=patient.user_id, is_cancelled=False).order_by('-appointmentDate')
+    discharges = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-releaseDate')
+
+    timeline = []
+    timeline.append({
+        'type': 'admit',
+        'date': patient.admitDate,
+        'title': 'Admitted to Hospital',
+        'detail': f'Symptoms: {patient.symptoms}',
+        'icon': 'fa-hospital',
+        'color': '#0f3460',
+    })
+
+    for apt in appointments:
+        timeline.append({
+            'type': 'appointment',
+            'date': apt.appointmentDate,
+            'title': f'Appointment with Dr. {apt.doctorName}',
+            'detail': apt.description,
+            'status': 'Approved' if apt.status else 'Pending',
+            'icon': 'fa-calendar-check',
+            'color': '#2a9d8f' if apt.status else '#c9a84c',
+        })
+        if apt.consultationDate:
+            timeline.append({
+                'type': 'consultation',
+                'date': apt.consultationDate,
+                'title': f'Consultation with Dr. {apt.doctorName}',
+                'detail': f'Time: {apt.consultationTime.strftime("%I:%M %p") if apt.consultationTime else "TBD"}' + (f' | Notes: {apt.consultationNotes}' if apt.consultationNotes else ''),
+                'icon': 'fa-comments-medical' if hasattr(apt, 'consultationNotes') else 'fa-comments',
+                'color': '#6C5CE7',
+            })
+
+    for d in discharges:
+        timeline.append({
+            'type': 'discharge',
+            'date': d.releaseDate,
+            'title': 'Discharged from Hospital',
+            'detail': f'Days spent: {d.daySpent} | Total bill: ₹{d.total}',
+            'icon': 'fa-sign-out-alt',
+            'color': '#FF6B6B',
+            'canReapply': d.canReapply,
+            'followUpNotes': d.followUpNotes,
+        })
+
+    timeline.sort(key=lambda x: x.get('date') or date.min, reverse=True)
+
+    return render(request, 'hospital/doctor/medical_records.html', {
+        'doctor': doctor,
+        'patient': patient,
+        'timeline': timeline,
+        'appointments': appointments,
+        'discharges': discharges,
+    })
 
 
 @login_required(login_url='doctorlogin')
@@ -890,7 +988,7 @@ def doctor_appointment_view(request):
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_approve_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(status=False, doctorId=request.user.id).order_by('-id')
+    appointments = models.Appointment.objects.filter(status=False, doctorId=request.user.id, is_cancelled=False).order_by('-id')
     patientid = [a.patientId for a in appointments]
     patients = models.Patient.objects.filter(user_id__in=patientid)
     appointments = zip(appointments, patients)
@@ -910,7 +1008,8 @@ def doctor_approve_appointment_action_view(request, pk):
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_reject_appointment_view(request, pk):
     appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
-    appointment.delete()
+    appointment.is_cancelled = True
+    appointment.save(update_fields=['is_cancelled'])
     return redirect('doctor-approve-appointment')
 
 
@@ -918,7 +1017,7 @@ def doctor_reject_appointment_view(request, pk):
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_view_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
+    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id, is_cancelled=False)
     patientid = [a.patientId for a in appointments]
     patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
     appointments = zip(appointments, patients)
@@ -929,7 +1028,7 @@ def doctor_view_appointment_view(request):
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_delete_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id)
+    appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id, is_cancelled=False)
     patientid = [a.patientId for a in appointments]
     patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
     appointments = zip(appointments, patients)
@@ -939,19 +1038,26 @@ def doctor_delete_appointment_view(request):
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor, login_url='access-denied')
 def delete_appointment_view(request, pk):
-    appointment = models.Appointment.objects.get(id=pk)
-    appointment.delete()
+    appointment = models.Appointment.objects.get(id=pk, doctorId=request.user.id)
+    appointment.is_cancelled = True
+    appointment.save(update_fields=['is_cancelled'])
     return redirect('doctor-appointment-history')
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_appointment_history_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(doctorId=request.user.id).order_by('-appointmentDate')
-    patientid = [a.patientId for a in appointments]
+    doctor_appointments = models.Appointment.objects.filter(doctorId=request.user.id).order_by('-appointmentDate')
+    patientid = [a.patientId for a in doctor_appointments]
     patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
-    appointments = zip(appointments, patients)
-    return render(request, 'hospital/doctor/appointment_history.html', {'appointments': appointments, 'doctor': doctor})
+    appointments = zip(doctor_appointments, patients)
+    stats = {
+        'total': doctor_appointments.count(),
+        'completed': doctor_appointments.filter(status=True, is_cancelled=False).count(),
+        'pending': doctor_appointments.filter(status=False, is_cancelled=False).count(),
+        'cancelled': doctor_appointments.filter(is_cancelled=True).count(),
+    }
+    return render(request, 'hospital/doctor/appointment_history.html', {'appointments': appointments, 'doctor': doctor, 'appointment_stats': stats})
 
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor, login_url='access-denied')
@@ -1004,7 +1110,7 @@ def doctor_schedule_consultation_view(request, pk):
 def patient_dashboard_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     doctor = models.Doctor.objects.get(user_id=patient.assignedDoctorId)
-    appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-id')
+    appointments = models.Appointment.objects.filter(patientId=request.user.id, is_cancelled=False).order_by('-id')
     appointmentcount = appointments.filter(status=True).count()
     pendingappointmentcount = appointments.filter(status=False).count()
     discharge = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-id')
@@ -1080,7 +1186,7 @@ def search_doctor_view(request):
 @user_passes_test(is_patient, login_url='access-denied')
 def patient_view_appointment_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(patientId=request.user.id)
+    appointments = models.Appointment.objects.filter(patientId=request.user.id, is_cancelled=False)
     return render(request, 'hospital/patient/view_appointment.html', {'appointments': appointments, 'patient': patient})
 
 @login_required(login_url='patientlogin')
@@ -1088,7 +1194,13 @@ def patient_view_appointment_view(request):
 def patient_appointment_history_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-appointmentDate')
-    return render(request, 'hospital/patient/appointment_history.html', {'appointments': appointments, 'patient': patient})
+    stats = {
+        'total': appointments.count(),
+        'completed': appointments.filter(status=True, is_cancelled=False).count(),
+        'pending': appointments.filter(status=False, is_cancelled=False).count(),
+        'cancelled': appointments.filter(is_cancelled=True).count(),
+    }
+    return render(request, 'hospital/patient/appointment_history.html', {'appointments': appointments, 'patient': patient, 'appointment_stats': stats})
 
 @login_required(login_url='patientlogin')
 @user_passes_test(is_patient, login_url='access-denied')
@@ -1161,7 +1273,7 @@ def patient_discharge_view(request):
 @user_passes_test(is_patient, login_url='access-denied')
 def patient_medical_records_view(request):
     patient = models.Patient.objects.get(user_id=request.user.id)
-    appointments = models.Appointment.objects.filter(patientId=request.user.id).order_by('-appointmentDate')
+    appointments = models.Appointment.objects.filter(patientId=request.user.id, is_cancelled=False).order_by('-appointmentDate')
     discharges = models.PatientDischargeDetails.objects.filter(patientId=patient.id).order_by('-releaseDate')
 
     # Build timeline
@@ -1205,7 +1317,7 @@ def patient_medical_records_view(request):
             'followUpNotes': d.followUpNotes,
         })
 
-    timeline.sort(key=lambda x: x['date'], reverse=True)
+    timeline.sort(key=lambda x: x.get('date') or date.min, reverse=True)
 
     return render(request, 'hospital/patient/medical_records.html', {
         'patient': patient,
