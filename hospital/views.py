@@ -25,6 +25,16 @@ def is_doctor(user):
 def is_patient(user):
     return user.groups.filter(name='PATIENT').exists()
 
+
+def apply_remember_me_session(request):
+    """Configure session expiry based on remember-me checkbox."""
+    remember_raw = (request.POST.get('remember') or '').strip().lower()
+    remember_me = remember_raw in {'1', 'true', 'on', 'yes'}
+    if remember_me:
+        request.session.set_expiry(60 * 60 * 24 * 30)
+    else:
+        request.session.set_expiry(0)
+
 def home_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
@@ -56,18 +66,23 @@ def forgot_password_view(request):
     """Handle password reset for admin, doctor, and patient users"""
     import secrets
     import string
+
+    selected_role = (request.GET.get('role') or '').strip().lower()
     
     if request.method == 'POST':
-        role = request.POST.get('role')
-        username = request.POST.get('username')
+        role = (request.POST.get('role') or selected_role).strip().lower()
+        username = (request.POST.get('username') or '').strip()
         
         if not role or not username:
             return render(request, 'hospital/forgot_password.html', {
-                'error_message': 'Please provide both account type and username.'
+                'error_message': 'Please provide both account type and username.',
+                'selected_role': role,
+                'entered_username': username,
             })
         
         # Generate a secure random password
-        alphabet = string.ascii_letters + string.digits
+        # Avoid visually confusing characters to reduce login mistakes.
+        alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789'
         new_password = ''.join(secrets.choice(alphabet) for _ in range(10))
         
         try:
@@ -80,7 +95,8 @@ def forgot_password_view(request):
                 return render(request, 'hospital/forgot_password.html', {
                     'password_reset': True,
                     'new_password': new_password,
-                    'login_url': '/adminlogin'
+                    'login_url': '/adminlogin',
+                    'selected_role': role,
                 })
             elif role == 'doctor' and user.groups.filter(name='DOCTOR').exists():
                 user.set_password(new_password)
@@ -88,7 +104,8 @@ def forgot_password_view(request):
                 return render(request, 'hospital/forgot_password.html', {
                     'password_reset': True,
                     'new_password': new_password,
-                    'login_url': '/doctorlogin'
+                    'login_url': '/doctorlogin',
+                    'selected_role': role,
                 })
             elif role == 'patient' and user.groups.filter(name='PATIENT').exists():
                 user.set_password(new_password)
@@ -96,19 +113,24 @@ def forgot_password_view(request):
                 return render(request, 'hospital/forgot_password.html', {
                     'password_reset': True,
                     'new_password': new_password,
-                    'login_url': '/patientlogin'
+                    'login_url': '/patientlogin',
+                    'selected_role': role,
                 })
             else:
                 return render(request, 'hospital/forgot_password.html', {
-                    'error_message': f'No {role} account found with username "{username}". Please check your account type.'
+                    'error_message': f'No {role} account found with username "{username}". Please check your account type.',
+                    'selected_role': role,
+                    'entered_username': username,
                 })
                 
         except User.DoesNotExist:
             return render(request, 'hospital/forgot_password.html', {
-                'error_message': f'No account found with username "{username}". Please check your username.'
+                'error_message': f'No account found with username "{username}". Please check your username.',
+                'selected_role': role,
+                'entered_username': username,
             })
     
-    return render(request, 'hospital/forgot_password.html')
+    return render(request, 'hospital/forgot_password.html', {'selected_role': selected_role})
 
 
 def admin_signup_view(request):
@@ -176,12 +198,15 @@ def patient_signup_view(request):
 def admin_login_view(request):
     form = AuthenticationForm()
     error_message = None
+    remember_checked = False
     if request.method == 'POST':
+        remember_checked = (request.POST.get('remember') or '').strip().lower() in {'1', 'true', 'on', 'yes'}
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if is_admin(user):
                 auth_login(request, user)
+                apply_remember_me_session(request)
                 return redirect('admin-dashboard')
             else:
                 error_message = 'This account is not registered as an Administrator. Please use the correct login portal.'
@@ -202,18 +227,21 @@ def admin_login_view(request):
                     # Username doesn't exist
                     error_message = 'Username not found. Please check your username or contact the system administrator.'
                     form = AuthenticationForm()
-    return render(request, 'hospital/admin/login.html', {'form': form, 'error_message': error_message})
+    return render(request, 'hospital/admin/login.html', {'form': form, 'error_message': error_message, 'remember_checked': remember_checked})
 
 
 def doctor_login_view(request):
     form = AuthenticationForm()
     error_message = None
+    remember_checked = False
     if request.method == 'POST':
+        remember_checked = (request.POST.get('remember') or '').strip().lower() in {'1', 'true', 'on', 'yes'}
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if is_doctor(user):
                 auth_login(request, user)
+                apply_remember_me_session(request)
                 return redirect('afterlogin')
             else:
                 error_message = 'This account is not registered as a Doctor. Please use the correct login portal.'
@@ -234,18 +262,21 @@ def doctor_login_view(request):
                     # Username doesn't exist
                     error_message = 'Username not found. Please check your username or sign up for a new account.'
                     form = AuthenticationForm()
-    return render(request, 'hospital/doctor/login.html', {'form': form, 'error_message': error_message})
+    return render(request, 'hospital/doctor/login.html', {'form': form, 'error_message': error_message, 'remember_checked': remember_checked})
 
 
 def patient_login_view(request):
     form = AuthenticationForm()
     error_message = None
+    remember_checked = False
     if request.method == 'POST':
+        remember_checked = (request.POST.get('remember') or '').strip().lower() in {'1', 'true', 'on', 'yes'}
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             if is_patient(user):
                 auth_login(request, user)
+                apply_remember_me_session(request)
                 return redirect('afterlogin')
             else:
                 error_message = 'This account is not registered as a Patient. Please use the correct login portal.'
@@ -266,7 +297,7 @@ def patient_login_view(request):
                     # Username doesn't exist
                     error_message = 'Username not found. Please check your username or sign up for a new account.'
                     form = AuthenticationForm()
-    return render(request, 'hospital/patient/login.html', {'form': form, 'error_message': error_message})
+    return render(request, 'hospital/patient/login.html', {'form': form, 'error_message': error_message, 'remember_checked': remember_checked})
 
 def afterlogin_view(request):
     if is_admin(request.user):

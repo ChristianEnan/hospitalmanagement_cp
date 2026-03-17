@@ -323,7 +323,7 @@
           
           <div class="form-options">
             <label class="remember-me">
-              <input type="checkbox" name="remember"> Remember me
+              <input type="checkbox" name="remember" value="1" {% if remember_checked %}checked{% endif %}> Remember me
             </label>
             <a href="{% url 'forgot-password' %}?role=doctor" class="forgot-password">Forgot Password?</a>
           </div>
