@@ -89,13 +89,31 @@
                 {% if a.is_cancelled %}
                   <span class="text-muted small">No actions</span>
                 {% elif a.status %}
-                  <span class="badge" style="background:#28a745;color:#fff;padding:6px 15px;border-radius:15px;font-size:13px;">
-                    <i class="fas fa-check-circle mr-1"></i>Completed
-                  </span>
+                  <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+                    <span class="badge" style="background:#28a745;color:#fff;padding:6px 15px;border-radius:15px;font-size:13px;">
+                      <i class="fas fa-check-circle mr-1"></i>Completed
+                    </span>
+                    <button type="button"
+                            class="btn btn-sm admin-delete-btn"
+                            data-delete-url="{% url 'admin-delete-appointment' a.id %}"
+                            data-patient-name="{{a.patientName}}"
+                            style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;border:none;">
+                      <i class="fas fa-trash-alt mr-1"></i>Delete
+                    </button>
+                  </div>
                 {% else %}
-                  <a href="{% url 'admin-update-appointment' a.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#17a2b8,#138496);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;">
-                    <i class="fas fa-edit mr-1"></i>Edit
-                  </a>
+                  <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+                    <a href="{% url 'admin-update-appointment' a.id %}" class="btn btn-sm" style="background:linear-gradient(135deg,#17a2b8,#138496);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;">
+                      <i class="fas fa-edit mr-1"></i>Edit
+                    </a>
+                    <button type="button"
+                            class="btn btn-sm admin-delete-btn"
+                            data-delete-url="{% url 'admin-delete-appointment' a.id %}"
+                            data-patient-name="{{a.patientName}}"
+                            style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border-radius:20px;padding:6px 15px;font-size:13px;border:none;">
+                      <i class="fas fa-trash-alt mr-1"></i>Delete
+                    </button>
+                  </div>
                 {% endif %}
               </td>
             </tr>
@@ -108,5 +126,57 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="adminDeleteConfirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content" style="border:none;border-radius:12px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,0.3);">
+      <div class="modal-header" style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;border:none;padding:20px 25px;">
+        <h5 class="modal-title" style="font-weight:700;font-size:1.1rem;">
+          <i class="fas fa-exclamation-triangle mr-2"></i>Confirm Delete
+        </h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color:#fff;opacity:1;">
+          <span aria-hidden="true" style="font-size:1.5rem;">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" style="padding:22px;background:#f8f9fa;">
+        <p id="adminDeleteText" style="margin:0;color:#333;line-height:1.5;">
+          Are you sure you want to delete this appointment?
+        </p>
+      </div>
+      <div class="modal-footer" style="border:none;padding:15px 25px;background:#fff;gap:10px;">
+        <button type="button" class="btn" data-dismiss="modal" style="background:#6c757d;color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;border:none;">
+          <i class="fas fa-times mr-1"></i>Cancel
+        </button>
+        <button type="button" class="btn" id="adminConfirmDeleteBtn" style="background:linear-gradient(135deg,#e74c3c,#c0392b);color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;border:none;">
+          <i class="fas fa-trash-alt mr-1"></i>Delete
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var targetDeleteUrl = '';
+    var deleteModal = $('#adminDeleteConfirmModal');
+    var deleteText = document.getElementById('adminDeleteText');
+    var confirmBtn = document.getElementById('adminConfirmDeleteBtn');
+
+    document.querySelectorAll('.admin-delete-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        targetDeleteUrl = this.getAttribute('data-delete-url') || '';
+        var patientName = this.getAttribute('data-patient-name') || 'this patient';
+        deleteText.textContent = 'Are you sure you want to delete appointment record for ' + patientName + '? This action cannot be undone.';
+        deleteModal.modal('show');
+      });
+    });
+
+    confirmBtn.addEventListener('click', function () {
+      if (targetDeleteUrl) {
+        window.location.href = targetDeleteUrl;
+      }
+    });
+  })();
+</script>
 
 {% endblock content %}

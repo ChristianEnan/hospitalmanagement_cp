@@ -2,376 +2,411 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title>Hospital Bill - Invoice</title>
   <style type="text/css">
     @page {
       size: A4;
-      margin: 1cm;
+      margin: 1.2cm;
     }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+
     body {
       font-family: Arial, Helvetica, sans-serif;
-      color: #333;
-      line-height: 1.4;
+      color: #263238;
       font-size: 12px;
-    }
-    
-    .invoice-container {
-      width: 100%;
+      line-height: 1.45;
+      margin: 0;
       padding: 0;
     }
-    
-    /* Header Section */
-    .invoice-header {
-      background-color: #1e2a4a;
-      color: #fff;
-      padding: 15px;
-      margin-bottom: 12px;
+
+    .invoice-wrap {
+      width: 100%;
+      border: 1px solid #dbe4f0;
+      background: #ffffff;
     }
-    
-    .header-top {
-      overflow: hidden;
-      margin-bottom: 10px;
+
+    .header {
+      background: #ffffff;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-bottom: 3px solid #d4a855;
     }
-    
-    .hospital-name {
-      float: left;
-      font-size: 22px;
-      font-weight: 700;
-      color: #d4a855;
-      width: 50%;
-    }
-    
-    .invoice-title {
-      float: right;
-      font-size: 18px;
-      font-weight: 600;
-      color: #d4a855;
-      text-align: right;
-      width: 50%;
-    }
-    
-    .header-bottom {
-      overflow: hidden;
-      padding-top: 8px;
-      border-top: 1px solid #d4a855;
-    }
-    
-    .invoice-subtitle {
-      float: left;
-      font-size: 11px;
-      color: #ccc;
-      width: 50%;
-    }
-    
-    .invoice-dates {
-      float: right;
-      text-align: right;
-      font-size: 10px;
-      color: #fff;
-      width: 50%;
-    }
-    
-    .invoice-dates div {
-      margin-bottom: 2px;
-      line-height: 1.3;
-    }
-    
-    .date-label {
-      color: #d4a855;
-      font-weight: 600;
-      display: inline-block;
-      width: 55px;
-      text-align: left;
-    }
-    
-    /* Main Content */
-    .invoice-body {
-      padding: 0 15px 15px 15px;
-    }
-    
-    /* Info Section */
-    .info-row {
-      overflow: hidden;
-      margin-bottom: 10px;
-    }
-    
-    .info-col {
-      float: left;
-      width: 49%;
-      padding: 10px;
-      background: #f8f9fa;
-      border-left: 3px solid #3d5a99;
-      margin-right: 2%;
-    }
-    
-    .info-col.right {
-      margin-right: 0;
-    }
-    
-    .info-title {
-      font-size: 10px;
-      font-weight: 700;
-      color: #1e2a4a;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid #ddd;
-    }
-    
-    .info-item {
-      font-size: 11px;
-      margin-bottom: 3px;
-      color: #555;
-    }
-    
-    .info-label {
-      font-weight: 600;
-      color: #333;
-      width: 70px;
-      display: inline-block;
-    }
-    
-    /* Symptoms */
-    .symptoms-box {
-      background: #fffbf0;
-      border-left: 3px solid #d4a855;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    
-    .symptoms-title {
-      font-size: 10px;
-      font-weight: 700;
-      color: #1e2a4a;
-      text-transform: uppercase;
-      margin-bottom: 5px;
-    }
-    
-    .symptoms-text {
-      font-size: 11px;
-      color: #555;
-    }
-    
-    /* Billing Table */
-    .billing-section {
-      margin-bottom: 10px;
-    }
-    
-    .billing-title {
-      font-size: 10px;
-      font-weight: 700;
-      color: #1e2a4a;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    
-    .billing-table {
+
+    .header-table {
       width: 100%;
       border-collapse: collapse;
-      border: 1px solid #ddd;
+      table-layout: fixed;
     }
-    
-    .billing-table thead {
-      background-color: #1e2a4a;
+
+    .header-table td {
+      vertical-align: middle;
+      padding: 0;
+      background: #1f3a6d;
     }
-    
-    .billing-table th {
-      padding: 8px 10px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 10px;
-      text-transform: uppercase;
-      color: #d4a855;
-      border: 1px solid #1e2a4a;
+
+    .header-left {
+      width: 50%;
     }
-    
-    .billing-table th:last-child {
-      text-align: right;
-      width: 25%;
+
+    .header-right {
+      width: 50%;
     }
-    
-    .billing-table td {
-      padding: 6px 10px;
-      font-size: 11px;
-      color: #555;
-      border: 1px solid #e8e8e8;
-    }
-    
-    .billing-table td:last-child {
-      text-align: right;
-      font-weight: 600;
-      color: #333;
-    }
-    
-    .billing-table .total-row {
-      background: #f0f0f0;
-    }
-    
-    .billing-table .total-row td {
-      padding: 10px;
-      font-size: 13px;
+
+    .hospital-title {
+      font-size: 20px;
       font-weight: 700;
-      color: #1e2a4a;
-      border-top: 2px solid #3d5a99;
+      color: #f2c464;
+      letter-spacing: 0.4px;
+      margin: 0;
+      padding: 0;
+      line-height: 1.15;
+      text-align: center;
     }
-    
-    /* Signature */
-    .signature-row {
-      overflow: hidden;
-      margin-top: 15px;
+
+    .invoice-title {
+      font-size: 20px;
+      font-weight: 700;
+      text-align: center;
+      color: #f2c464;
+      margin: 0;
+      padding-top: 0;
+      line-height: 1.15;
+    }
+
+    .header-sub {
+      border-top: 1px solid #8aa0c7;
+      margin-top: 4px;
+      padding-top: 4px;
+      font-size: 11px;
+      color: #d9e4fa;
+    }
+
+    .header-sub-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .header-sub-table td {
+      padding: 0;
+      vertical-align: middle;
+      background: #1f3a6d;
+    }
+
+    .sub-left {
+      width: 62%;
+      padding-left: 2px;
+    }
+
+    .sub-right {
+      width: 38%;
+      padding-left: 2px;
+      background: #1f3a6d;
+    }
+
+    .meta-table {
+      width: auto;
+      margin-left: auto;
+      border-collapse: collapse;
+      table-layout: auto;
+      font-size: 11px;
+      color: #ffffff;
+    }
+
+    .meta-table td {
+      padding: 0;
+      line-height: 1.2;
+      background: #1f3a6d;
+      vertical-align: middle;
+    }
+
+    .meta-key {
+      width: 52px;
+      color: #f2c464;
+      font-weight: 700;
+      text-align: left;
+      padding-right: 2px;
+    }
+
+    .meta-val {
+      text-align: left;
+      color: #f7fbff;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      min-width: 88px;
+    }
+
+    .content {
+      padding: 14px 16px 12px 16px;
+    }
+
+    .block-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #1f3a6d;
+      margin-bottom: 6px;
+    }
+
+    .info-table {
+      width: 100%;
+      border-collapse: collapse;
       margin-bottom: 10px;
     }
-    
-    .signature-col {
-      float: left;
-      width: 49%;
-      text-align: center;
-      margin-right: 2%;
+
+    .info-table td {
+      width: 50%;
+      vertical-align: top;
+      padding: 0 0 0 0;
     }
-    
-    .signature-col.right {
-      margin-right: 0;
+
+    .info-card {
+      border: 1px solid #e1e8f3;
+      background: #f8fbff;
+      padding: 10px;
+      min-height: 74px;
     }
-    
-    .signature-line {
-      border-top: 1px solid #666;
-      width: 150px;
-      margin: 20px auto 5px;
+
+    .left-gap {
+      padding-right: 6px;
     }
-    
-    .signature-label {
-      font-size: 10px;
-      font-weight: 600;
-      color: #666;
+
+    .right-gap {
+      padding-left: 6px;
     }
-    
-    /* Footer */
-    .invoice-footer {
-      padding-top: 8px;
-      border-top: 1px solid #ddd;
-      text-align: center;
-      font-size: 9px;
-      color: #888;
-    }
-    
-    .footer-text {
+
+    .line {
       margin-bottom: 3px;
+      font-size: 12px;
+      color: #37474f;
+    }
+
+    .line-label {
+      font-weight: 700;
+      color: #263238;
+      display: inline-block;
+      width: 68px;
+    }
+
+    .symptom-box {
+      border: 1px solid #f0deb1;
+      background: #fffdf7;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+
+    .symptom-text {
+      font-size: 12px;
+      color: #37474f;
+    }
+
+    .bill-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #cfd9e8;
+      table-layout: fixed;
+    }
+
+    .bill-table th {
+      background: #2d4f88;
+      color: #f2c464;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-size: 10px;
+      font-weight: 700;
+      text-align: left;
+      border: 1px solid #45669b;
+      padding: 9px 10px;
+      vertical-align: middle;
+    }
+
+    .bill-table th:last-child,
+    .bill-table td:last-child {
+      text-align: right;
+      width: 28%;
+    }
+
+    .bill-table td {
+      border: 1px solid #e3e9f2;
+      padding: 8px 10px;
+      font-size: 12px;
+      color: #37474f;
+      background: #ffffff;
+      vertical-align: middle;
+    }
+
+    .total-row td {
+      background: #eef3fb;
+      border-top: 2px solid #5b79ad;
+      font-size: 13px;
+      font-weight: 700;
+      color: #1f3a6d;
+      padding-top: 10px;
+      padding-bottom: 10px;
+    }
+
+    .sign-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      margin-bottom: 8px;
+    }
+
+    .sign-table td {
+      width: 50%;
+      text-align: center;
+      vertical-align: bottom;
+      padding: 0;
+    }
+
+    .sign-line {
+      width: 170px;
+      border-top: 1px solid #73808f;
+      margin: 0 auto 8px auto;
+    }
+
+    .sign-label {
+      font-size: 18px;
+      font-weight: 700;
+      color: #607080;
+      line-height: 1.2;
+    }
+
+    .footer {
+      border-top: 1px solid #dfe6f0;
+      margin-top: 8px;
+      padding-top: 8px;
+      text-align: center;
+      font-size: 10px;
+      color: #64748b;
+      line-height: 1.45;
+    }
+
+    .thanks {
+      margin-top: 4px;
+      font-weight: 700;
+      color: #1f3a6d;
     }
   </style>
 </head>
 <body>
-  <div class="invoice-container">
-    <!-- Header -->
-    <div class="invoice-header">
-      <div class="header-top">
-        <div class="hospital-name">Hospital Management</div>
-        <div class="invoice-title">DISCHARGE INVOICE</div>
-      </div>
-      <div class="header-bottom">
-        <div class="invoice-subtitle">Quality Healthcare Management System</div>
-        <div class="invoice-dates">
-          <div><span class="date-label">Admit:</span> {{admitDate}}</div>
-          <div><span class="date-label">Release:</span> {{releaseDate}}</div>
-          <div><span class="date-label">Days:</span> {{daySpent}}</div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Body -->
-    <div class="invoice-body">
-      <!-- Patient and Doctor Info -->
-      <div class="info-row">
-        <div class="info-col">
-          <div class="info-title">Patient Information</div>
-          <div class="info-item"><span class="info-label">Name:</span> {{patientName}}</div>
-          <div class="info-item"><span class="info-label">Mobile:</span> {{mobile}}</div>
-          <div class="info-item"><span class="info-label">Address:</span> {{address}}</div>
-        </div>
-        
-        <div class="info-col right">
-          <div class="info-title">Doctor Information</div>
-          <div class="info-item"><span class="info-label">Doctor:</span> {{assignedDoctorName}}</div>
-          <div class="info-item"><span class="info-label">Department:</span> Medical Services</div>
-        </div>
-      </div>
-      
-      <div style="clear:both;"></div>
-      
-      <!-- Symptoms -->
-      <div class="symptoms-box">
-        <div class="symptoms-title">Disease & Symptoms</div>
-        <div class="symptoms-text">{{symptoms}}</div>
-      </div>
-      
-      <!-- Billing Table -->
-      <div class="billing-section">
-        <div class="billing-title">Billing Summary</div>
-        <table class="billing-table">
-          <thead>
-            <tr>
-              <th>Description</th>
-              <th>Amount (Rs.)</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Room Charges ({{daySpent}} days)</td>
-              <td>{{roomCharge}}</td>
-            </tr>
-            <tr>
-              <td>Doctor Consultation Fee</td>
-              <td>{{doctorFee}}</td>
-            </tr>
-            <tr>
-              <td>Medicine & Pharmacy</td>
-              <td>{{medicineCost}}</td>
-            </tr>
-            <tr>
-              <td>Other Charges & Services</td>
-              <td>{{OtherCharge}}</td>
-            </tr>
-            <tr class="total-row">
-              <td><strong>TOTAL AMOUNT</strong></td>
-              <td><strong>{{total}}</strong></td>
-            </tr>
-          </tbody>
+  <div class="invoice-wrap">
+    <div class="header">
+      <table class="header-table">
+        <tr>
+          <td class="header-left">
+            <p class="hospital-title">Hospital Management</p>
+          </td>
+          <td class="header-right">
+            <p class="invoice-title">DISCHARGE INVOICE</p>
+          </td>
+        </tr>
+      </table>
+
+      <div class="header-sub">
+        <table class="header-sub-table">
+          <tr>
+            <td class="sub-left">Quality Healthcare Management System</td>
+            <td class="sub-right">
+              <table class="meta-table">
+                <tr>
+                  <td class="meta-key">Admit:</td>
+                  <td class="meta-val">{{admitDate|default:"-"}}</td>
+                </tr>
+                <tr>
+                  <td class="meta-key">Release:</td>
+                  <td class="meta-val">{{releaseDate|default:"-"}}</td>
+                </tr>
+                <tr>
+                  <td class="meta-key">Days:</td>
+                  <td class="meta-val">{{daySpent|default:"-"}}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
         </table>
       </div>
-      
-      <!-- Signature Section -->
-      <div class="signature-row">
-        <div class="signature-col">
-          <div class="signature-line"></div>
-          <div class="signature-label">Patient Signature</div>
-        </div>
-        <div class="signature-col right">
-          <div class="signature-line"></div>
-          <div class="signature-label">Authorized Signature</div>
-        </div>
-      </div>
-      
-      <div style="clear:both;"></div>
-      
-      <!-- Footer -->
-      <div class="invoice-footer">
-        <div class="footer-text"><strong>Note:</strong> This is a computer-generated invoice. For queries, contact billing department.</div>
-        <div class="footer-text" style="margin-top:5px;color:#1e2a4a;font-weight:600;">Thank you for choosing our services!</div>
-      </div>
     </div>
-  </div>
-</body>
-</html>
-        <div class="footer-text"><span class="footer-bold">Note:</span> This is a computer-generated invoice and does not require a physical signature.</div>
-        <div class="footer-text">For any queries, please contact our billing department.</div>
-        <div class="footer-text" style="margin-top:15px;color:#1e2a4a;font-weight:600;">Thank you for choosing our services!</div>
+
+    <div class="content">
+      <table class="info-table">
+        <tr>
+          <td class="left-gap">
+            <div class="info-card">
+              <div class="block-title">Patient Information</div>
+              <div class="line"><span class="line-label">Name:</span> {{patientName}}</div>
+              <div class="line"><span class="line-label">Mobile:</span> {{mobile}}</div>
+              <div class="line"><span class="line-label">Address:</span> {{address}}</div>
+            </div>
+          </td>
+          <td class="right-gap">
+            <div class="info-card">
+              <div class="block-title">Doctor Information</div>
+              <div class="line"><span class="line-label">Doctor:</span> {{assignedDoctorName}}</div>
+              <div class="line"><span class="line-label">Dept:</span> Medical Services</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="symptom-box">
+        <div class="block-title">Disease and Symptoms</div>
+        <div class="symptom-text">{{symptoms}}</div>
+      </div>
+
+      <div class="block-title">Billing Summary</div>
+      <table class="bill-table">
+        <colgroup>
+          <col style="width:72%;" />
+          <col style="width:28%;" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Amount (Rs.)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Room Charges ({{daySpent}} days)</td>
+            <td>{{roomCharge}}</td>
+          </tr>
+          <tr>
+            <td>Doctor Consultation Fee</td>
+            <td>{{doctorFee}}</td>
+          </tr>
+          <tr>
+            <td>Medicine and Pharmacy</td>
+            <td>{{medicineCost}}</td>
+          </tr>
+          <tr>
+            <td>Other Charges and Services</td>
+            <td>{{OtherCharge}}</td>
+          </tr>
+          <tr class="total-row">
+            <td>TOTAL AMOUNT</td>
+            <td>{{total}}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <table class="sign-table">
+        <tr>
+          <td>
+            <div class="sign-line"></div>
+            <div class="sign-label">Patient Signature</div>
+          </td>
+          <td>
+            <div class="sign-line"></div>
+            <div class="sign-label">Authorized Signature</div>
+          </td>
+        </tr>
+      </table>
+
+      <div class="footer">
+        <div><strong>Note:</strong> This is a computer-generated invoice. For queries, contact billing department.</div>
+        <div class="thanks">Thank you for choosing our services.</div>
       </div>
     </div>
   </div>
