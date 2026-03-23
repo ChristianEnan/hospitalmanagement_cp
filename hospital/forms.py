@@ -77,10 +77,11 @@ class AppointmentForm(forms.ModelForm):
 
 
 class PatientAppointmentForm(forms.ModelForm):
-    doctorId = forms.ModelChoiceField(
-        queryset=models.Doctor.objects.all().filter(status=True),
-        empty_label="-- Select a Doctor --",
-        to_field_name="user_id",
+    doctorId = forms.TypedChoiceField(
+        coerce=int,
+        empty_value=None,
+        choices=(),
+        required=True,
     )
     appointmentDate = forms.DateField(
         widget=forms.DateInput(attrs={'type': 'date'}),
@@ -90,6 +91,16 @@ class PatientAppointmentForm(forms.ModelForm):
     class Meta:
         model = models.Appointment
         fields = ['doctorId', 'appointmentDate', 'description']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        active_doctors = models.Doctor.objects.filter(status=True).select_related('user').order_by('user__first_name', 'user__last_name')
+        doctor_choices = [('', '-- Select a Doctor --')]
+        doctor_choices.extend(
+            (doctor.user_id, f"Dr. {doctor.user.first_name} {doctor.user.last_name} - {doctor.department}")
+            for doctor in active_doctors
+        )
+        self.fields['doctorId'].choices = doctor_choices
 
 
 class ContactusForm(forms.Form):

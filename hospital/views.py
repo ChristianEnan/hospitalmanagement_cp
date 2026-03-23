@@ -1015,14 +1015,21 @@ def doctor_appointment_view(request):
     return render(request, 'hospital/doctor/appointment.html', {'doctor': doctor})
 
 
+def _appointments_with_patients(appointments):
+    """Pair each appointment with its patient while preserving appointment order and duplicates."""
+    patient_ids = [a.patientId for a in appointments if a.patientId]
+    patients_by_user_id = {
+        p.user_id: p for p in models.Patient.objects.filter(user_id__in=patient_ids)
+    }
+    return [(a, patients_by_user_id.get(a.patientId)) for a in appointments]
+
+
 @login_required(login_url='doctorlogin')
 @user_passes_test(is_doctor, login_url='access-denied')
 def doctor_approve_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=False, doctorId=request.user.id, is_cancelled=False).order_by('-id')
-    patientid = [a.patientId for a in appointments]
-    patients = models.Patient.objects.filter(user_id__in=patientid)
-    appointments = zip(appointments, patients)
+    appointments = _appointments_with_patients(appointments)
     return render(request, 'hospital/doctor/approve_appointment.html', {'appointments': appointments, 'doctor': doctor})
 
 
@@ -1049,9 +1056,7 @@ def doctor_reject_appointment_view(request, pk):
 def doctor_view_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id, is_cancelled=False)
-    patientid = [a.patientId for a in appointments]
-    patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
-    appointments = zip(appointments, patients)
+    appointments = _appointments_with_patients(appointments)
     return render(request, 'hospital/doctor/view_appointment.html', {'appointments': appointments, 'doctor': doctor})
 
 
@@ -1060,9 +1065,7 @@ def doctor_view_appointment_view(request):
 def doctor_delete_appointment_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     appointments = models.Appointment.objects.filter(status=True, doctorId=request.user.id, is_cancelled=False)
-    patientid = [a.patientId for a in appointments]
-    patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
-    appointments = zip(appointments, patients)
+    appointments = _appointments_with_patients(appointments)
     return render(request, 'hospital/doctor/delete_appointment.html', {'appointments': appointments, 'doctor': doctor})
 
 
@@ -1079,9 +1082,7 @@ def delete_appointment_view(request, pk):
 def doctor_appointment_history_view(request):
     doctor = models.Doctor.objects.get(user_id=request.user.id)
     doctor_appointments = models.Appointment.objects.filter(doctorId=request.user.id).order_by('-appointmentDate')
-    patientid = [a.patientId for a in doctor_appointments]
-    patients = models.Patient.objects.filter(status=True, user_id__in=patientid)
-    appointments = zip(doctor_appointments, patients)
+    appointments = _appointments_with_patients(doctor_appointments)
     stats = {
         'total': doctor_appointments.count(),
         'completed': doctor_appointments.filter(status=True, is_cancelled=False).count(),
@@ -1178,17 +1179,23 @@ def patient_book_appointment_view(request):
     mydict = {'appointmentForm': appointmentForm, 'patient': patient, 'message': message}
     if request.method == 'POST':
         appointmentForm = forms.PatientAppointmentForm(request.POST)
+        mydict['appointmentForm'] = appointmentForm
         if appointmentForm.is_valid():
             appointment = appointmentForm.save(commit=False)
-            doctor = appointmentForm.cleaned_data['doctorId']
-            appointment.doctorId = doctor.user_id
+            doctor_user_id = appointmentForm.cleaned_data['doctorId']
+            doctor = models.Doctor.objects.filter(user_id=doctor_user_id, status=True).first()
+            if not doctor:
+                messages.error(request, 'Selected doctor is no longer available. Please choose another doctor.')
+                return render(request, 'hospital/patient/book_appointment.html', context=mydict)
+            appointment.doctorId = doctor_user_id
             appointment.doctorName = doctor.get_name
             appointment.patientId = request.user.id
-            appointment.patientName = request.user.first_name
+            appointment.patientName = patient.get_name
             appointment.status = False
             appointment.save()
             messages.success(request, 'Appointment booked successfully! Awaiting approval.')
             return redirect('patient-view-appointment')
+        messages.error(request, 'Unable to book appointment. Please check the highlighted fields and try again.')
     return render(request, 'hospital/patient/book_appointment.html', context=mydict)
 
 
@@ -1239,15 +1246,7 @@ def patient_update_appointment_view(request, pk):
     patient = models.Patient.objects.get(user_id=request.user.id)
     appointment = models.Appointment.objects.get(id=pk, patientId=request.user.id)
     
-    # Get initial doctor for dropdown
-    initial_doctor = None
-    if appointment.doctorId:
-        try:
-            initial_doctor = models.Doctor.objects.get(user_id=appointment.doctorId)
-        except:
-            pass
-    
-    appointmentForm = forms.PatientAppointmentForm(instance=appointment, initial={'doctorId': initial_doctor})
+    appointmentForm = forms.PatientAppointmentForm(instance=appointment, initial={'doctorId': appointment.doctorId})
     mydict = {'appointmentForm': appointmentForm, 'appointment': appointment, 'patient': patient}
     
     if request.method == 'POST':
@@ -1255,8 +1254,12 @@ def patient_update_appointment_view(request, pk):
         if appointmentForm.is_valid():
             appointment = appointmentForm.save(commit=False)
             # Get the selected doctor and save their info
-            doctor = appointmentForm.cleaned_data['doctorId']
-            appointment.doctorId = doctor.user_id
+            doctor_user_id = appointmentForm.cleaned_data['doctorId']
+            doctor = models.Doctor.objects.filter(user_id=doctor_user_id, status=True).first()
+            if not doctor:
+                messages.error(request, 'Selected doctor is no longer available. Please choose another doctor.')
+                return render(request, 'hospital/patient/update_appointment.html', context=mydict)
+            appointment.doctorId = doctor_user_id
             appointment.doctorName = doctor.get_name
             appointment.status = False  # Requires re-approval after update
             appointment.save()
