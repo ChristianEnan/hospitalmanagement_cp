@@ -47,9 +47,9 @@ pip install xhtml2pdf
 - Download This Project Zip Folder and Extract it
 - Move to project folder in Terminal. Then run following Commands :
 ```
-py manage.py makemigrations
-py manage.py migrate
-py manage.py runserver
+d:/hospitalmanagement_cp/.venv/Scripts/python.exe manage.py makemigrations
+d:/hospitalmanagement_cp/.venv/Scripts/python.exe manage.py migrate
+d:/hospitalmanagement_cp/.venv/Scripts/python.exe manage.py runserver
 ```
 - Now enter following URL in Your Browser Installed On Your Pc
 ```
@@ -66,4 +66,42 @@ EMAIL_RECEIVING_USER = 'youremail@gmail.com'
 - Login to gmail through host email id in your browser and open following link and turn it ON
 ```
 https://myaccount.google.com/lesssecureapps
+```
+
+## DEPLOY ON RENDER
+- This project is now configured for Render using `render.yaml` and `gunicorn`.
+- Push the project to GitHub.
+- In Render dashboard: `New` -> `Blueprint`.
+- Select your GitHub repository and deploy. Render will read `render.yaml` automatically.
+
+### Environment Variables (Render)
+Set these variables in Render service settings (or keep from `render.yaml`):
+
+```
+DEBUG=False
+ALLOWED_HOSTS=.onrender.com,your-service-name.onrender.com
+SECRET_KEY=your-strong-secret-key
+DATABASE_URL=postgresql://username:password@host:5432/dbname?sslmode=require
+EMAIL_HOST_USER=youremail@gmail.com
+EMAIL_HOST_PASSWORD=your-gmail-app-password
+EMAIL_RECEIVING_USER=youremail@gmail.com
+```
+
+### Important Note About Database
+- Render filesystem is ephemeral, so SQLite is not suitable for production persistence.
+- Use Render PostgreSQL or another external PostgreSQL database and set `DATABASE_URL`.
+
+### Migrate Database
+- `render.yaml` already runs migrations in `buildCommand`.
+- If you want to run manually from Render shell:
+
+```
+python manage.py migrate
+```
+
+### Optional: Create Admin User
+Run in Render shell:
+
+```
+python manage.py createsuperuser
 ```
