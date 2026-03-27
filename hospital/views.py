@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib import messages
 from datetime import date
 from django.conf import settings
@@ -39,6 +39,11 @@ def home_view(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect('afterlogin')
     return render(request, 'hospital/index.html')
+
+
+def logout_view(request):
+    auth_logout(request)
+    return redirect('home')
 
 def access_denied_view(request):
     return render(request, 'hospital/access_denied.html')
