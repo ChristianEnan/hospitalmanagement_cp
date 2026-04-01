@@ -9,6 +9,7 @@ DEPARTMENTS = [
     ('ENT', 'ENT'),
     ('Gastroenterology', 'Gastroenterology'),
     ('General Medicine', 'General Medicine'),
+    ('Gynecology', 'Gynecology'),
     ('Neurology', 'Neurology'),
     ('Orthopedics', 'Orthopedics'),
     ('Pediatrics', 'Pediatrics'),
